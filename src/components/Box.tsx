@@ -1,5 +1,5 @@
 import { use } from 'react';
-import { CurrentTrackContext } from '../context/currentTrackContext';
+import { CurrentTrackContext } from '../context/CurrentTrackContext';
 
 export const Box = () => {
   const { currentTrack } = use(CurrentTrackContext);

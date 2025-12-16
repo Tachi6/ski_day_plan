@@ -1,7 +1,7 @@
 import { type PropsWithChildren, useState } from 'react';
 import type { LatLngTuple } from 'leaflet';
 import { distanceHaversine, trackDistance } from '../helpers/distances';
-import { CurrentTrackContext } from './currentTrackContext';
+import { CurrentTrackContext } from './CurrentTrackContext';
 
 export interface Track {
   coordinates: LatLngTuple[];
