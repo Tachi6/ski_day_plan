@@ -1,9 +1,10 @@
 import type { LatLngTuple } from 'leaflet';
 import 'leaflet-arrowheads';
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { MapContainer, Polyline, TileLayer } from 'react-leaflet';
 import { PolylineArrows } from './PolylineArrows';
-import { useCurrentTrack } from '../hooks/useCurrentTrack';
+import { ZoomControlLayer } from './ZoomControlLayer';
+import { CurrentTrackContext } from '../context/currentTrackContext';
 
 export interface Run {
   id: number;
@@ -109,7 +110,7 @@ export const Map = () => {
   const [runs, setRuns] = useState<Run[]>([]);
   const [lifts, setLifts] = useState<Lift[]>([]);
 
-  const { currentTrack, addRunToTrack } = useCurrentTrack();
+  const { currentTrack, addRunToTrack } = use(CurrentTrackContext);
 
   useEffect(() => {
     const obtainRuns = async () => {
@@ -131,26 +132,25 @@ export const Map = () => {
     obtainLifts();
   }, []);
 
-  // const updateSelectedRuns = (runId: number): void => {
-  //   if (isRunSelected(runId)) return;
-
-  //   setSelectedRuns([...selectedRuns, runId]);
-  // };
-
-  // const isRunSelected = (runId: number): boolean => selectedRuns.includes(runId);
-
   return (
-    <MapContainer center={[42.6988865, 0.9347175]} zoom={16} scrollWheelZoom={true} minZoom={14}>
+    <MapContainer
+      center={[42.6988865, 0.9347175]}
+      zoom={16}
+      scrollWheelZoom={true}
+      minZoom={14}
+      zoomControl={false}
+      className="back-layer theme"
+    >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         // url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         // STADIA OUTDOORS
         url="https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png"
       />
+      <ZoomControlLayer />
       {runs.length + lifts.length > 0 &&
         [...runs, ...lifts].map((track) => {
           const parsedCoordinates = parseCoordinates(track.geometry.coordinates);
-
           return (
             <Polyline
               key={track.id}
@@ -160,19 +160,6 @@ export const Map = () => {
             />
           );
         })}
-      {/* {lifts.length > 0 &&
-        lifts.map((lift) => {
-          const parsedCoordinates = parseCoordinates(lift.geometry.coordinates);
-
-          return (
-            <Polyline
-              key={lift.id}
-              eventHandlers={{ click: () => addRunToTrack(parsedCoordinates) }}
-              pathOptions={{ color: 'grey', weight: 4 }}
-              positions={parsedCoordinates}
-            />
-          );
-        })} */}
       {currentTrack.coordinates.length > 0 && (
         <Polyline
           pathOptions={{ color: '#ff00FF', weight: 8, interactive: false }}
