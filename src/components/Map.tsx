@@ -4,7 +4,7 @@ import { use, useEffect, useState } from 'react';
 import { MapContainer, Polyline, TileLayer } from 'react-leaflet';
 import { PolylineArrows } from './PolylineArrows';
 import { ZoomControlLayer } from './ZoomControlLayer';
-import { CurrentTrackContext } from '../context/CurrentTrackContext';
+import { CurrentTrackContext } from '../context/currentTrack/CurrentTrackContext';
 
 export interface Run {
   id: number;

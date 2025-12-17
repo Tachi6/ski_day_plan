@@ -1,5 +1,5 @@
 import { use } from 'react';
-import { CurrentTrackContext } from '../context/CurrentTrackContext';
+import { CurrentTrackContext } from '../context/currentTrack/CurrentTrackContext';
 
 export const Box = () => {
   const { currentTrack } = use(CurrentTrackContext);
@@ -43,7 +43,7 @@ export const Box = () => {
         </div>
         <div className="box-element">
           <p>
-            {distanceToString(currentTrack.climbElevation)}
+            {currentTrack.climbElevation.toFixed(0)}
             <span>m</span>
           </p>
           <p>Ascenso</p>
