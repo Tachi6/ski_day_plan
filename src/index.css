@@ -67,7 +67,7 @@
 
 @media (max-width: 640px) {
   .leaflet-container {
-    max-height: 100%;
+    height: 100dvh;
   }
 
   .box {
