@@ -31,13 +31,13 @@ const initTrackState: Track = {
 };
 
 const UP_UP_DISTANCE: number = 250;
-const UP_UP_HEIGHT: number = 10;
+const UP_UP_HEIGHT: number = 6;
 const UP_DOWN_DISTANCE: number = 250;
-const UP_DOWN_HEIGHT: number = -10;
+const UP_DOWN_HEIGHT: number = 3;
 const DOWN_DOWN_DISTANCE: number = 125;
-const DOWN_DOWN_HEIGHT: number = -10;
+const DOWN_DOWN_HEIGHT: number = 3;
 const DOWN_UP_DISTANCE: number = 250;
-const DOWN_UP_HEIGHT: number = 10;
+const DOWN_UP_HEIGHT: number = 6;
 
 export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => {
   const [currentTrack, setCurrentTrack] = useState<Track>(initTrackState);
@@ -96,6 +96,9 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
       }
 
       case 'up+up': {
+        console.log(distanceHaversine(lastTrackEnd, newTrackInit));
+        console.log(lastTrackEnd[2]! - newTrackInit[2]!);
+
         if (
           distanceHaversine(lastTrackEnd, newTrackInit) < UP_UP_DISTANCE &&
           Math.abs(lastTrackEnd[2]! - newTrackInit[2]!) < UP_UP_HEIGHT
@@ -107,48 +110,52 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
         break;
       }
       case 'up+down': {
-        const index = newTrack.findIndex(
-          (trackPoint) =>
+        newTrack.find((trackPoint, index) => {
+          const hasPoint =
             distanceHaversine(lastTrackEnd, trackPoint) < UP_DOWN_DISTANCE &&
-            lastTrackEnd[2]! - trackPoint[2]! > UP_DOWN_HEIGHT
-        );
+            trackPoint[2]! - lastTrackEnd[2]! >= UP_DOWN_HEIGHT;
 
-        if (index !== -1) {
-          setCurrentTrack(addNewTrack({ currentTrack, newTrack: [lastTrackEnd, ...newTrack.slice(index)] }));
-          return;
-        }
+          if (hasPoint) {
+            setCurrentTrack(addNewTrack({ currentTrack, newTrack: [lastTrackEnd, ...newTrack.slice(index)] }));
+            return;
+          }
+
+          return hasPoint;
+        });
 
         break;
       }
       case 'down+down': {
-        const index = newTrack.findLastIndex((trackPoint) => {
-          return (
+        newTrack.find((trackPoint, index) => {
+          const hasPoint =
             distanceHaversine(lastTrackEnd, trackPoint) < DOWN_DOWN_DISTANCE &&
-            trackPoint[2]! - lastTrackEnd[2]! >= DOWN_DOWN_HEIGHT
-          );
-        });
+            lastTrackEnd[2]! - trackPoint[2]! >= DOWN_DOWN_HEIGHT;
 
-        if (index !== -1) {
-          setCurrentTrack(addNewTrack({ currentTrack, newTrack: [lastTrackEnd, ...newTrack.slice(index)] }));
-          return;
-        }
+          if (hasPoint) {
+            setCurrentTrack(addNewTrack({ currentTrack, newTrack: [lastTrackEnd, ...newTrack.slice(index)] }));
+            return;
+          }
+
+          return hasPoint;
+        });
 
         break;
       }
       case 'down+up': {
-        const index = lastTrack.findIndex(
-          (track) =>
-            distanceHaversine(track, newTrackInit) < DOWN_UP_DISTANCE && track[2]! - newTrackInit[2]! < DOWN_UP_HEIGHT
-        );
+        lastTrack.findLast((trackPoint, index) => {
+          const hasPoint =
+            distanceHaversine(trackPoint, newTrackInit) < DOWN_UP_DISTANCE &&
+            Math.abs(trackPoint[2]! - newTrackInit[2]!) < DOWN_UP_HEIGHT;
 
-        if (index !== -1) {
-          const cutIndex = currentTrack.coordinates.length - lastTrack.length + index + 1;
-          const editedCurrentTrack = clipCurrentTrack({ currentTrack, cutIndex });
-          const editedTrackEnd = editedCurrentTrack.coordinates[editedCurrentTrack.coordinates.length - 1];
+          if (hasPoint) {
+            const cutIndex = currentTrack.coordinates.length - lastTrack.length + index + 1;
+            const editedCurrentTrack = clipCurrentTrack({ currentTrack, cutIndex });
+            const editedTrackEnd = editedCurrentTrack.coordinates[editedCurrentTrack.coordinates.length - 1];
 
-          setCurrentTrack(addNewTrack({ currentTrack: editedCurrentTrack, newTrack: [editedTrackEnd, ...newTrack] }));
-          return;
-        }
+            setCurrentTrack(addNewTrack({ currentTrack: editedCurrentTrack, newTrack: [editedTrackEnd, ...newTrack] }));
+            return;
+          }
+        });
 
         break;
       }
