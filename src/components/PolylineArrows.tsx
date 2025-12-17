@@ -13,16 +13,24 @@ export const PolylineArrows = ({ positions }: Props): null => {
   useEffect(() => {
     if (!map) return;
 
-    const polylineWithArrows = L.polyline(positions, {
+    const polyline = L.polyline(positions, {
+      color: '#ff00FF',
+      weight: 8,
+      interactive: false,
+    });
+
+    const polylineArrows = L.polyline(positions, {
       color: 'transparent',
       weight: 8,
       interactive: false,
     }).arrowheads({ frequency: '100m', fill: true, color: '#ffff00', weight: 1, size: '8px' });
 
-    polylineWithArrows.addTo(map);
+    polyline.addTo(map);
+    polylineArrows.addTo(map);
 
     return () => {
-      polylineWithArrows.remove();
+      polyline.remove();
+      polylineArrows.remove();
     };
   }, [map, positions]);
 

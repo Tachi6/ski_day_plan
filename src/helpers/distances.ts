@@ -32,6 +32,28 @@ export const distanceHaversine = (point1: LatLngTuple, point2: LatLngTuple): num
 
   return distance3D;
 };
+export const distanceHaversine2 = (point1: LatLngTuple, point2: LatLngTuple): number => {
+  // Convert to radians
+  const radiuslatitudePoint1 = degreesToRadians(point1[0]);
+  const radiuslatitudePoint2 = degreesToRadians(point2[0]);
+  const latitudeDiference = degreesToRadians(point2[0] - point1[0]);
+  const longitudeDiference = degreesToRadians(point2[1] - point1[1]);
+
+  // Haversine Formule (part a)
+  const a =
+    Math.sin(latitudeDiference / 2) * Math.sin(latitudeDiference / 2) +
+    Math.cos(radiuslatitudePoint1) *
+      Math.cos(radiuslatitudePoint2) *
+      Math.sin(longitudeDiference / 2) *
+      Math.sin(longitudeDiference / 2);
+
+  // Haversine Formule (part c)
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+  const horitzontalDistance = R_METERS * c;
+
+  return horitzontalDistance;
+};
 
 export const trackDistance = (track: LatLngTuple[]) => {
   let lastCoordinates: LatLngTuple;

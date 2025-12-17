@@ -1,10 +1,11 @@
 import type { LatLngTuple } from 'leaflet';
 import 'leaflet-arrowheads';
 import { use, useEffect, useState } from 'react';
-import { MapContainer, Polyline, TileLayer } from 'react-leaflet';
+import { MapContainer, TileLayer } from 'react-leaflet';
 import { PolylineArrows } from './PolylineArrows';
 import { ZoomControlLayer } from './ZoomControlLayer';
 import { CurrentTrackContext } from '../context/currentTrack/CurrentTrackContext';
+import { PolylineCustom } from './PolylineCustom';
 
 export interface Run {
   id: number;
@@ -85,27 +86,6 @@ const parseCoordinates = (coordinates: LatLngTuple[]): LatLngTuple[] => {
   return coordinates.map((coordinate) => [coordinate[1], coordinate[0], coordinate[2]]);
 };
 
-const runColor = (type: string | undefined) => {
-  switch (type) {
-    case 'novice':
-      return '#00FF00';
-    case 'easy':
-      return '#0000FF';
-    case 'intermediate':
-      return '#FF0000';
-    case 'advanced':
-      return '#000000';
-    case 'expert':
-      return '#000000';
-    case 'freeride':
-      return '#FF8000';
-    case undefined:
-      return '#808080';
-    default:
-      return '#0000FF';
-  }
-};
-
 export const Map = () => {
   const [runs, setRuns] = useState<Run[]>([]);
   const [lifts, setLifts] = useState<Lift[]>([]);
@@ -152,20 +132,14 @@ export const Map = () => {
         [...runs, ...lifts].map((track) => {
           const parsedCoordinates = parseCoordinates(track.geometry.coordinates);
           return (
-            <Polyline
+            <PolylineCustom
               key={track.id}
-              eventHandlers={{ click: () => addRunToTrack(parsedCoordinates) }}
-              pathOptions={{ color: runColor(track.properties.difficulty), weight: 6 }}
               positions={parsedCoordinates}
+              difficulty={track.properties.difficulty}
+              onClick={() => addRunToTrack(parsedCoordinates)}
             />
           );
         })}
-      {currentTrack.coordinates.length > 0 && (
-        <Polyline
-          pathOptions={{ color: '#ff00FF', weight: 8, interactive: false }}
-          positions={currentTrack.coordinates}
-        />
-      )}
       {currentTrack.coordinates.length > 0 && <PolylineArrows positions={currentTrack.coordinates} />}
     </MapContainer>
   );
