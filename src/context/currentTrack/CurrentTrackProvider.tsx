@@ -31,13 +31,13 @@ const initTrackState: Track = {
 };
 
 const UP_UP_DISTANCE: number = 250;
-const UP_UP_HEIGHT: number = 6;
+const UP_UP_HEIGHT: number = 7.5;
 const UP_DOWN_DISTANCE: number = 250;
-const UP_DOWN_HEIGHT: number = 3;
+const UP_DOWN_HEIGHT: number = 0;
 const DOWN_DOWN_DISTANCE: number = 125;
-const DOWN_DOWN_HEIGHT: number = 3;
+const DOWN_DOWN_HEIGHT: number = 2.5;
 const DOWN_UP_DISTANCE: number = 250;
-const DOWN_UP_HEIGHT: number = 6;
+const DOWN_UP_HEIGHT: number = 5;
 
 export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => {
   const [currentTrack, setCurrentTrack] = useState<Track>(initTrackState);
@@ -96,15 +96,11 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
       }
 
       case 'up+up': {
-        console.log(distanceHaversine(lastTrackEnd, newTrackInit));
-        console.log(lastTrackEnd[2]! - newTrackInit[2]!);
-
         if (
-          distanceHaversine(lastTrackEnd, newTrackInit) < UP_UP_DISTANCE &&
-          Math.abs(lastTrackEnd[2]! - newTrackInit[2]!) < UP_UP_HEIGHT
+          distanceHaversine(lastTrackEnd, newTrackInit) <= UP_UP_DISTANCE &&
+          Math.abs(lastTrackEnd[2]! - newTrackInit[2]!) <= UP_UP_HEIGHT
         ) {
           setCurrentTrack(addNewTrack({ currentTrack, newTrack: [lastTrackEnd, ...newTrack] }));
-          return;
         }
 
         break;
@@ -112,12 +108,11 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
       case 'up+down': {
         newTrack.find((trackPoint, index) => {
           const hasPoint =
-            distanceHaversine(lastTrackEnd, trackPoint) < UP_DOWN_DISTANCE &&
-            trackPoint[2]! - lastTrackEnd[2]! >= UP_DOWN_HEIGHT;
+            distanceHaversine(lastTrackEnd, trackPoint) <= UP_DOWN_DISTANCE &&
+            trackPoint[2]! - lastTrackEnd[2]! <= UP_DOWN_HEIGHT;
 
           if (hasPoint) {
             setCurrentTrack(addNewTrack({ currentTrack, newTrack: [lastTrackEnd, ...newTrack.slice(index)] }));
-            return;
           }
 
           return hasPoint;
@@ -128,12 +123,11 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
       case 'down+down': {
         newTrack.find((trackPoint, index) => {
           const hasPoint =
-            distanceHaversine(lastTrackEnd, trackPoint) < DOWN_DOWN_DISTANCE &&
+            distanceHaversine(lastTrackEnd, trackPoint) <= DOWN_DOWN_DISTANCE &&
             lastTrackEnd[2]! - trackPoint[2]! >= DOWN_DOWN_HEIGHT;
 
           if (hasPoint) {
             setCurrentTrack(addNewTrack({ currentTrack, newTrack: [lastTrackEnd, ...newTrack.slice(index)] }));
-            return;
           }
 
           return hasPoint;
@@ -144,8 +138,8 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
       case 'down+up': {
         lastTrack.findLast((trackPoint, index) => {
           const hasPoint =
-            distanceHaversine(trackPoint, newTrackInit) < DOWN_UP_DISTANCE &&
-            Math.abs(trackPoint[2]! - newTrackInit[2]!) < DOWN_UP_HEIGHT;
+            distanceHaversine(trackPoint, newTrackInit) <= DOWN_UP_DISTANCE &&
+            Math.abs(trackPoint[2]! - newTrackInit[2]!) <= DOWN_UP_HEIGHT;
 
           if (hasPoint) {
             const cutIndex = currentTrack.coordinates.length - lastTrack.length + index + 1;
@@ -153,7 +147,6 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
             const editedTrackEnd = editedCurrentTrack.coordinates[editedCurrentTrack.coordinates.length - 1];
 
             setCurrentTrack(addNewTrack({ currentTrack: editedCurrentTrack, newTrack: [editedTrackEnd, ...newTrack] }));
-            return;
           }
         });
 
