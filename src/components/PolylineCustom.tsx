@@ -20,7 +20,7 @@ const runColor = (type: string | undefined) => {
     case undefined:
       return '#808080';
     default:
-      return '#0000FF';
+      return '#00FF00';
   }
 };
 

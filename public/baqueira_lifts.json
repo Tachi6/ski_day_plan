@@ -1,7 +1,7 @@
 {
   "lifts": [
     {
-      "id": 8491,
+      "id": 8486,
       "type": "Feature",
       "properties": {
         "feature_id": "4a9b039bab25abf6c6ea8bb17fc737e5dfed4e82",
@@ -25,6 +25,7 @@
         "duration": 288,
         "detachable": 0,
         "bubble": 0,
+
         "heating": 0,
         "ski_area_ids": "125d02338620dc079d5d635595a099370161bf83",
         "ski_area_names": "Estació d'Esquí Baqueira-Beret"
@@ -53,7 +54,7 @@
       }
     },
     {
-      "id": 8492,
+      "id": 8487,
       "type": "Feature",
       "properties": {
         "feature_id": "e2629bc2fd4e35ea2d75d436ed140df8e9ea7938",
@@ -109,7 +110,7 @@
       }
     },
     {
-      "id": 8493,
+      "id": 8488,
       "type": "Feature",
       "properties": {
         "feature_id": "4487fe8d7c02474c1644b218301306f1020e7a65",
@@ -154,7 +155,7 @@
       }
     },
     {
-      "id": 8501,
+      "id": 8496,
       "type": "Feature",
       "properties": {
         "feature_id": "fe25a1fbf3c0ca308e8ece7a646e4f2de5b0213c",
@@ -206,7 +207,7 @@
       }
     },
     {
-      "id": 8502,
+      "id": 8497,
       "type": "Feature",
       "properties": {
         "feature_id": "71b29f1b76b9f9132a22d171fad4788a58c7d335",
@@ -266,7 +267,7 @@
       }
     },
     {
-      "id": 8503,
+      "id": 8498,
       "type": "Feature",
       "properties": {
         "feature_id": "b2cea7c07a38d9af1df4662c80531faee12fc6de",
@@ -314,7 +315,7 @@
       }
     },
     {
-      "id": 8504,
+      "id": 8499,
       "type": "Feature",
       "properties": {
         "feature_id": "29aa56461edf08fd675474083da0d46b2b3f24f6",
@@ -364,7 +365,7 @@
       }
     },
     {
-      "id": 8505,
+      "id": 8500,
       "type": "Feature",
       "properties": {
         "feature_id": "93a118c6256eedae0836c2445b2e7efa76795d13",
@@ -425,7 +426,7 @@
       }
     },
     {
-      "id": 8506,
+      "id": 8501,
       "type": "Feature",
       "properties": {
         "feature_id": "8917b212989945a1041276d5f633bdfc83bb6c30",
@@ -476,7 +477,7 @@
       }
     },
     {
-      "id": 8507,
+      "id": 8502,
       "type": "Feature",
       "properties": {
         "feature_id": "1a395f55479949c18d06be87dd0f9a4ab66217dc",
@@ -533,7 +534,7 @@
       }
     },
     {
-      "id": 8508,
+      "id": 8503,
       "type": "Feature",
       "properties": {
         "feature_id": "cddcfaa8e986f31c0b8c0e366788ff752f25c2db",
@@ -598,7 +599,7 @@
       }
     },
     {
-      "id": 8509,
+      "id": 8504,
       "type": "Feature",
       "properties": {
         "feature_id": "5ed2132018785a6dc5c2b528eb7ed4d108fab5d4",
@@ -655,7 +656,7 @@
       }
     },
     {
-      "id": 8510,
+      "id": 8505,
       "type": "Feature",
       "properties": {
         "feature_id": "eefc799abe463f92587f938be953be762eae2af3",
@@ -705,7 +706,7 @@
       }
     },
     {
-      "id": 8511,
+      "id": 8506,
       "type": "Feature",
       "properties": {
         "feature_id": "b15a829284e8b4e52203901478cae403ea9d18f4",
@@ -757,7 +758,7 @@
       }
     },
     {
-      "id": 8896,
+      "id": 8891,
       "type": "Feature",
       "properties": {
         "feature_id": "ad9365fd20dbe65302ec45a1370494926166f0bf",
@@ -811,7 +812,7 @@
       }
     },
     {
-      "id": 8897,
+      "id": 8892,
       "type": "Feature",
       "properties": {
         "feature_id": "16a3ef363df3fbd51fee09785745b5eb12dfe1af",
@@ -857,7 +858,7 @@
       }
     },
     {
-      "id": 8898,
+      "id": 8893,
       "type": "Feature",
       "properties": {
         "feature_id": "db5ac7c42ba1de5ddd882b616029d5cf5b58739a",
@@ -897,7 +898,7 @@
       }
     },
     {
-      "id": 8899,
+      "id": 8894,
       "type": "Feature",
       "properties": {
         "feature_id": "65deeb1cc821d191da6c712df5d836dcbdac7580",
@@ -947,7 +948,7 @@
       }
     },
     {
-      "id": 8900,
+      "id": 8895,
       "type": "Feature",
       "properties": {
         "feature_id": "4a7a747644dacfe5694e25b109a82f5833fc8be1",
@@ -1001,7 +1002,7 @@
       }
     },
     {
-      "id": 11402,
+      "id": 11397,
       "type": "Feature",
       "properties": {
         "feature_id": "1aff836bc1160205ba504420448b1476a6cac63b",
@@ -1056,7 +1057,7 @@
       }
     },
     {
-      "id": 11904,
+      "id": 11898,
       "type": "Feature",
       "properties": {
         "feature_id": "244bd4606e90e3954ac5c1c5f4e17999c1978ce4",
@@ -1093,7 +1094,7 @@
       }
     },
     {
-      "id": 11905,
+      "id": 11899,
       "type": "Feature",
       "properties": {
         "feature_id": "0eddcc264013be99af613e253e82c8d477865b9d",
@@ -1130,7 +1131,7 @@
       }
     },
     {
-      "id": 11906,
+      "id": 11900,
       "type": "Feature",
       "properties": {
         "feature_id": "f0458aa51e0df6d26d18f57d8f9c7f4de03299a8",
@@ -1167,7 +1168,7 @@
       }
     },
     {
-      "id": 11907,
+      "id": 11901,
       "type": "Feature",
       "properties": {
         "feature_id": "b12117adf787b614712502d7f6188b7dbf4064ce",
@@ -1204,7 +1205,7 @@
       }
     },
     {
-      "id": 11908,
+      "id": 11902,
       "type": "Feature",
       "properties": {
         "feature_id": "d49e536a6d4aac6129a02dffbd5e8cfb89084031",
@@ -1241,7 +1242,7 @@
       }
     },
     {
-      "id": 11909,
+      "id": 11903,
       "type": "Feature",
       "properties": {
         "feature_id": "1c6d2d991e15eba83dbf67f9461679750b9252db",
@@ -1280,7 +1281,7 @@
       }
     },
     {
-      "id": 11910,
+      "id": 11904,
       "type": "Feature",
       "properties": {
         "feature_id": "f67a8f5fc43aca66648763719a3abbe5f43c3120",
@@ -1317,7 +1318,7 @@
       }
     },
     {
-      "id": 11911,
+      "id": 11905,
       "type": "Feature",
       "properties": {
         "feature_id": "072a098e33d2276b408414e464a7c88ea2da7254",
@@ -1354,7 +1355,7 @@
       }
     },
     {
-      "id": 11912,
+      "id": 11906,
       "type": "Feature",
       "properties": {
         "feature_id": "d36524a6a3cbbe664acbf2b51624ac9d8fc90fc4",
@@ -1398,7 +1399,7 @@
       }
     },
     {
-      "id": 14305,
+      "id": 14299,
       "type": "Feature",
       "properties": {
         "feature_id": "e513402ffde427e5cc9d1e899a4432cbce44cef1",
@@ -1448,10 +1449,10 @@
       }
     },
     {
-      "id": 14641,
+      "id": 14635,
       "type": "Feature",
       "properties": {
-        "feature_id": "aae164384d655b96215b06a35ce3e22358556d1f",
+        "feature_id": "3391ed1beb11561dd5a67726dd9e6b36809e1a40",
         "name": "TQ Stadium",
         "status": "operating",
         "sources": "[{\"type\":\"openstreetmap\",\"id\":\"way/333801517\"}]",
@@ -1495,12 +1496,12 @@
           [0.9795014, 42.71855990000003, 2184.9],
           [0.9805200999999997, 42.71814790000001, 2215.2],
           [0.9806678999999997, 42.7180881, 2218.1],
-          [0.9811198999999997, 42.7179054, 2221.8]
+          [0.9813214, 42.7178302, 2226.4]
         ]
       }
     },
     {
-      "id": 17386,
+      "id": 17379,
       "type": "Feature",
       "properties": {
         "feature_id": "209a656be77bcd66086393c05d2dbdc5c4b694e0",
@@ -1556,7 +1557,7 @@
       }
     },
     {
-      "id": 19206,
+      "id": 19199,
       "type": "Feature",
       "properties": {
         "feature_id": "8faec5ee7f8fbf84ee445fade3839c4454edc359",
@@ -1608,7 +1609,7 @@
       }
     },
     {
-      "id": 19207,
+      "id": 19200,
       "type": "Feature",
       "properties": {
         "feature_id": "222ef1f00739124a0e18219bb8d3d9e66bcd4a79",
@@ -1649,7 +1650,7 @@
       }
     },
     {
-      "id": 20265,
+      "id": 20260,
       "type": "Feature",
       "properties": {
         "feature_id": "0ea4ae185e61a4a5715dda1895e307464ed04813",
