@@ -127,7 +127,7 @@ export const Map = () => {
         // url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         // STADIA OUTDOORS
         attribution='&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png?api_key=$1c941a16-e805-4d4d-b32d-77401f1754f9"
+        url="https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}{r}.png?api_key=$1c941a16-e805-4d4d-b32d-77401f1754f9"
       />
       <ZoomControlLayer />
       {runs.length + lifts.length > 0 &&
@@ -138,6 +138,7 @@ export const Map = () => {
               key={track.id}
               positions={parsedCoordinates}
               difficulty={track.properties.difficulty}
+              name={track.properties.name}
               onClick={() => addRunToTrack(parsedCoordinates)}
             />
           );

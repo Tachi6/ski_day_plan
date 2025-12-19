@@ -2,6 +2,7 @@ import type { LatLngTuple } from 'leaflet';
 import { useEffect } from 'react';
 import { useMap } from 'react-leaflet';
 import L from 'leaflet';
+import 'leaflet-textpath';
 
 const runColor = (type: string | undefined) => {
   switch (type) {
@@ -20,17 +21,18 @@ const runColor = (type: string | undefined) => {
     case undefined:
       return '#808080';
     default:
-      return '#00FF00';
+      return '#0000FF';
   }
 };
 
 interface Props {
   positions: LatLngTuple[];
   difficulty: string | undefined;
+  name: string;
   onClick: () => void;
 }
 
-export const PolylineCustom = ({ positions, difficulty, onClick }: Props): null => {
+export const PolylineCustom = ({ positions, difficulty, name, onClick }: Props): null => {
   const map = useMap();
 
   useEffect(() => {
@@ -48,6 +50,12 @@ export const PolylineCustom = ({ positions, difficulty, onClick }: Props): null 
       interactive: false,
     });
 
+    polylineEvents.setText(name, {
+      center: true,
+      offset: -5,
+      orientation: positions[positions.length - 1][1] > positions[0][1] ? 0 : 180,
+    });
+
     polylineEvents.on('click', onClick);
 
     polylineEvents.addTo(map);
@@ -57,7 +65,7 @@ export const PolylineCustom = ({ positions, difficulty, onClick }: Props): null 
       polylineEvents.remove();
       polyline.remove();
     };
-  }, [map, positions, difficulty, onClick]);
+  }, [map, positions, difficulty, name, onClick]);
 
   return null;
 };
