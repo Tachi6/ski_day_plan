@@ -1,116 +1,16 @@
-import type { LatLngTuple } from 'leaflet';
 import 'leaflet-arrowheads';
-import { use, useEffect, useState } from 'react';
+import { use } from 'react';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import { PolylineArrows } from './PolylineArrows';
 import { ZoomControlLayer } from './ZoomControlLayer';
 import { CurrentTrackContext } from '../context/currentTrack/CurrentTrackContext';
 import { PolylineCustom } from './PolylineCustom';
-
-export interface Run {
-  id: number;
-  type: string;
-  properties: RunProperties;
-  geometry: Geometry;
-}
-
-export interface Lift {
-  id: number;
-  type: string;
-  properties: LiftProperties;
-  geometry: Geometry;
-}
-
-interface RunProperties {
-  feature_id: string;
-  name: string;
-  status: string;
-  sources: string;
-  websites: string;
-  wikidata_id?: string;
-  country_codes: string;
-  region_codes: string;
-  countries: string;
-  regions: string;
-  localities?: string;
-  uses: string;
-  ref?: string;
-  description?: string;
-  difficulty: string;
-  difficulty_convention: string;
-  oneway: number;
-  lit: number;
-  gladed: number;
-  patrolled: number;
-  grooming: string;
-  elevation_profile_heights: string;
-  elevation_profile_resolution: number;
-  ski_area_ids: string;
-  ski_area_names: string;
-}
-
-interface LiftProperties {
-  feature_id: string;
-  name: string;
-  status: string;
-  sources: string;
-  websites: string;
-  wikidata_id?: string;
-  country_codes: string;
-  region_codes: string;
-  countries: string;
-  regions: string;
-  localities?: string;
-  lift_type: string;
-  ref?: string;
-  ref_fr_cairn?: string;
-  description?: string;
-  difficulty?: string;
-  oneway: number;
-  occupancy: number;
-  capacity: number;
-  duration: number;
-  detachable: number;
-  bubble: number;
-  heating: number;
-  ski_area_ids: string;
-  ski_area_names: string;
-}
-
-interface Geometry {
-  type: string;
-  coordinates: LatLngTuple[];
-}
-
-const parseCoordinates = (coordinates: LatLngTuple[]): LatLngTuple[] => {
-  return coordinates.map((coordinate) => [coordinate[1], coordinate[0], coordinate[2]]);
-};
+import { useObtainData } from '../hooks/UseObtainData';
 
 export const Map = () => {
-  const [runs, setRuns] = useState<Run[]>([]);
-  const [lifts, setLifts] = useState<Lift[]>([]);
-
   const { currentTrack, addRunToTrack } = use(CurrentTrackContext);
 
-  useEffect(() => {
-    const obtainRuns = async () => {
-      const resp = await fetch('baqueira_runs.json');
-      const data = await resp.json();
-      const loadedRuns: Run[] = data.runs;
-
-      setRuns(loadedRuns.filter((run) => run.properties.uses === 'downhill' || run.properties.uses === 'connection'));
-    };
-
-    const obtainLifts = async () => {
-      const resp = await fetch('baqueira_lifts.json');
-      const data = await resp.json();
-
-      setLifts(data.lifts);
-    };
-
-    obtainRuns();
-    obtainLifts();
-  }, []);
+  const { runs, lifts } = useObtainData();
 
   return (
     <MapContainer
@@ -132,14 +32,13 @@ export const Map = () => {
       <ZoomControlLayer />
       {runs.length + lifts.length > 0 &&
         [...runs, ...lifts].map((track) => {
-          const parsedCoordinates = parseCoordinates(track.geometry.coordinates);
           return (
             <PolylineCustom
               key={track.id}
-              positions={parsedCoordinates}
+              positions={track.geometry.coordinates}
               difficulty={track.properties.difficulty}
               name={track.properties.name}
-              onClick={() => addRunToTrack(parsedCoordinates)}
+              onClick={() => addRunToTrack(track.geometry.coordinates)}
             />
           );
         })}

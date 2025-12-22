@@ -3,6 +3,7 @@ import { type LatLngTuple } from 'leaflet';
 import { distanceHaversine } from '../../helpers/distances';
 import { CurrentTrackContext } from './CurrentTrackContext';
 import { addNewTrack, clipCurrentTrack, getConnectionInfo } from './CurrentTrackHelpers';
+import { useObtainData } from '../../hooks/UseObtainData';
 
 export interface Track {
   coordinates: LatLngTuple[];
@@ -42,6 +43,8 @@ const DOWN_UP_HEIGHT: number = 5;
 export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => {
   const [currentTrack, setCurrentTrack] = useState<Track>(initTrackState);
 
+  const { connections } = useObtainData();
+
   const addRunToTrack = (newTrack: LatLngTuple[]): void => {
     // Last added track
     const lastTrackStepInit = currentTrack.trackSteps[currentTrack.trackSteps.length - 2];
@@ -51,10 +54,10 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
     const newTrackInit = newTrack[0];
     const lastTrackEnd = lastTrack[lastTrack.length - 1];
 
-    const connectionType = getConnectionInfo({ lastTrack, newTrack });
-    console.log(connectionType);
+    const connectionType = getConnectionInfo({ lastTrack, newTrack, connections });
 
     const connect = connectionType.connectionType ?? connectionType.directions;
+
     console.log(connect);
 
     switch (connect) {
@@ -95,6 +98,30 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
         return;
       }
 
+      case 'conex+start':
+        setCurrentTrack(
+          addNewTrack({
+            currentTrack,
+            newTrack: [
+              ...connectionType.connectionTrack!.slice(0, connectionType.lastTrackConnectionIndex),
+              ...newTrack,
+            ],
+          })
+        );
+        return;
+
+      case 'conex+middle':
+        setCurrentTrack(
+          addNewTrack({
+            currentTrack,
+            newTrack: [
+              ...connectionType.connectionTrack!.slice(0, -1),
+              ...newTrack.slice(connectionType.newTrackConnectionIndex),
+            ],
+          })
+        );
+        return;
+
       case 'up+up': {
         if (
           distanceHaversine(lastTrackEnd, newTrackInit) <= UP_UP_DISTANCE &&
@@ -105,6 +132,7 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
 
         break;
       }
+
       case 'up+down': {
         newTrack.find((trackPoint, index) => {
           const hasPoint =
