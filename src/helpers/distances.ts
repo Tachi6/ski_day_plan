@@ -70,3 +70,25 @@ export const trackDistance = (track: LatLngTuple[]) => {
     return accumulator + distance;
   }, 0);
 };
+
+type Turns = 'xSmall' | 'small' | 'medium' | 'large';
+
+interface DistanceTurnsProps {
+  distance: number;
+  turns: Turns;
+}
+
+const turnsToRadius: Record<Turns, number> = {
+  xSmall: 0.1,
+  small: 0.2,
+  medium: 0.3,
+  large: 1,
+};
+
+export const distanceByTurns = ({ distance, turns }: DistanceTurnsProps) => {
+  const turnDistance = turnsToRadius[turns];
+
+  const distanceUnit = Math.PI * (turnDistance / 2);
+
+  return distance * distanceUnit;
+};

@@ -1,7 +1,7 @@
 import { use } from 'react';
 import { CurrentTrackContext } from '../context/currentTrack/CurrentTrackContext';
 
-export const Box = () => {
+export const SettingsBox = () => {
   const { currentTrack } = use(CurrentTrackContext);
 
   const distanceToString = (distance: number): string => {
@@ -9,28 +9,35 @@ export const Box = () => {
   };
 
   return (
-    <div className="box">
+    <div className="box settings-box">
       <div className="box-line">
         <div className="box-element">
           <p>
             {distanceToString(currentTrack.downhillDistance)}
             <span>km</span>
           </p>
-          <p>Distancia esqui</p>
+          <p>Muy corto</p>
         </div>
         <div className="box-element">
           <p>
             {distanceToString(currentTrack.uphillDistance)}
             <span>km</span>
           </p>
-          <p>Distancia subida</p>
+          <p>Corto</p>
         </div>
         <div className="box-element">
           <p>
             {distanceToString(currentTrack.totalDistance)}
             <span>km</span>
           </p>
-          <p>Distancia total</p>
+          <p>Medio</p>
+        </div>
+        <div className="box-element">
+          <p>
+            {distanceToString(currentTrack.totalDistance)}
+            <span>km</span>
+          </p>
+          <p>Largo</p>
         </div>
       </div>
       <div className="box-line">

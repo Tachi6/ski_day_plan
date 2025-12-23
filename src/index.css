@@ -21,14 +21,22 @@
 
 .box {
   position: absolute;
-  top: 20px;
-  left: 20px;
   background-color: #f4f4f4;
-  width: 320px;
   padding: 10px 10px 5px 10px;
   border-radius: 8px;
   z-index: 100;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.stats-box {
+  top: 20px;
+  left: 20px;
+  width: 320px;
+}
+
+.settings-box {
+  top: 20px;
+  right: 20px;
 }
 
 .theme .leaflet-control-zoom.leaflet-bar.leaflet-control {
