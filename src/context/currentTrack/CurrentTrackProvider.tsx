@@ -62,17 +62,17 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
 
     switch (connect) {
       case null:
-      case 'end+start':
+      case 'EndStart':
         setCurrentTrack(addNewTrack({ currentTrack, newTrack }));
         return;
 
-      case 'end+middle':
+      case 'EndMiddle':
         setCurrentTrack(
           addNewTrack({ currentTrack, newTrack: newTrack.slice(connectionType.newTrackConnectionIndex) })
         );
         return;
 
-      case 'middle+start': {
+      case 'MiddleStart': {
         const cutIndex =
           currentTrack.coordinates.length - lastTrack.length + connectionType.lastTrackConnectionIndex + 1;
         const editedCurrentTrack = clipCurrentTrack({ currentTrack, cutIndex });
@@ -81,8 +81,8 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
         return;
       }
 
-      case 'middle+middle': {
-        if (connectionType.lastTrackDirection === 'down') {
+      case 'MiddleMiddle': {
+        if (connectionType.lastTrackDirection === 'Down') {
           const cutIndex =
             currentTrack.coordinates.length - lastTrack.length + connectionType.lastTrackConnectionIndex + 1;
           const editedCurrentTrack = clipCurrentTrack({ currentTrack, cutIndex });
@@ -98,31 +98,63 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
         return;
       }
 
-      case 'conex+start':
+      case 'EndConexStart':
         setCurrentTrack(
           addNewTrack({
             currentTrack,
-            newTrack: [
-              ...connectionType.connectionTrack!.slice(0, connectionType.lastTrackConnectionIndex),
-              ...newTrack,
-            ],
+            newTrack: [...connectionType.connectorTrack!.slice(0, connectionType.connectorTrackIndex), ...newTrack],
           })
         );
         return;
 
-      case 'conex+middle':
+      case 'EndConexMiddle':
         setCurrentTrack(
           addNewTrack({
             currentTrack,
             newTrack: [
-              ...connectionType.connectionTrack!.slice(0, -1),
+              ...connectionType.connectorTrack!.slice(0, -1),
               ...newTrack.slice(connectionType.newTrackConnectionIndex),
             ],
           })
         );
         return;
 
-      case 'up+up': {
+      case 'MiddleConexMiddle': {
+        if (connectionType.lastTrackDirection === 'Down') {
+          const cutIndex =
+            currentTrack.coordinates.length - lastTrack.length + connectionType.lastTrackConnectionIndex + 1;
+          const editedCurrentTrack = clipCurrentTrack({ currentTrack, cutIndex });
+
+          setCurrentTrack(
+            addNewTrack({
+              currentTrack: editedCurrentTrack,
+              newTrack: [
+                ...connectionType.connectorTrack!.slice(0, -1),
+                ...newTrack.slice(connectionType.newTrackConnectionIndex),
+              ],
+            })
+          );
+        }
+        return;
+      }
+
+      case 'MiddleConexStart': {
+        if (connectionType.lastTrackDirection === 'Down') {
+          const cutIndex =
+            currentTrack.coordinates.length - lastTrack.length + connectionType.lastTrackConnectionIndex + 1;
+          const editedCurrentTrack = clipCurrentTrack({ currentTrack, cutIndex });
+
+          setCurrentTrack(
+            addNewTrack({
+              currentTrack: editedCurrentTrack,
+              newTrack: [...connectionType.connectorTrack!.slice(0, connectionType.connectorTrackIndex), ...newTrack],
+            })
+          );
+        }
+        return;
+      }
+
+      case 'UpUp': {
         if (
           distanceHaversine(lastTrackEnd, newTrackInit) <= UP_UP_DISTANCE &&
           Math.abs(lastTrackEnd[2]! - newTrackInit[2]!) <= UP_UP_HEIGHT
@@ -133,7 +165,7 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
         break;
       }
 
-      case 'up+down': {
+      case 'UpDown': {
         newTrack.find((trackPoint, index) => {
           const hasPoint =
             distanceHaversine(lastTrackEnd, trackPoint) <= UP_DOWN_DISTANCE &&
@@ -148,7 +180,7 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
 
         break;
       }
-      case 'down+down': {
+      case 'DownDown': {
         newTrack.find((trackPoint, index) => {
           const hasPoint =
             distanceHaversine(lastTrackEnd, trackPoint) <= DOWN_DOWN_DISTANCE &&
@@ -163,7 +195,7 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
 
         break;
       }
-      case 'down+up': {
+      case 'DownUp': {
         lastTrack.findLast((trackPoint, index) => {
           const hasPoint =
             distanceHaversine(trackPoint, newTrackInit) <= DOWN_UP_DISTANCE &&

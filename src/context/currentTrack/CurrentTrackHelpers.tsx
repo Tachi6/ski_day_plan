@@ -1,31 +1,35 @@
 import { type LatLngTuple } from 'leaflet';
-import { trackDistance } from '../../helpers/distances';
+import { distanceByTurns, trackDistance } from '../../helpers/distances';
 import type { Track } from './CurrentTrackProvider';
 import type { Run } from '../../hooks/UseObtainData';
 
 type ConnectionType =
-  | 'end+start'
-  | 'end+middle'
-  | 'end+end'
-  | 'end+conex'
-  | 'middle+start'
-  | 'middle+middle'
-  | 'middle+end'
-  | 'middle+conex'
-  | 'start+start'
-  | 'start+end'
-  | 'start+middle'
-  | 'start+conex'
-  | 'conex+start'
-  | 'conex+end'
-  | 'conex+middle'
-  | 'conex+conex';
+  | 'EndStart'
+  | 'EndMiddle'
+  | 'EndEnd'
+  | 'MiddleStart'
+  | 'MiddleMiddle'
+  | 'MiddleEnd'
+  | 'StartStart'
+  | 'StartMiddle'
+  | 'StartEnd'
+  | 'StartConexStart'
+  | 'StartConexEnd'
+  | 'StartConexMiddle'
+  | 'MiddleConexStart'
+  | 'MiddleConexMiddle'
+  | 'MiddleConexEnd'
+  | 'EndConexStart'
+  | 'EndConexMiddle'
+  | 'EndConexEnd';
 
-type Directions = 'up+up' | 'up+down' | 'down+down' | 'down+up';
+type Directions = 'UpUp' | 'UpDown' | 'DownDown' | 'DownUp';
 
-type Intersection = 'start' | 'middle' | 'end' | 'conex';
+type Intersection = 'Start' | 'Middle' | 'End';
 
-type Direction = 'down' | 'up';
+type Direction = 'Down' | 'Up';
+
+type Connection = 'Conex' | '';
 
 interface ConnectionInfo {
   hasConnection: boolean;
@@ -37,7 +41,9 @@ interface ConnectionInfo {
   newTrackDirection: Direction | null;
   connectionType: ConnectionType | null;
   directions: Directions | null;
-  connectionTrack: LatLngTuple[] | null;
+  connectorTrack: LatLngTuple[] | null;
+  connectorTrackIndex: number;
+  connectorTrackConnection: Connection;
 }
 
 interface GetConnectionInfoProps {
@@ -57,13 +63,15 @@ export const getConnectionInfo = ({ lastTrack, newTrack, connections }: GetConne
     newTrackDirection: null,
     connectionType: null,
     directions: null,
-    connectionTrack: null,
+    connectorTrack: null,
+    connectorTrackIndex: -1,
+    connectorTrackConnection: '',
   };
 
   lastTrack.find((point1, index1) =>
     newTrack.some((point2, index2) => {
-      connectionInfo.lastTrackDirection = lastTrack[0][2]! - lastTrack[lastTrack.length - 1][2]! >= 0 ? 'down' : 'up';
-      connectionInfo.newTrackDirection = newTrack[0][2]! - newTrack[newTrack.length - 1][2]! >= 0 ? 'down' : 'up';
+      connectionInfo.lastTrackDirection = lastTrack[0][2]! - lastTrack[lastTrack.length - 1][2]! >= 0 ? 'Down' : 'Up';
+      connectionInfo.newTrackDirection = newTrack[0][2]! - newTrack[newTrack.length - 1][2]! >= 0 ? 'Down' : 'Up';
 
       if (index1 === 0) return false;
 
@@ -76,22 +84,22 @@ export const getConnectionInfo = ({ lastTrack, newTrack, connections }: GetConne
 
         switch (index1) {
           case lastTrack.length - 1:
-            connectionInfo.lastTrackConnection = 'end';
+            connectionInfo.lastTrackConnection = 'End';
             break;
           default:
-            connectionInfo.lastTrackConnection = 'middle';
+            connectionInfo.lastTrackConnection = 'Middle';
             break;
         }
 
         switch (index2) {
           case 0:
-            connectionInfo.newTrackConnection = 'start';
+            connectionInfo.newTrackConnection = 'Start';
             break;
           case newTrack.length - 1:
-            connectionInfo.newTrackConnection = 'end';
+            connectionInfo.newTrackConnection = 'End';
             break;
           default:
-            connectionInfo.newTrackConnection = 'middle';
+            connectionInfo.newTrackConnection = 'Middle';
             break;
         }
       }
@@ -101,36 +109,59 @@ export const getConnectionInfo = ({ lastTrack, newTrack, connections }: GetConne
   );
 
   if (!connectionInfo.hasConnection && lastTrack.length > 0) {
-    const connection = connections.find(
-      (connection) =>
-        connection.geometry.coordinates[0][0] === lastTrack[lastTrack.length - 1][0] &&
-        connection.geometry.coordinates[0][1] === lastTrack[lastTrack.length - 1][1] &&
-        connection.geometry.coordinates[0][2] === lastTrack[lastTrack.length - 1][2]
+    // const connection = connections.find(
+    //   (connection) =>
+    //     connection.geometry.coordinates[0][0] === lastTrack[lastTrack.length - 1][0] &&
+    //     connection.geometry.coordinates[0][1] === lastTrack[lastTrack.length - 1][1] &&
+    //     connection.geometry.coordinates[0][2] === lastTrack[lastTrack.length - 1][2]
+    // );
+
+    lastTrack.find((point, index) =>
+      connections.some((connection) => {
+        if (index === 0) return false;
+
+        const hasMatch =
+          connection.geometry.coordinates[0][0] === point[0] &&
+          connection.geometry.coordinates[0][1] === point[1] &&
+          connection.geometry.coordinates[0][2] === point[2];
+
+        if (hasMatch) {
+          connectionInfo.connectorTrack = connection.geometry.coordinates;
+          connectionInfo.lastTrackConnectionIndex = index;
+
+          switch (index) {
+            case lastTrack.length - 1:
+              connectionInfo.lastTrackConnection = 'End';
+              break;
+            default:
+              connectionInfo.lastTrackConnection = 'Middle';
+              break;
+          }
+        }
+
+        return hasMatch;
+      })
     );
 
-    if (connection) {
-      const connectionTrack = connection.geometry.coordinates;
-
+    if (connectionInfo.connectorTrack) {
       newTrack.find((point1, index1) =>
-        connectionTrack.some((point2, index2) => {
+        connectionInfo.connectorTrack!.some((point2, index2) => {
           if (index1 === newTrack.length - 1) return false;
 
           const hasMatch = point1[0] === point2[0] && point1[1] === point2[1] && point1[2] === point2[2];
 
           if (hasMatch) {
             connectionInfo.hasConnection = true;
-            connectionInfo.connectionTrack = connectionTrack;
-            connectionInfo.lastTrackConnectionIndex = index2;
+            connectionInfo.connectorTrackIndex = index2;
             connectionInfo.newTrackConnectionIndex = index1;
-
-            connectionInfo.lastTrackConnection = 'conex';
+            connectionInfo.connectorTrackConnection = 'Conex';
 
             switch (index1) {
               case 0:
-                connectionInfo.newTrackConnection = 'start';
+                connectionInfo.newTrackConnection = 'Start';
                 break;
               default:
-                connectionInfo.newTrackConnection = 'middle';
+                connectionInfo.newTrackConnection = 'Middle';
                 break;
             }
           }
@@ -141,12 +172,13 @@ export const getConnectionInfo = ({ lastTrack, newTrack, connections }: GetConne
     }
   }
 
-  connectionInfo.connectionType = connectionInfo.hasConnection
-    ? `${connectionInfo.lastTrackConnection!}+${connectionInfo.newTrackConnection!}`
-    : null;
+  connectionInfo.connectionType =
+    connectionInfo.hasConnection || connectionInfo.connectorTrackConnection === 'Conex'
+      ? `${connectionInfo.lastTrackConnection!}${connectionInfo.connectorTrackConnection!}${connectionInfo.newTrackConnection!}`
+      : null;
 
   connectionInfo.directions = connectionInfo.lastTrackDirection
-    ? `${connectionInfo.lastTrackDirection!}+${connectionInfo.newTrackDirection!}`
+    ? `${connectionInfo.lastTrackDirection!}${connectionInfo.newTrackDirection!}`
     : null;
 
   return connectionInfo;
@@ -163,6 +195,13 @@ export const addNewTrack = ({ currentTrack, newTrack }: AddNewTrackProps): Track
   const newTrackStep = currentTrack.coordinates.length + newTrack.length;
   const newTrackDistance = trackDistance(newTrack);
   const newTrackElevation = Math.abs(newTrack[0][2]! - newTrack[newTrack.length - 1][2]!);
+
+  console.log(
+    distanceByTurns({
+      distance: currentTrack.downhillDistance + (isDownHill ? newTrackDistance : 0),
+      turns: 'large',
+    })
+  );
 
   return {
     coordinates: [...currentTrack.coordinates, ...newTrack],
