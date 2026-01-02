@@ -14,14 +14,14 @@ import none from '../assets/images/0-stops.png';
 import some from '../assets/images/1-stops.png';
 import few from '../assets/images/2-stops.png';
 import many from '../assets/images/3-stops.png';
-import { useContext } from 'react';
+import { use } from 'react';
 import { ViewSettingsContext } from '../context/viewSettings/ViewSettingsContext';
 
 export const SettingsBox = () => {
   // const distanceToString = (distance: number): string => {
   //   return `${(distance / 1000).toFixed(1)}`;
   // };
-  const { view } = useContext(ViewSettingsContext);
+  const { view } = use(ViewSettingsContext);
 
   return (
     <div className={`box settings-box ${view ? 'show' : 'hide'}`}>

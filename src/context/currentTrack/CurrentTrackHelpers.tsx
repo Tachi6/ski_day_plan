@@ -219,19 +219,23 @@ export const addNewTrack = ({ currentTrack, newTrack }: AddNewTrackProps): Track
 
 interface ClipCurrentTrackProps {
   currentTrack: Track;
-  cutIndex: number;
+  cutIndex?: number;
 }
 
 export const clipCurrentTrack = ({ currentTrack, cutIndex }: ClipCurrentTrackProps): Track => {
-  const trackToRemove = currentTrack.coordinates.slice(cutIndex - 1);
+  const usedCutIndex = cutIndex ?? currentTrack.trackSteps.at(-2)!;
+  const trackToRemove = currentTrack.coordinates.slice(usedCutIndex - 1);
+
   const isDownhill = trackToRemove[0][2]! - trackToRemove[trackToRemove.length - 1][2]! >= 0;
+
+  const newTrackStep = cutIndex ? [cutIndex] : [];
 
   const removeDistance = trackDistance(trackToRemove);
   const removeElevation = Math.abs(trackToRemove[trackToRemove.length - 1][2]! - trackToRemove[0][2]!);
 
   return {
-    coordinates: [...currentTrack.coordinates.slice(0, cutIndex)],
-    trackSteps: [...currentTrack.trackSteps.slice(0, currentTrack.trackSteps.length - 1), cutIndex],
+    coordinates: [...currentTrack.coordinates.slice(0, usedCutIndex)],
+    trackSteps: [...currentTrack.trackSteps.slice(0, currentTrack.trackSteps.length - 1), ...newTrackStep],
     downhillDistance: currentTrack.downhillDistance - (isDownhill ? removeDistance : 0),
     uphillDistance: currentTrack.uphillDistance - (!isDownhill ? removeDistance : 0),
     totalDistance: currentTrack.totalDistance - removeDistance,

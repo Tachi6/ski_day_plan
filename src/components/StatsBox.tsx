@@ -7,7 +7,7 @@ import settings from '../assets/svg/settings.svg';
 import { ViewSettingsContext } from '../context/viewSettings/ViewSettingsContext';
 
 export const StatsBox = () => {
-  const { currentTrack } = use(CurrentTrackContext);
+  const { currentTrack, undoLastTrack, clearTrack } = use(CurrentTrackContext);
   const { changeVisibility } = use(ViewSettingsContext);
 
   const distanceToString = (distance: number): string => {
@@ -62,10 +62,10 @@ export const StatsBox = () => {
         </div>
       </div>
       <div className="box-line buttons">
-        <button className="stats-box-button">
+        <button className="stats-box-button" onClick={undoLastTrack}>
           <img src={undo} alt="settings-icon" />
         </button>
-        <button className="stats-box-button">
+        <button className="stats-box-button" onClick={clearTrack}>
           <img src={remove} alt="settings-icon" />
         </button>
         <button className="stats-box-button">

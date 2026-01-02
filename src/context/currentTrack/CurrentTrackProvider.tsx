@@ -218,5 +218,27 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
     }
   };
 
-  return <CurrentTrackContext value={{ currentTrack, addRunToTrack }}>{children}</CurrentTrackContext>;
+  const undoLastTrack = () => {
+    if (currentTrack.trackSteps.length < 2) return;
+
+    if (currentTrack.trackSteps.length === 2) {
+      setCurrentTrack(initTrackState);
+      return;
+    }
+
+    const editedCurrentTrack = clipCurrentTrack({ currentTrack });
+    console.log(currentTrack);
+
+    console.log(editedCurrentTrack);
+
+    setCurrentTrack(editedCurrentTrack);
+  };
+
+  const clearTrack = () => setCurrentTrack(initTrackState);
+
+  return (
+    <CurrentTrackContext value={{ currentTrack, addRunToTrack, undoLastTrack, clearTrack }}>
+      {children}
+    </CurrentTrackContext>
+  );
 };
