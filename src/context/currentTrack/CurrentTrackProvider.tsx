@@ -3,7 +3,7 @@ import { type LatLngTuple } from 'leaflet';
 import { distanceHaversine } from '../../helpers/distances';
 import { CurrentTrackContext } from './CurrentTrackContext';
 import { addNewTrack, clipCurrentTrack, getConnectionInfo } from './CurrentTrackHelpers';
-import { useObtainData } from '../../hooks/UseObtainData';
+import { useObtainData, type Lift, type Run } from '../../hooks/UseObtainData';
 
 export interface Track {
   coordinates: LatLngTuple[];
@@ -45,7 +45,10 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
 
   const { connections } = useObtainData();
 
-  const addRunToTrack = (newTrack: LatLngTuple[]): void => {
+  const addRunToTrack = (track: Run | Lift): void => {
+    console.log(track.properties.difficulty !== undefined);
+
+    const newTrack: LatLngTuple[] = track.geometry.coordinates;
     // Last added track
     const lastTrackStepInit = currentTrack.trackSteps[currentTrack.trackSteps.length - 2];
     const lastTrackStepEnd = currentTrack.trackSteps[currentTrack.trackSteps.length - 1];
@@ -63,7 +66,12 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
     switch (connect) {
       case null:
       case 'EndStart':
-        setCurrentTrack(addNewTrack({ currentTrack, newTrack }));
+        setCurrentTrack(
+          addNewTrack({
+            currentTrack,
+            newTrack,
+          })
+        );
         return;
 
       case 'EndMiddle':

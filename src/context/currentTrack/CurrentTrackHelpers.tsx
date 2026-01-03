@@ -109,13 +109,6 @@ export const getConnectionInfo = ({ lastTrack, newTrack, connections }: GetConne
   );
 
   if (!connectionInfo.hasConnection && lastTrack.length > 0) {
-    // const connection = connections.find(
-    //   (connection) =>
-    //     connection.geometry.coordinates[0][0] === lastTrack[lastTrack.length - 1][0] &&
-    //     connection.geometry.coordinates[0][1] === lastTrack[lastTrack.length - 1][1] &&
-    //     connection.geometry.coordinates[0][2] === lastTrack[lastTrack.length - 1][2]
-    // );
-
     lastTrack.find((point, index) =>
       connections.some((connection) => {
         if (index === 0) return false;
@@ -187,6 +180,7 @@ export const getConnectionInfo = ({ lastTrack, newTrack, connections }: GetConne
 interface AddNewTrackProps {
   currentTrack: Track;
   newTrack: LatLngTuple[];
+  time?: number;
 }
 
 export const addNewTrack = ({ currentTrack, newTrack }: AddNewTrackProps): Track => {
@@ -209,7 +203,7 @@ export const addNewTrack = ({ currentTrack, newTrack }: AddNewTrackProps): Track
     downhillDistance: currentTrack.downhillDistance + (isDownHill ? newTrackDistance : 0),
     uphillDistance: currentTrack.uphillDistance + (!isDownHill ? newTrackDistance : 0),
     totalDistance: currentTrack.totalDistance + newTrackDistance,
-    totalTime: 0,
+    totalTime: currentTrack.totalTime,
     descentElevation: currentTrack.descentElevation + (isDownHill ? newTrackElevation : 0),
     climbElevation: currentTrack.climbElevation + (!isDownHill ? newTrackElevation : 0),
     downhills: 0,

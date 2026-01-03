@@ -30,15 +30,31 @@ export const Map = () => {
         url="https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}{r}.png?api_key=$1c941a16-e805-4d4d-b32d-77401f1754f9"
       />
       <ZoomControlLayer />
-      {runs.length + lifts.length > 0 &&
-        [...runs, ...lifts].map((track) => {
+      {runs.length > 0 &&
+        runs.map((track) => {
+          // const time = track.properties.difficulty
+
           return (
             <PolylineCustom
               key={track.id}
               positions={track.geometry.coordinates}
               difficulty={track.properties.difficulty}
               name={track.properties.name}
-              onClick={() => addRunToTrack(track.geometry.coordinates)}
+              onClick={() => addRunToTrack(track)}
+            />
+          );
+        })}
+      {lifts.length > 0 &&
+        lifts.map((track) => {
+          // const time = track.properties.duration;
+
+          return (
+            <PolylineCustom
+              key={track.id}
+              positions={track.geometry.coordinates}
+              difficulty={track.properties.difficulty}
+              name={track.properties.name}
+              onClick={() => addRunToTrack(track)}
             />
           );
         })}
