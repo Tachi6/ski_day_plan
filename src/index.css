@@ -107,6 +107,7 @@
 
 .settings-box.hide {
   right: var(--settings-box-hide);
+  z-index: -1;
 }
 
 .settings-box.show {
