@@ -16,30 +16,44 @@ import few from '../assets/images/2-stops.png';
 import many from '../assets/images/3-stops.png';
 import { use } from 'react';
 import { ViewSettingsContext } from '../context/viewSettings/ViewSettingsContext';
+import { TrackSettingsContext } from '../context/trackSettings/TrackSettingsContext';
 
 export const SettingsBox = () => {
   // const distanceToString = (distance: number): string => {
   //   return `${(distance / 1000).toFixed(1)}`;
   // };
   const { view } = use(ViewSettingsContext);
+  const { trackSettings, changeSettings } = use(TrackSettingsContext);
 
   return (
     <div className={`box settings-box ${view ? 'show' : 'hide'}`}>
       <h3>Giro preferido</h3>
       <div className="box-line">
-        <button className="box-button">
+        <button
+          className={`box-button ${trackSettings.turn === 'xsmall' ? 'selected' : ''}`}
+          onClick={() => changeSettings({ turn: 'xsmall' })}
+        >
           <img className="turn-image" src={xsmall} alt="turn-xsmall" />
           <p className="settings-button-text">Muy corto</p>
         </button>
-        <button className="box-button selected">
+        <button
+          className={`box-button ${trackSettings.turn === 'small' ? 'selected' : ''}`}
+          onClick={() => changeSettings({ turn: 'small' })}
+        >
           <img className="turn-image" src={small} alt="turn-small" />
           <p className="settings-button-text">Corto</p>
         </button>
-        <button className="box-button">
+        <button
+          className={`box-button ${trackSettings.turn === 'medium' ? 'selected' : ''}`}
+          onClick={() => changeSettings({ turn: 'medium' })}
+        >
           <img className="turn-image" src={medium} alt="turn-medium" />
           <p className="settings-button-text">Medio</p>
         </button>
-        <button className="box-button">
+        <button
+          className={`box-button ${trackSettings.turn === 'large' ? 'selected' : ''}`}
+          onClick={() => changeSettings({ turn: 'large' })}
+        >
           <img className="turn-image" src={large} alt="turn-large" />
           <p className="settings-button-text">Largo</p>
         </button>
