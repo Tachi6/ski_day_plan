@@ -5,6 +5,7 @@ import remove from '../assets/svg/remove.svg';
 import location from '../assets/svg/location.svg';
 import settings from '../assets/svg/settings.svg';
 import { ViewSettingsContext } from '../context/viewSettings/ViewSettingsContext';
+import { timeToHoursAndMinutes } from '../helpers/times';
 
 export const StatsBox = () => {
   const { currentTrack, undoLastTrack, clearTrack } = use(CurrentTrackContext);
@@ -56,7 +57,10 @@ export const StatsBox = () => {
         </div>
         <div className="box-element">
           <p>
-            0<span>h</span>00<span>m</span>
+            {timeToHoursAndMinutes(currentTrack.totalTime).hours}
+            <span>h</span>
+            {timeToHoursAndMinutes(currentTrack.totalTime).minutes}
+            <span>m</span>
           </p>
           <p>Tiempo</p>
         </div>

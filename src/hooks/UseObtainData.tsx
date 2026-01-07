@@ -33,6 +33,7 @@ interface RunProperties {
   difficulty: string;
   difficulty_convention: string;
   oneway: number;
+  duration?: number;
   lit: number;
   gladed: number;
   patrolled: number;
@@ -63,7 +64,7 @@ interface LiftProperties {
   oneway: number;
   occupancy: number;
   capacity: number;
-  duration: number;
+  duration?: number;
   detachable: number;
   bubble: number;
   heating: number;

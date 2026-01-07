@@ -2,6 +2,7 @@ import { type LatLngTuple } from 'leaflet';
 import { trackDistance } from '../../helpers/distances';
 import type { Track } from './CurrentTrackProvider';
 import type { Lift, Run } from '../../hooks/UseObtainData';
+import { obtainSeconds } from '../../helpers/times';
 
 type ConnectionType =
   | 'EndStart'
@@ -192,6 +193,9 @@ export const addNewTrack = ({ currentTrack, newTrack }: AddNewTrackProps): Track
   const isDownHill = newTrackCoords[0][2]! - newTrackCoords[newTrackCoords.length - 1][2]! >= 0;
 
   const newTrackDistance = trackDistance(newTrackCoords);
+  const newTrackTime = newTrack.properties.duration ?? obtainSeconds({ distance: newTrackDistance, track: newTrack });
+  console.log(obtainSeconds({ distance: newTrackDistance, track: newTrack }));
+
   const newTrackElevation = Math.abs(newTrackCoords[0][2]! - newTrackCoords[newTrackCoords.length - 1][2]!);
 
   return {
@@ -200,7 +204,7 @@ export const addNewTrack = ({ currentTrack, newTrack }: AddNewTrackProps): Track
     downhillDistance: currentTrack.downhillDistance + (isDownHill ? newTrackDistance : 0),
     uphillDistance: currentTrack.uphillDistance + (!isDownHill ? newTrackDistance : 0),
     totalDistance: currentTrack.totalDistance + newTrackDistance,
-    totalTime: currentTrack.totalTime,
+    totalTime: currentTrack.totalTime + newTrackTime,
     descentElevation: currentTrack.descentElevation + (isDownHill ? newTrackElevation : 0),
     climbElevation: currentTrack.climbElevation + (!isDownHill ? newTrackElevation : 0),
     downhills: 0,

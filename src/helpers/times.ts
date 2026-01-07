@@ -1,6 +1,9 @@
+import type { Lift, Run } from '../hooks/UseObtainData';
+import { runSpeed, type RunTypes, liftSpeed, type LiftsTypes } from './speeds';
+
 interface ObtainTimeProps {
   distance: number;
-  speedMS: number;
+  track: Run | Lift;
 }
 
 interface Time {
@@ -8,9 +11,12 @@ interface Time {
   minutes: string;
 }
 
-export const parseKmHToMS = (speedKmH: number) => speedKmH / 3.6;
-
-export const obtainSeconds = ({ distance, speedMS }: ObtainTimeProps): number => distance / speedMS;
+export const obtainSeconds = ({ distance, track }: ObtainTimeProps): number => {
+  if (track.properties.difficulty) {
+    return distance / runSpeed[track.properties.difficulty as RunTypes];
+  }
+  return distance / liftSpeed[track.properties.name.split(' ')[0] as LiftsTypes];
+};
 
 export const timeToHoursAndMinutes = (seconds: number): Time => {
   const hours = Math.floor(seconds / 3600);
