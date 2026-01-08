@@ -11,17 +11,18 @@ const trackSettingsInitialState: TrackSettingsState = {
 export const TrackSettingsProvider = ({ children }: PropsWithChildren) => {
   const [trackSettings, setTrackSettings] = useState(trackSettingsInitialState);
 
-  const changeSettings = (settings: ChangeSettingsProps) => {
-    console.log(settings);
-
+  const changeSettings = (settings: ChangeSettingsProps) =>
     setTrackSettings({
       turn: settings.turn ?? trackSettings.turn,
       speed: settings.speed ?? trackSettings.speed,
       stops: settings.stops ?? trackSettings.stops,
-      // TODO: hacer funcionar pauses
-      pauses: settings.pauses ?? trackSettings.pauses,
+      // TODO: refactor pauses???
+      pauses: settings.pauses
+        ? trackSettings.pauses.includes(settings.pauses[0])
+          ? trackSettings.pauses.filter((pause) => pause !== settings.pauses![0])
+          : [...trackSettings.pauses, ...settings.pauses]
+        : trackSettings.pauses,
     });
-  };
 
   return (
     <TrackSettingsContext

@@ -84,7 +84,10 @@ export const SettingsBox = () => {
           <h3>{buttonLine.label}</h3>
           <div className="box-line">
             {buttonLine.options.map((option) => {
-              const isSelected = trackSettings[buttonLine.id] === option[0];
+              const isSelected =
+                buttonLine.id === 'pauses'
+                  ? trackSettings[buttonLine.id].includes(option[0] as Pauses)
+                  : trackSettings[buttonLine.id] === option[0];
 
               return (
                 <button
