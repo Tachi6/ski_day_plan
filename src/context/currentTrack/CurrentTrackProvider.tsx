@@ -339,6 +339,11 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
   const undoLastTrack = () => {
     if (currentTrack.trackSteps.length === 0) return;
 
+    if (currentTrack.trackSteps.length === 1) {
+      setCurrentTrack(initTrackState);
+      return;
+    }
+
     const editedCurrentTrack = removeLastTrack(currentTrack, trackSettings);
 
     setCurrentTrack(editedCurrentTrack);
