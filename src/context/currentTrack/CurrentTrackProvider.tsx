@@ -1,9 +1,10 @@
-import { type PropsWithChildren, useState } from 'react';
+import { type PropsWithChildren, use, useState } from 'react';
 import { type LatLngTuple } from 'leaflet';
 import { distanceHaversine } from '../../helpers/distances';
 import { CurrentTrackContext } from './CurrentTrackContext';
 import { addNewTrack, clipCurrentTrack, getConnectionInfo, removeLastTrack } from './CurrentTrackHelpers';
 import { useObtainData, type Lift, type Run } from '../../hooks/UseObtainData';
+import { TrackSettingsContext } from '../trackSettings/TrackSettingsContext';
 
 export interface Track {
   coordinates: LatLngTuple[];
@@ -43,6 +44,8 @@ const DOWN_UP_HEIGHT: number = 5;
 export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => {
   const [currentTrack, setCurrentTrack] = useState<Track>(initTrackState);
 
+  const { trackSettings } = use(TrackSettingsContext);
+
   const { connections } = useObtainData();
 
   const addRunToTrack = (newTrack: Run | Lift): void => {
@@ -73,6 +76,7 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
           addNewTrack({
             currentTrack,
             newTrack: newTrack,
+            trackSettings: trackSettings,
           })
         );
         return;
@@ -88,6 +92,7 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
                 type: newTrack.geometry.type,
               },
             },
+            trackSettings: trackSettings,
           })
           // newTrack: newTrackCoords.slice(connectionType.newTrackConnectionIndex) })
         );
@@ -102,6 +107,7 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
           addNewTrack({
             currentTrack: editedCurrentTrack,
             newTrack,
+            trackSettings: trackSettings,
           })
         );
         return;
@@ -123,6 +129,7 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
                   type: newTrack.geometry.type,
                 },
               },
+              trackSettings: trackSettings,
             })
           );
         }
@@ -144,6 +151,7 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
                 type: newTrack.geometry.type,
               },
             },
+            trackSettings: trackSettings,
           })
         );
         return;
@@ -162,6 +170,7 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
                 type: newTrack.geometry.type,
               },
             },
+            trackSettings: trackSettings,
           })
         );
         return;
@@ -185,6 +194,7 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
                   type: newTrack.geometry.type,
                 },
               },
+              trackSettings: trackSettings,
             })
           );
         }
@@ -210,6 +220,7 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
                   type: newTrack.geometry.type,
                 },
               },
+              trackSettings: trackSettings,
             })
           );
         }
@@ -231,6 +242,7 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
                   type: newTrack.geometry.type,
                 },
               },
+              trackSettings: trackSettings,
             })
           );
         }
@@ -255,6 +267,7 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
                     type: newTrack.geometry.type,
                   },
                 },
+                trackSettings: trackSettings,
               })
             );
           }
@@ -281,6 +294,7 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
                     type: newTrack.geometry.type,
                   },
                 },
+                trackSettings: trackSettings,
               })
             );
           }
@@ -311,6 +325,7 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
                     type: newTrack.geometry.type,
                   },
                 },
+                trackSettings: trackSettings,
               })
             );
           }

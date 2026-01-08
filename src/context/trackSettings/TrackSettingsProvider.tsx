@@ -5,7 +5,7 @@ const trackSettingsInitialState: TrackSettingsState = {
   turn: 'small',
   speed: 'low',
   stops: 'few',
-  pauses: ['dinner', 'coke'],
+  pauses: [],
 };
 
 export const TrackSettingsProvider = ({ children }: PropsWithChildren) => {

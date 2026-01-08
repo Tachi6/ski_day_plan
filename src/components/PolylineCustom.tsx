@@ -4,7 +4,9 @@ import { useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet-textpath';
 
-const runColor = (type: string | undefined) => {
+export type RunTypes = 'novice' | 'easy' | 'intermediate' | 'advanced' | 'expert' | 'freeride';
+
+const runColor = (type: RunTypes | undefined) => {
   switch (type) {
     case 'novice':
       return '#00FF00';
@@ -45,7 +47,7 @@ export const PolylineCustom = ({ positions, difficulty, name, onClick }: Props):
     });
 
     const polyline = L.polyline(positions, {
-      color: runColor(difficulty),
+      color: runColor(difficulty as RunTypes),
       weight: 6,
       interactive: false,
     });

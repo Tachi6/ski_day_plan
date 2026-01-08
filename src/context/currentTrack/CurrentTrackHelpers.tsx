@@ -3,6 +3,7 @@ import { trackDistance } from '../../helpers/distances';
 import type { Track } from './CurrentTrackProvider';
 import type { Lift, Run } from '../../hooks/UseObtainData';
 import { obtainSeconds } from '../../helpers/times';
+import type { TrackSettingsState } from '../trackSettings/TrackSettingsContext';
 
 type ConnectionType =
   | 'EndStart'
@@ -185,16 +186,22 @@ export const getConnectionInfo = ({
 interface AddNewTrackProps {
   currentTrack: Track;
   newTrack: Run | Lift;
-  time?: number;
+  trackSettings: TrackSettingsState;
 }
 
-export const addNewTrack = ({ currentTrack, newTrack }: AddNewTrackProps): Track => {
+export const addNewTrack = ({ currentTrack, newTrack, trackSettings }: AddNewTrackProps): Track => {
   const newTrackCoords = newTrack.geometry.coordinates;
   const isDownHill = newTrackCoords[0][2]! - newTrackCoords[newTrackCoords.length - 1][2]! >= 0;
 
   const newTrackDistance = trackDistance(newTrackCoords);
-  const newTrackTime = newTrack.properties.duration ?? obtainSeconds({ distance: newTrackDistance, track: newTrack });
-  console.log(obtainSeconds({ distance: newTrackDistance, track: newTrack }));
+  const newTrackTime =
+    newTrack.properties.duration ??
+    obtainSeconds({
+      distance: newTrackDistance,
+      track: newTrack,
+      speed: trackSettings.speed,
+      stops: trackSettings.stops,
+    });
 
   const newTrackElevation = Math.abs(newTrackCoords[0][2]! - newTrackCoords[newTrackCoords.length - 1][2]!);
 

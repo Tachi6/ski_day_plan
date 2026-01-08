@@ -39,8 +39,9 @@
   top: 20px;
   left: 20px;
   width: 320px;
-  height: 195px;
+  height: 210px;
   padding-bottom: 15px;
+  padding-top: 6px;
 }
 
 .theme .leaflet-control-zoom.leaflet-bar.leaflet-control {
@@ -55,7 +56,12 @@
   gap: 10px;
 }
 
+.stats-box .box-line {
+  height: 55px;
+}
+
 .box-line.buttons {
+  margin-top: 5px;
   justify-content: space-around;
 }
 
@@ -81,8 +87,8 @@
 }
 
 .box-element p {
-  height: 36px;
-  font-size: 32px;
+  height: 32px;
+  font-size: 28px;
 }
 
 .box-element p span {
@@ -169,7 +175,7 @@
   .settings-box {
     width: var(--settings-box-responsive-width);
     height: min-content;
-    top: 235px;
+    top: 245px;
     padding: 10px 17.5px 15px 17.5px;
     gap: 8px;
   }
@@ -202,30 +208,5 @@
     width: 65px;
     height: 60px;
     padding: 10px 5px 5px 5px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    font-weight: 200;
-    border-radius: 4px;
-    border: none;
-    box-shadow: 0 0 2.5px rgba(0, 0, 0, 0.5);
-    cursor: pointer;
-  }
-
-  .box-button:hover {
-    box-shadow: 0 0 2.5px rgba(0, 0, 0, 1);
-  }
-
-  .box-button:hover p {
-    font-weight: 400;
-  }
-
-  .box-button.selected {
-    box-shadow: 0 0 5px rgba(0, 0, 0, 1);
-  }
-
-  .box-button.selected p {
-    font-weight: 500;
   }
 }

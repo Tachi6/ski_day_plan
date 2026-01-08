@@ -5,11 +5,17 @@ import remove from '../assets/svg/remove.svg';
 import location from '../assets/svg/location.svg';
 import settings from '../assets/svg/settings.svg';
 import { ViewSettingsContext } from '../context/viewSettings/ViewSettingsContext';
-import { timeToHoursAndMinutes } from '../helpers/times';
+import { obtainPausesSeconds, timeToHoursAndMinutes } from '../helpers/times';
+import { TrackSettingsContext } from '../context/trackSettings/TrackSettingsContext';
 
 export const StatsBox = () => {
   const { currentTrack, undoLastTrack, clearTrack } = use(CurrentTrackContext);
   const { changeVisibility } = use(ViewSettingsContext);
+  const { trackSettings } = use(TrackSettingsContext);
+
+  const skiSeconds = currentTrack.totalTime;
+  const pausesSeconds = obtainPausesSeconds(trackSettings.pauses);
+  const totalSeconds = skiSeconds + pausesSeconds;
 
   const distanceToString = (distance: number): string => {
     return `${(distance / 1000).toFixed(1)}`;
@@ -56,15 +62,40 @@ export const StatsBox = () => {
           <p>Ascenso</p>
         </div>
         <div className="box-element">
-          <p>
-            {timeToHoursAndMinutes(currentTrack.totalTime).hours}
-            <span>h</span>
-            {timeToHoursAndMinutes(currentTrack.totalTime).minutes}
-            <span>m</span>
-          </p>
-          <p>Tiempo</p>
+          <p>0</p>
+          <p>Descensos</p>
         </div>
       </div>
+      <div className="box-line">
+        <div className="box-element">
+          <p>
+            {timeToHoursAndMinutes(skiSeconds).hours}
+            <span>h</span>
+            {timeToHoursAndMinutes(skiSeconds).minutes}
+            <span>m</span>
+          </p>
+          <p>Tiempo esqui</p>
+        </div>
+        <div className="box-element">
+          <p>
+            {timeToHoursAndMinutes(pausesSeconds).hours}
+            <span>h</span>
+            {timeToHoursAndMinutes(pausesSeconds).minutes}
+            <span>m</span>
+          </p>
+          <p>Descansos</p>
+        </div>
+        <div className="box-element">
+          <p>
+            {timeToHoursAndMinutes(totalSeconds).hours}
+            <span>h</span>
+            {timeToHoursAndMinutes(totalSeconds).minutes}
+            <span>m</span>
+          </p>
+          <p>Tiempo total</p>
+        </div>
+      </div>
+
       <div className="box-line buttons">
         <button className="stats-box-button" onClick={undoLastTrack}>
           <img src={undo} alt="settings-icon" />
