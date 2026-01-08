@@ -3,7 +3,8 @@ import { trackDistance } from '../../helpers/distances';
 import type { Track } from './CurrentTrackProvider';
 import type { Lift, Run } from '../../hooks/UseObtainData';
 import { obtainSeconds } from '../../helpers/times';
-import type { TrackSettingsState } from '../trackSettings/TrackSettingsContext';
+import type { TrackSettingsState, Turn } from '../trackSettings/TrackSettingsContext';
+import type { RunTypes } from '../../components/PolylineCustom';
 
 type ConnectionType =
   | 'EndStart'
@@ -193,15 +194,17 @@ export const addNewTrack = ({ currentTrack, newTrack, trackSettings }: AddNewTra
   const newTrackCoords = newTrack.geometry.coordinates;
   const isDownHill = newTrackCoords[0][2]! - newTrackCoords[newTrackCoords.length - 1][2]! >= 0;
 
-  const newTrackDistance = trackDistance(newTrackCoords);
-  const newTrackTime =
-    newTrack.properties.duration ??
-    obtainSeconds({
-      distance: newTrackDistance,
-      track: newTrack,
-      speed: trackSettings.speed,
-      stops: trackSettings.stops,
-    });
+  const newTrackDistance = trackDistance({
+    track: newTrack.geometry.coordinates,
+    turn: trackSettings.turn,
+    runType: newTrack.properties.difficulty as RunTypes,
+  });
+  const newTrackTime = obtainSeconds({
+    distance: newTrackDistance,
+    track: newTrack,
+    speed: trackSettings.speed,
+    stops: trackSettings.stops,
+  });
 
   const newTrackElevation = Math.abs(newTrackCoords[0][2]! - newTrackCoords[newTrackCoords.length - 1][2]!);
 
@@ -222,9 +225,10 @@ export const addNewTrack = ({ currentTrack, newTrack, trackSettings }: AddNewTra
 interface ClipCurrentTrackProps {
   currentTrack: Track;
   cutIndex: number;
+  turn: Turn;
 }
 
-export const clipCurrentTrack = ({ currentTrack, cutIndex }: ClipCurrentTrackProps): Track => {
+export const clipCurrentTrack = ({ currentTrack, cutIndex, turn }: ClipCurrentTrackProps): Track => {
   const lastTrack = currentTrack.trackSteps.at(-1)!;
 
   const trackToRemove = currentTrack.coordinates.slice(cutIndex - 1);
@@ -249,7 +253,11 @@ export const clipCurrentTrack = ({ currentTrack, cutIndex }: ClipCurrentTrackPro
     },
   };
 
-  const removeDistance = trackDistance(trackToRemove);
+  const removeDistance = trackDistance({
+    track: trackToRemove,
+    turn: turn,
+    runType: lastTrack.properties.difficulty as RunTypes,
+  });
   const removeElevation = Math.abs(trackToRemove[trackToRemove.length - 1][2]! - trackToRemove[0][2]!);
 
   return {
@@ -266,7 +274,8 @@ export const clipCurrentTrack = ({ currentTrack, cutIndex }: ClipCurrentTrackPro
   };
 };
 
-export const removeLastTrack = (currentTrack: Track): Track => {
+export const removeLastTrack = (currentTrack: Track, turn: Turn): Track => {
+  const lastTrack = currentTrack.trackSteps.at(-1)!;
   const cutIndex = currentTrack.coordinates.findLastIndex((coordinate) => {
     const lastInitCoordinate = currentTrack.trackSteps.at(-1)!.geometry.coordinates[0];
 
@@ -276,11 +285,15 @@ export const removeLastTrack = (currentTrack: Track): Track => {
       coordinate[2] === lastInitCoordinate[2]
     );
   });
-  const trackToRemove = currentTrack.trackSteps.at(-1)!.geometry.coordinates;
+  const trackToRemove = lastTrack.geometry.coordinates;
 
   const isDownhill = trackToRemove[0][2]! - trackToRemove.at(-1)![2]! >= 0;
 
-  const removeDistance = trackDistance(trackToRemove);
+  const removeDistance = trackDistance({
+    track: trackToRemove,
+    turn: turn,
+    runType: lastTrack.properties.difficulty as RunTypes,
+  });
   const removeElevation = Math.abs(trackToRemove[trackToRemove.length - 1][2]! - trackToRemove[0][2]!);
 
   return {
