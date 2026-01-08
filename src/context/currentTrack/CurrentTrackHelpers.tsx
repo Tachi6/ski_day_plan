@@ -236,7 +236,7 @@ export const clipCurrentTrack = ({ currentTrack, cutIndex, turn }: ClipCurrentTr
   const isDownhill = trackToRemove[0][2]! - trackToRemove[trackToRemove.length - 1][2]! >= 0;
 
   const lastTrackIndex = lastTrack.geometry.coordinates.findLastIndex((coordinate) => {
-    const currentTrackCoordinate = currentTrack.coordinates[cutIndex];
+    const currentTrackCoordinate = currentTrack.coordinates[cutIndex - 1];
 
     return (
       coordinate[0] === currentTrackCoordinate[0] &&
