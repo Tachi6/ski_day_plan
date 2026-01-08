@@ -3,7 +3,7 @@ import { trackDistance } from '../../helpers/distances';
 import type { Track } from './CurrentTrackProvider';
 import type { Lift, Run } from '../../hooks/UseObtainData';
 import { obtainSeconds } from '../../helpers/times';
-import type { TrackSettingsState, Turn } from '../trackSettings/TrackSettingsContext';
+import type { TrackSettingsState } from '../trackSettings/TrackSettingsContext';
 import type { RunTypes } from '../../components/PolylineCustom';
 
 type ConnectionType =
@@ -225,10 +225,10 @@ export const addNewTrack = ({ currentTrack, newTrack, trackSettings }: AddNewTra
 interface ClipCurrentTrackProps {
   currentTrack: Track;
   cutIndex: number;
-  turn: Turn;
+  trackSettings: TrackSettingsState;
 }
 
-export const clipCurrentTrack = ({ currentTrack, cutIndex, turn }: ClipCurrentTrackProps): Track => {
+export const clipCurrentTrack = ({ currentTrack, cutIndex, trackSettings }: ClipCurrentTrackProps): Track => {
   const lastTrack = currentTrack.trackSteps.at(-1)!;
 
   const trackToRemove = currentTrack.coordinates.slice(cutIndex - 1);
@@ -255,10 +255,16 @@ export const clipCurrentTrack = ({ currentTrack, cutIndex, turn }: ClipCurrentTr
 
   const removeDistance = trackDistance({
     track: trackToRemove,
-    turn: turn,
+    turn: trackSettings.turn,
     runType: lastTrack.properties.difficulty as RunTypes,
   });
   const removeElevation = Math.abs(trackToRemove[trackToRemove.length - 1][2]! - trackToRemove[0][2]!);
+  const removeTime = obtainSeconds({
+    distance: removeDistance,
+    speed: trackSettings.speed,
+    stops: trackSettings.stops,
+    track: lastTrack,
+  });
 
   return {
     coordinates: [...currentTrack.coordinates.slice(0, cutIndex)],
@@ -266,7 +272,7 @@ export const clipCurrentTrack = ({ currentTrack, cutIndex, turn }: ClipCurrentTr
     downhillDistance: currentTrack.downhillDistance - (isDownhill ? removeDistance : 0),
     uphillDistance: currentTrack.uphillDistance - (!isDownhill ? removeDistance : 0),
     totalDistance: currentTrack.totalDistance - removeDistance,
-    totalTime: 0,
+    totalTime: currentTrack.totalTime - removeTime,
     descentElevation: currentTrack.descentElevation - (isDownhill ? removeElevation : 0),
     climbElevation: currentTrack.climbElevation - (!isDownhill ? removeElevation : 0),
     downhills: currentTrack.downhills,
@@ -274,7 +280,7 @@ export const clipCurrentTrack = ({ currentTrack, cutIndex, turn }: ClipCurrentTr
   };
 };
 
-export const removeLastTrack = (currentTrack: Track, turn: Turn): Track => {
+export const removeLastTrack = (currentTrack: Track, trackSettings: TrackSettingsState): Track => {
   const lastTrack = currentTrack.trackSteps.at(-1)!;
   const cutIndex = currentTrack.coordinates.findLastIndex((coordinate) => {
     const lastInitCoordinate = currentTrack.trackSteps.at(-1)!.geometry.coordinates[0];
@@ -293,10 +299,16 @@ export const removeLastTrack = (currentTrack: Track, turn: Turn): Track => {
 
   const removeDistance = trackDistance({
     track: trackToRemove,
-    turn: turn,
+    turn: trackSettings.turn,
     runType: lastTrack.properties.difficulty as RunTypes,
   });
   const removeElevation = Math.abs(trackToRemove[trackToRemove.length - 1][2]! - trackToRemove[0][2]!);
+  const removeTime = obtainSeconds({
+    distance: removeDistance,
+    speed: trackSettings.speed,
+    stops: trackSettings.stops,
+    track: lastTrack,
+  });
 
   return {
     coordinates: [...currentTrack.coordinates.slice(0, cutIndex)],
@@ -304,7 +316,7 @@ export const removeLastTrack = (currentTrack: Track, turn: Turn): Track => {
     downhillDistance: currentTrack.downhillDistance - (isDownhill ? removeDistance : 0),
     uphillDistance: currentTrack.uphillDistance - (!isDownhill ? removeDistance : 0),
     totalDistance: currentTrack.totalDistance - removeDistance,
-    totalTime: 0,
+    totalTime: currentTrack.totalTime - removeTime,
     descentElevation: currentTrack.descentElevation - (isDownhill ? removeElevation : 0),
     climbElevation: currentTrack.climbElevation - (!isDownhill ? removeElevation : 0),
     downhills: !isPreviousTrackDownhill && isDownhill ? currentTrack.downhills - 1 : currentTrack.downhills,

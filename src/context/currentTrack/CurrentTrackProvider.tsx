@@ -48,8 +48,6 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
 
   const { connections } = useObtainData();
 
-  const turn = trackSettings.turn;
-
   const addRunToTrack = (newTrack: Run | Lift): void => {
     const newTrackCoords: LatLngTuple[] = newTrack.geometry.coordinates;
     // Last added track
@@ -103,7 +101,7 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
       case 'MiddleStart': {
         const cutIndex =
           currentTrack.coordinates.length - lastTrackCoords.length + connectionType.lastTrackConnectionIndex + 1;
-        const editedCurrentTrack = clipCurrentTrack({ currentTrack, cutIndex, turn });
+        const editedCurrentTrack = clipCurrentTrack({ currentTrack, cutIndex, trackSettings });
 
         setCurrentTrack(
           addNewTrack({
@@ -119,7 +117,7 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
         if (connectionType.lastTrackDirection === 'Down') {
           const cutIndex =
             currentTrack.coordinates.length - lastTrackCoords.length + connectionType.lastTrackConnectionIndex + 1;
-          const editedCurrentTrack = clipCurrentTrack({ currentTrack, cutIndex, turn });
+          const editedCurrentTrack = clipCurrentTrack({ currentTrack, cutIndex, trackSettings });
 
           setCurrentTrack(
             addNewTrack({
@@ -181,7 +179,7 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
         if (connectionType.lastTrackDirection === 'Down') {
           const cutIndex =
             currentTrack.coordinates.length - lastTrackCoords.length + connectionType.lastTrackConnectionIndex + 1;
-          const editedCurrentTrack = clipCurrentTrack({ currentTrack, cutIndex, turn });
+          const editedCurrentTrack = clipCurrentTrack({ currentTrack, cutIndex, trackSettings });
 
           setCurrentTrack(
             addNewTrack({
@@ -207,7 +205,7 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
         if (connectionType.lastTrackDirection === 'Down') {
           const cutIndex =
             currentTrack.coordinates.length - lastTrackCoords.length + connectionType.lastTrackConnectionIndex + 1;
-          const editedCurrentTrack = clipCurrentTrack({ currentTrack, cutIndex, turn });
+          const editedCurrentTrack = clipCurrentTrack({ currentTrack, cutIndex, trackSettings });
 
           setCurrentTrack(
             addNewTrack({
@@ -312,7 +310,7 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
 
           if (hasPoint) {
             const cutIndex = currentTrack.coordinates.length - lastTrackCoords.length + index + 1;
-            const editedCurrentTrack = clipCurrentTrack({ currentTrack, cutIndex, turn });
+            const editedCurrentTrack = clipCurrentTrack({ currentTrack, cutIndex, trackSettings });
             const editedTrackEnd = editedCurrentTrack.coordinates[editedCurrentTrack.coordinates.length - 1];
 
             setCurrentTrack(
@@ -343,7 +341,7 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
   const undoLastTrack = () => {
     if (currentTrack.trackSteps.length === 0) return;
 
-    const editedCurrentTrack = removeLastTrack(currentTrack, turn);
+    const editedCurrentTrack = removeLastTrack(currentTrack, trackSettings);
 
     setCurrentTrack(editedCurrentTrack);
   };
