@@ -62,7 +62,7 @@ export const StatsBox = () => {
           <p>Ascenso</p>
         </div>
         <div className="box-element">
-          <p>0</p>
+          <p>{currentTrack.downhills}</p>
           <p>Descensos</p>
         </div>
       </div>

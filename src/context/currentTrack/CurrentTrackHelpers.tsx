@@ -189,7 +189,9 @@ interface AddNewTrackProps {
 
 export const addNewTrack = ({ currentTrack, newTrack, trackSettings }: AddNewTrackProps): Track => {
   const newTrackCoords = newTrack.geometry.coordinates;
-  const isDownHill = newTrackCoords[0][2]! - newTrackCoords[newTrackCoords.length - 1][2]! >= 0;
+  const isDownhill = newTrackCoords[0][2]! - newTrackCoords[newTrackCoords.length - 1][2]! >= 0;
+  const lastTrack = currentTrack.trackSteps.at(-1)?.geometry.coordinates;
+  const islastTrackDownhill = lastTrack && lastTrack[0][2]! - lastTrack[lastTrack.length - 1][2]! >= 0;
 
   const newTrackDistance = trackDistance({
     track: newTrack.geometry.coordinates,
@@ -208,13 +210,14 @@ export const addNewTrack = ({ currentTrack, newTrack, trackSettings }: AddNewTra
   return {
     coordinates: [...currentTrack.coordinates, ...newTrackCoords],
     trackSteps: [...currentTrack.trackSteps, newTrack],
-    downhillDistance: currentTrack.downhillDistance + (isDownHill ? newTrackDistance : 0),
-    uphillDistance: currentTrack.uphillDistance + (!isDownHill ? newTrackDistance : 0),
+    downhillDistance: currentTrack.downhillDistance + (isDownhill ? newTrackDistance : 0),
+    uphillDistance: currentTrack.uphillDistance + (!isDownhill ? newTrackDistance : 0),
     totalDistance: currentTrack.totalDistance + newTrackDistance,
     totalTime: currentTrack.totalTime + newTrackTime,
-    descentElevation: currentTrack.descentElevation + (isDownHill ? newTrackElevation : 0),
-    climbElevation: currentTrack.climbElevation + (!isDownHill ? newTrackElevation : 0),
-    downhills: 0,
+    descentElevation: currentTrack.descentElevation + (isDownhill ? newTrackElevation : 0),
+    climbElevation: currentTrack.climbElevation + (!isDownhill ? newTrackElevation : 0),
+    // TODO: refactor downhills
+    downhills: !islastTrackDownhill && isDownhill ? currentTrack.downhills + 1 : currentTrack.downhills,
     uphills: 0,
   };
 };
@@ -266,7 +269,7 @@ export const clipCurrentTrack = ({ currentTrack, cutIndex, turn }: ClipCurrentTr
     totalTime: 0,
     descentElevation: currentTrack.descentElevation - (isDownhill ? removeElevation : 0),
     climbElevation: currentTrack.climbElevation - (!isDownhill ? removeElevation : 0),
-    downhills: 0,
+    downhills: currentTrack.downhills,
     uphills: 0,
   };
 };
@@ -285,6 +288,8 @@ export const removeLastTrack = (currentTrack: Track, turn: Turn): Track => {
   const trackToRemove = lastTrack.geometry.coordinates;
 
   const isDownhill = trackToRemove[0][2]! - trackToRemove.at(-1)![2]! >= 0;
+  const previousTrack = currentTrack.trackSteps.at(-2)?.geometry.coordinates;
+  const isPreviousTrackDownhill = previousTrack && previousTrack[0][2]! - previousTrack!.at(-1)![2]! >= 0;
 
   const removeDistance = trackDistance({
     track: trackToRemove,
@@ -302,7 +307,7 @@ export const removeLastTrack = (currentTrack: Track, turn: Turn): Track => {
     totalTime: 0,
     descentElevation: currentTrack.descentElevation - (isDownhill ? removeElevation : 0),
     climbElevation: currentTrack.climbElevation - (!isDownhill ? removeElevation : 0),
-    downhills: 0,
+    downhills: !isPreviousTrackDownhill && isDownhill ? currentTrack.downhills - 1 : currentTrack.downhills,
     uphills: 0,
   };
 };
