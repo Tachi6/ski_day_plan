@@ -218,7 +218,6 @@ export const addNewTrack = ({ currentTrack, newTrack, trackSettings }: AddNewTra
     climbElevation: currentTrack.climbElevation + (!isDownhill ? newTrackElevation : 0),
     // TODO: refactor downhills
     downhills: !islastTrackDownhill && isDownhill ? currentTrack.downhills + 1 : currentTrack.downhills,
-    uphills: 0,
   };
 };
 
@@ -276,7 +275,6 @@ export const clipCurrentTrack = ({ currentTrack, cutIndex, trackSettings }: Clip
     descentElevation: currentTrack.descentElevation - (isDownhill ? removeElevation : 0),
     climbElevation: currentTrack.climbElevation - (!isDownhill ? removeElevation : 0),
     downhills: currentTrack.downhills,
-    uphills: 0,
   };
 };
 
@@ -320,6 +318,5 @@ export const removeLastTrack = (currentTrack: Track, trackSettings: TrackSetting
     descentElevation: currentTrack.descentElevation - (isDownhill ? removeElevation : 0),
     climbElevation: currentTrack.climbElevation - (!isDownhill ? removeElevation : 0),
     downhills: !isPreviousTrackDownhill && isDownhill ? currentTrack.downhills - 1 : currentTrack.downhills,
-    uphills: 0,
   };
 };

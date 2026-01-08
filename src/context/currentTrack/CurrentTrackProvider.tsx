@@ -16,7 +16,6 @@ export interface Track {
   descentElevation: number;
   climbElevation: number;
   downhills: number;
-  uphills: number;
 }
 
 const initTrackState: Track = {
@@ -29,7 +28,6 @@ const initTrackState: Track = {
   climbElevation: 0,
   descentElevation: 0,
   downhills: 0,
-  uphills: 0,
 };
 
 const UP_UP_DISTANCE: number = 250;
