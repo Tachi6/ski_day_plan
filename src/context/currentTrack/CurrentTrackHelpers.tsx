@@ -110,7 +110,6 @@ export const getConnectionInfo = ({
             break;
         }
       }
-
       return hasMatch;
     })
   );
@@ -138,7 +137,6 @@ export const getConnectionInfo = ({
               break;
           }
         }
-
         return hasMatch;
       })
     );
@@ -165,7 +163,6 @@ export const getConnectionInfo = ({
                 break;
             }
           }
-
           return hasMatch;
         })
       );
