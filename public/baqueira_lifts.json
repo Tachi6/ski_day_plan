@@ -1561,7 +1561,7 @@
       "type": "Feature",
       "properties": {
         "feature_id": "8faec5ee7f8fbf84ee445fade3839c4454edc359",
-        "name": "TSD6 Clot de Os",
+        "name": "TSD Clot de Os",
         "status": "operating",
         "sources": "[{\"type\":\"openstreetmap\",\"id\":\"way/995851439\"}]",
         "websites": "[]",
