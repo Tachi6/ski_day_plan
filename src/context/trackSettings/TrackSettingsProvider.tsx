@@ -5,19 +5,23 @@ const trackSettingsInitialState: TrackSettingsState = {
   turn: 'small',
   speed: 'low',
   stops: 'few',
-  pauses: ['lunch', 'coke'],
+  pauses: ['dinner', 'coke'],
 };
 
 export const TrackSettingsProvider = ({ children }: PropsWithChildren) => {
   const [trackSettings, setTrackSettings] = useState(trackSettingsInitialState);
 
-  const changeSettings = (settings: ChangeSettingsProps) =>
+  const changeSettings = (settings: ChangeSettingsProps) => {
+    console.log(settings);
+
     setTrackSettings({
       turn: settings.turn ?? trackSettings.turn,
       speed: settings.speed ?? trackSettings.speed,
       stops: settings.stops ?? trackSettings.stops,
+      // TODO: hacer funcionar pauses
       pauses: settings.pauses ?? trackSettings.pauses,
     });
+  };
 
   return (
     <TrackSettingsContext

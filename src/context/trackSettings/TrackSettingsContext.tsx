@@ -1,22 +1,22 @@
 import { createContext } from 'react';
 
-type Turn = 'xsmall' | 'small' | 'medium' | 'large';
-type Speed = 'xlow' | 'low' | 'medium' | 'high';
-type Stops = 'none' | 'some' | 'few' | 'many';
-type Pause = 'breakfast' | 'coffee' | 'lunch' | 'coke';
+export type Turn = 'xsmall' | 'small' | 'medium' | 'large';
+export type Speed = 'xlow' | 'low' | 'mid' | 'high';
+export type Stops = 'none' | 'some' | 'few' | 'many';
+export type Pauses = 'breakfast' | 'coffee' | 'dinner' | 'coke';
 
 export interface TrackSettingsState {
   turn: Turn;
   speed: Speed;
   stops: Stops;
-  pauses: Pause[];
+  pauses: Pauses[];
 }
 
 export interface ChangeSettingsProps {
   turn?: Turn;
   speed?: Speed;
   stops?: Stops;
-  pauses?: Pause[];
+  pauses?: Pauses[];
 }
 
 interface TrackSettingsContextProps {
