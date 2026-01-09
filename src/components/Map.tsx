@@ -6,15 +6,18 @@ import { ZoomControlLayer } from './ZoomControlLayer';
 import { CurrentTrackContext } from '../context/currentTrack/CurrentTrackContext';
 import { PolylineCustom } from './PolylineCustom';
 import { useObtainData } from '../hooks/UseObtainData';
+import { useIsPortrait } from '../hooks/UseIsPortrait';
 
 export const Map = () => {
   const { currentTrack, addRunToTrack } = use(CurrentTrackContext);
 
   const { runs, lifts } = useObtainData();
+  const isPortrait = useIsPortrait();
+  console.log(isPortrait);
 
   return (
     <MapContainer
-      center={[42.6988865, 0.9347175]}
+      center={isPortrait ? [42.701199, 0.937167] : [42.699522, 0.946113]}
       zoom={16}
       scrollWheelZoom={true}
       minZoom={14}
