@@ -1,7 +1,7 @@
 import { type LatLngTuple } from 'leaflet';
 import { trackDistance } from '../../helpers/distances';
 import type { Track } from './CurrentTrackProvider';
-import type { Lift, Run } from '../../hooks/UseObtainData';
+import type { Lift, Run } from '../../hooks/useObtainData';
 import { obtainSeconds } from '../../helpers/times';
 import type { TrackSettingsState } from '../trackSettings/TrackSettingsContext';
 import type { RunTypes } from '../../components/PolylineCustom';

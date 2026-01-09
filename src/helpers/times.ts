@@ -1,6 +1,6 @@
 import type { RunTypes } from '../components/PolylineCustom';
 import type { Pauses, Speed, Stops } from '../context/trackSettings/TrackSettingsContext';
-import type { Lift, Run } from '../hooks/UseObtainData';
+import type { Lift, Run } from '../hooks/useObtainData';
 import { liftSpeed, runSpeedTable, type LiftsTypes } from './speeds';
 
 interface ObtainTimeProps {

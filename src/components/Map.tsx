@@ -5,8 +5,8 @@ import { PolylineArrows } from './PolylineArrows';
 import { ZoomControlLayer } from './ZoomControlLayer';
 import { CurrentTrackContext } from '../context/currentTrack/CurrentTrackContext';
 import { PolylineCustom } from './PolylineCustom';
-import { useObtainData } from '../hooks/UseObtainData';
-import { useIsPortrait } from '../hooks/UseIsPortrait';
+import { useObtainData } from '../hooks/useObtainData';
+import { useIsPortrait } from '../hooks/useIsPortrait';
 
 export const Map = () => {
   const { currentTrack, addRunToTrack } = use(CurrentTrackContext);

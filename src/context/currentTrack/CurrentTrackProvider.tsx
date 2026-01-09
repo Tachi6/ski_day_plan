@@ -3,7 +3,7 @@ import { type LatLngTuple } from 'leaflet';
 import { distanceHaversine } from '../../helpers/distances';
 import { CurrentTrackContext } from './CurrentTrackContext';
 import { addNewTrack, clipCurrentTrack, getConnectionInfo, removeLastTrack } from './CurrentTrackHelpers';
-import { useObtainData, type Lift, type Run } from '../../hooks/UseObtainData';
+import { useObtainData, type Lift, type Run } from '../../hooks/useObtainData';
 import { TrackSettingsContext } from '../trackSettings/TrackSettingsContext';
 
 export interface Track {

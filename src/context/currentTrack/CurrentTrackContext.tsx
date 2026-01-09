@@ -1,6 +1,6 @@
 import { createContext } from 'react';
 import type { Track } from './CurrentTrackProvider';
-import type { Lift, Run } from '../../hooks/UseObtainData';
+import type { Lift, Run } from '../../hooks/useObtainData';
 
 interface CurrentTrackContextProps {
   currentTrack: Track;
