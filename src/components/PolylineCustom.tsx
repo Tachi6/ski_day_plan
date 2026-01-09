@@ -1,5 +1,5 @@
 import type { LatLngTuple } from 'leaflet';
-import { useEffect } from 'react';
+import { memo, useEffect, useEffectEvent, useRef } from 'react';
 import { useMap } from 'react-leaflet';
 import 'leaflet-textpath';
 import { HighlightablePolyline } from 'leaflet-highlightable-layers';
@@ -14,12 +14,26 @@ interface Props {
   name: string;
   onClick: () => void;
 }
-
-export const PolylineCustom = ({ positions, difficulty, name, onClick }: Props): null => {
+// TODO: MEMO
+export const PolylineCustom = memo(({ positions, difficulty, name, onClick }: Props): null => {
   const map = useMap();
+
+  const isPanesCreated = useRef(false);
+
+  const handleClick = useEffectEvent(onClick);
 
   useEffect(() => {
     if (!map) return;
+
+    // Panes to manage layers positions
+    if (!isPanesCreated.current) {
+      map.createPane('runs-lifts');
+      map.createPane('arrows');
+      map.getPane('runs-lifts')!.style.zIndex = '400';
+      map.getPane('arrows')!.style.zIndex = '401';
+
+      isPanesCreated.current = true;
+    }
 
     const polyline = new HighlightablePolyline(positions, {
       color: runColor(difficulty as RunTypes),
@@ -27,7 +41,7 @@ export const PolylineCustom = ({ positions, difficulty, name, onClick }: Props):
       raised: false,
       outlineWeight: 10,
       outlineColor: borderColor(difficulty as RunTypes),
-      lhlZIndex: 0,
+      pane: 'runs-lifts',
     });
 
     polyline.setText(name, {
@@ -47,9 +61,10 @@ export const PolylineCustom = ({ positions, difficulty, name, onClick }: Props):
       color: arrowColor(difficulty as RunTypes),
       weight: 1,
       size: '6px',
+      pane: 'arrows',
     });
 
-    polyline.on('click', onClick);
+    polyline.on('click', handleClick);
 
     polyline.addTo(map);
     polylineArrows.addTo(map);
@@ -58,7 +73,7 @@ export const PolylineCustom = ({ positions, difficulty, name, onClick }: Props):
       polyline.remove();
       polylineArrows.remove();
     };
-  }, [map, positions, difficulty, name, onClick]);
+  }, [map, positions, difficulty, name]);
 
   return null;
-};
+});

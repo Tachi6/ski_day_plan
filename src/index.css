@@ -161,6 +161,15 @@
   font-weight: 500;
 }
 
+.on-top {
+  z-index: 10;
+}
+
+.on-back {
+  z-index: 9;
+  border: 50px solid black;
+}
+
 @media (max-width: 640px) {
   .leaflet-container {
     height: 100dvh;

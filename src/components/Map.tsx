@@ -1,11 +1,11 @@
 import 'leaflet-arrowheads';
-import { use } from 'react';
+import { use, useCallback } from 'react';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import { PolylineArrows } from './PolylineArrows';
 import { ZoomControlLayer } from './ZoomControlLayer';
 import { CurrentTrackContext } from '../context/currentTrack/CurrentTrackContext';
 import { PolylineCustom } from './PolylineCustom';
-import { useObtainData } from '../hooks/useObtainData';
+import { useObtainData, type Lift, type Run } from '../hooks/useObtainData';
 import { useIsPortrait } from '../hooks/useIsPortrait';
 
 export const Map = () => {
@@ -13,6 +13,8 @@ export const Map = () => {
 
   const { runs, lifts } = useObtainData();
   const isPortrait = useIsPortrait();
+
+  const handleAddRunToTrack = useCallback((track: Run | Lift) => addRunToTrack(track), [addRunToTrack]);
 
   return (
     <MapContainer
@@ -33,27 +35,14 @@ export const Map = () => {
       />
       <ZoomControlLayer />
       {runs.length > 0 &&
-        runs.map((track) => {
-          // const time = track.properties.difficulty
-
-          return (
-            <PolylineCustom
-              key={track.id}
-              positions={track.geometry.coordinates}
-              difficulty={track.properties.difficulty}
-              name={track.properties.name}
-              onClick={() => addRunToTrack(track)}
-            />
-          );
-        })}
-      {lifts.length > 0 &&
-        lifts.map((track) => (
+        lifts.length > 0 &&
+        [...runs, ...lifts].map((track) => (
           <PolylineCustom
             key={track.id}
             positions={track.geometry.coordinates}
             difficulty={track.properties.difficulty}
             name={track.properties.name}
-            onClick={() => addRunToTrack(track)}
+            onClick={() => handleAddRunToTrack(track)}
           />
         ))}
       {currentTrack.coordinates.length > 0 && (
