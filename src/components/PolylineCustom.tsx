@@ -1,5 +1,5 @@
 import type { LatLngTuple } from 'leaflet';
-import { memo, useEffect, useEffectEvent, useRef } from 'react';
+import { useEffect, useEffectEvent, useRef } from 'react';
 import { useMap } from 'react-leaflet';
 import 'leaflet-textpath';
 import { HighlightablePolyline } from 'leaflet-highlightable-layers';
@@ -14,8 +14,8 @@ interface Props {
   name: string;
   onClick: () => void;
 }
-// TODO: MEMO
-export const PolylineCustom = memo(({ positions, difficulty, name, onClick }: Props): null => {
+
+export const PolylineCustom = ({ positions, difficulty, name, onClick }: Props): null => {
   const map = useMap();
 
   const isPanesCreated = useRef(false);
@@ -76,4 +76,4 @@ export const PolylineCustom = memo(({ positions, difficulty, name, onClick }: Pr
   }, [map, positions, difficulty, name]);
 
   return null;
-});
+};
