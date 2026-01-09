@@ -37,7 +37,7 @@ const UP_DOWN_HEIGHT: number = 0;
 const DOWN_DOWN_DISTANCE: number = 125;
 const DOWN_DOWN_HEIGHT: number = 2.5;
 const DOWN_UP_DISTANCE: number = 250;
-const DOWN_UP_HEIGHT: number = 2.5;
+const DOWN_UP_HEIGHT: number = 5;
 
 export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => {
   const [currentTrack, setCurrentTrack] = useState<Track>(initTrackState);
