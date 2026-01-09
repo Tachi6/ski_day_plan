@@ -1,31 +1,12 @@
 import type { LatLngTuple } from 'leaflet';
 import { useEffect } from 'react';
 import { useMap } from 'react-leaflet';
-import L from 'leaflet';
 import 'leaflet-textpath';
+import { HighlightablePolyline } from 'leaflet-highlightable-layers';
+import { arrowColor, borderColor, runColor } from '../helpers/colors';
+import L from 'leaflet';
 
 export type RunTypes = 'novice' | 'easy' | 'intermediate' | 'advanced' | 'expert' | 'freeride';
-
-const runColor = (type: RunTypes | undefined) => {
-  switch (type) {
-    case 'novice':
-      return '#00FF00';
-    case 'easy':
-      return '#0000FF';
-    case 'intermediate':
-      return '#FF0000';
-    case 'advanced':
-      return '#000000';
-    case 'expert':
-      return '#000000';
-    case 'freeride':
-      return '#FF8000';
-    case undefined:
-      return '#808080';
-    default:
-      return '#0000FF';
-  }
-};
 
 interface Props {
   positions: LatLngTuple[];
@@ -40,32 +21,42 @@ export const PolylineCustom = ({ positions, difficulty, name, onClick }: Props):
   useEffect(() => {
     if (!map) return;
 
-    const polylineEvents = L.polyline(positions, {
-      color: 'transparent',
-      weight: 16,
-      interactive: true,
-    });
-
-    const polyline = L.polyline(positions, {
+    const polyline = new HighlightablePolyline(positions, {
       color: runColor(difficulty as RunTypes),
       weight: 6,
-      interactive: false,
+      raised: false,
+      outlineWeight: 10,
+      outlineColor: borderColor(difficulty as RunTypes),
+      lhlZIndex: 0,
     });
 
-    polylineEvents.setText(name, {
+    polyline.setText(name, {
       center: true,
-      offset: -5,
+      offset: -7,
       orientation: positions[positions.length - 1][1] > positions[0][1] ? 0 : 180,
     });
 
-    polylineEvents.on('click', onClick);
+    const polylineArrows = L.polyline(positions, {
+      color: 'transparent',
+      weight: 6,
+      interactive: false,
+    }).arrowheads({
+      yawn: 45,
+      frequency: '100m',
+      fill: true,
+      color: arrowColor(difficulty as RunTypes),
+      weight: 1,
+      size: '6px',
+    });
 
-    polylineEvents.addTo(map);
+    polyline.on('click', onClick);
+
     polyline.addTo(map);
+    polylineArrows.addTo(map);
 
     return () => {
-      polylineEvents.remove();
       polyline.remove();
+      polylineArrows.remove();
     };
   }, [map, positions, difficulty, name, onClick]);
 

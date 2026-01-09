@@ -13,7 +13,6 @@ export const Map = () => {
 
   const { runs, lifts } = useObtainData();
   const isPortrait = useIsPortrait();
-  console.log(isPortrait);
 
   return (
     <MapContainer
@@ -48,20 +47,21 @@ export const Map = () => {
           );
         })}
       {lifts.length > 0 &&
-        lifts.map((track) => {
-          // const time = track.properties.duration;
-
-          return (
-            <PolylineCustom
-              key={track.id}
-              positions={track.geometry.coordinates}
-              difficulty={track.properties.difficulty}
-              name={track.properties.name}
-              onClick={() => addRunToTrack(track)}
-            />
-          );
-        })}
-      {currentTrack.coordinates.length > 0 && <PolylineArrows positions={currentTrack.coordinates} />}
+        lifts.map((track) => (
+          <PolylineCustom
+            key={track.id}
+            positions={track.geometry.coordinates}
+            difficulty={track.properties.difficulty}
+            name={track.properties.name}
+            onClick={() => addRunToTrack(track)}
+          />
+        ))}
+      {currentTrack.coordinates.length > 0 && (
+        <PolylineArrows
+          positions={currentTrack.coordinates}
+          difficulty={currentTrack.trackSteps.at(-1)?.properties.difficulty}
+        />
+      )}
     </MapContainer>
   );
 };
