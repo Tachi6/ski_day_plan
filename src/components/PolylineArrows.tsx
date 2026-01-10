@@ -1,7 +1,9 @@
 import type { LatLngTuple } from 'leaflet';
 import { useEffect, useRef } from 'react';
 import { useMap } from 'react-leaflet';
-import L from 'leaflet';
+import { borderColor } from '../helpers/colors';
+import type { RunTypes } from './PolylineCustom';
+import { HighlightablePolyline } from 'leaflet-highlightable-layers';
 
 interface Props {
   positions: LatLngTuple[];
@@ -26,12 +28,22 @@ export const PolylineArrows = ({ positions, difficulty }: Props): null => {
       isPanesCreated.current = true;
     }
 
-    const polyline = L.polyline(positions, {
-      color: '#ffffff80',
+    const polyline = new HighlightablePolyline(positions, {
+      color: '#FF00FF',
       weight: 6,
+      raised: false,
+      outlineWeight: 10,
       interactive: false,
+      outlineColor: borderColor(difficulty as RunTypes),
       pane: 'current-track',
     });
+
+    // const polyline = L.polyline(positions, {
+    //   color: '#FF00FF',
+    //   weight: 6,
+    //   interactive: false,
+    //   pane: 'current-track',
+    // });
 
     // const polylineArrows = L.polyline(positions, {
     //   color: 'transparent',

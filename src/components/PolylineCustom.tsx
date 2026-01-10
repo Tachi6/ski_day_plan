@@ -26,7 +26,6 @@ export const PolylineCustom = ({ track }: Props): null => {
   useEffect(() => {
     if (!map) return;
 
-    console.log('linea');
     const positions = track.geometry.coordinates;
     const difficulty = track.properties.difficulty;
 

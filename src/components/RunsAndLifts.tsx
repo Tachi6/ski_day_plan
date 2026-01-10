@@ -16,7 +16,7 @@ export const RunsAndLifts = () => {
       map.createPane('runs-lifts');
       map.createPane('arrows');
       map.getPane('runs-lifts')!.style.zIndex = '400';
-      map.getPane('arrows')!.style.zIndex = '401';
+      map.getPane('arrows')!.style.zIndex = '403';
 
       isPanesCreated.current = true;
     }
