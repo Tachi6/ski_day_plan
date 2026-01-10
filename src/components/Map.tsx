@@ -1,20 +1,16 @@
 import 'leaflet-arrowheads';
-import { use, useCallback } from 'react';
+import { use } from 'react';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import { PolylineArrows } from './PolylineArrows';
 import { ZoomControlLayer } from './ZoomControlLayer';
 import { CurrentTrackContext } from '../context/currentTrack/CurrentTrackContext';
-import { PolylineCustom } from './PolylineCustom';
-import { useObtainData, type Lift, type Run } from '../hooks/useObtainData';
 import { useIsPortrait } from '../hooks/useIsPortrait';
+import { RunsAndLifts } from './RunsAndLifts';
 
 export const Map = () => {
-  const { currentTrack, addRunToTrack } = use(CurrentTrackContext);
+  const { currentTrack } = use(CurrentTrackContext);
 
-  const { runs, lifts } = useObtainData();
   const isPortrait = useIsPortrait();
-
-  const handleAddRunToTrack = useCallback((track: Run | Lift) => addRunToTrack(track), [addRunToTrack]);
 
   return (
     <MapContainer
@@ -34,17 +30,7 @@ export const Map = () => {
         url="https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}{r}.png?api_key=$1c941a16-e805-4d4d-b32d-77401f1754f9"
       />
       <ZoomControlLayer />
-      {runs.length > 0 &&
-        lifts.length > 0 &&
-        [...runs, ...lifts].map((track) => (
-          <PolylineCustom
-            key={track.id}
-            positions={track.geometry.coordinates}
-            difficulty={track.properties.difficulty}
-            name={track.properties.name}
-            onClick={() => handleAddRunToTrack(track)}
-          />
-        ))}
+      <RunsAndLifts />
       {currentTrack.coordinates.length > 0 && (
         <PolylineArrows
           positions={currentTrack.coordinates}

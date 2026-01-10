@@ -1,39 +1,34 @@
-import type { LatLngTuple } from 'leaflet';
-import { useEffect, useEffectEvent, useRef } from 'react';
+import { use, useEffect, useEffectEvent, useRef } from 'react';
 import { useMap } from 'react-leaflet';
 import 'leaflet-textpath';
 import { HighlightablePolyline } from 'leaflet-highlightable-layers';
 import { arrowColor, borderColor, runColor } from '../helpers/colors';
 import L from 'leaflet';
+import type { Lift, Run } from '../hooks/useObtainData';
+import { CurrentTrackContext } from '../context/currentTrack/CurrentTrackContext';
 
 export type RunTypes = 'novice' | 'easy' | 'intermediate' | 'advanced' | 'expert' | 'freeride';
 
 interface Props {
-  positions: LatLngTuple[];
-  difficulty: string | undefined;
-  name: string;
-  onClick: () => void;
+  track: Run | Lift;
 }
 
-export const PolylineCustom = ({ positions, difficulty, name, onClick }: Props): null => {
+export const PolylineCustom = ({ track }: Props): null => {
   const map = useMap();
 
-  const isPanesCreated = useRef(false);
+  const { addRunToTrack } = use(CurrentTrackContext);
 
-  const handleClick = useEffectEvent(onClick);
+  const polylineRef = useRef<L.Polyline | null>(null);
+  const polylineArrowsRef = useRef<L.Polyline | null>(null);
+
+  const handleClick = useEffectEvent(addRunToTrack);
 
   useEffect(() => {
     if (!map) return;
 
-    // Panes to manage layers positions
-    if (!isPanesCreated.current) {
-      map.createPane('runs-lifts');
-      map.createPane('arrows');
-      map.getPane('runs-lifts')!.style.zIndex = '400';
-      map.getPane('arrows')!.style.zIndex = '401';
-
-      isPanesCreated.current = true;
-    }
+    console.log('linea');
+    const positions = track.geometry.coordinates;
+    const difficulty = track.properties.difficulty;
 
     const polyline = new HighlightablePolyline(positions, {
       color: runColor(difficulty as RunTypes),
@@ -44,11 +39,13 @@ export const PolylineCustom = ({ positions, difficulty, name, onClick }: Props):
       pane: 'runs-lifts',
     });
 
-    polyline.setText(name, {
+    polyline.setText(track.properties.name, {
       center: true,
       offset: -7,
       orientation: positions[positions.length - 1][1] > positions[0][1] ? 0 : 180,
     });
+
+    polyline.on('click', () => handleClick(track));
 
     const polylineArrows = L.polyline(positions, {
       color: 'transparent',
@@ -64,16 +61,20 @@ export const PolylineCustom = ({ positions, difficulty, name, onClick }: Props):
       pane: 'arrows',
     });
 
-    polyline.on('click', handleClick);
-
     polyline.addTo(map);
     polylineArrows.addTo(map);
+
+    polylineRef.current = polyline;
+    polylineArrowsRef.current = polylineArrows;
 
     return () => {
       polyline.remove();
       polylineArrows.remove();
+      polylineRef.current = null;
+      polylineArrowsRef.current = null;
     };
-  }, [map, positions, difficulty, name]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [map]);
 
   return null;
 };
