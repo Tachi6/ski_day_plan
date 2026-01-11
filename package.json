@@ -10,7 +10,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "-": "^0.0.1",
     "@types/leaflet": "^1.9.21",
     "@types/leaflet-textpath": "^1.2.6",
     "leaflet": "^1.9.4",

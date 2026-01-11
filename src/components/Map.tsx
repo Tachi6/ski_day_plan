@@ -1,15 +1,11 @@
 import 'leaflet-arrowheads';
-import { use } from 'react';
 import { MapContainer, TileLayer } from 'react-leaflet';
-import { PolylineArrows } from './PolylineArrows';
 import { ZoomControlLayer } from './ZoomControlLayer';
-import { CurrentTrackContext } from '../context/currentTrack/CurrentTrackContext';
 import { useIsPortrait } from '../hooks/useIsPortrait';
 import { RunsAndLifts } from './RunsAndLifts';
+import { CurrentTracks } from './CurrentTracks';
 
 export const Map = () => {
-  const { currentTrack } = use(CurrentTrackContext);
-
   const isPortrait = useIsPortrait();
 
   return (
@@ -31,12 +27,7 @@ export const Map = () => {
       />
       <ZoomControlLayer />
       <RunsAndLifts />
-      {currentTrack.coordinates.length > 0 && (
-        <PolylineArrows
-          positions={currentTrack.coordinates}
-          difficulty={currentTrack.trackSteps.at(-1)?.properties.difficulty}
-        />
-      )}
+      <CurrentTracks />
     </MapContainer>
   );
 };
