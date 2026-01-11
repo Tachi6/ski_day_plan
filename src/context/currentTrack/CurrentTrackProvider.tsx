@@ -92,7 +92,6 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
             },
             trackSettings: trackSettings,
           })
-          // newTrack: newTrackCoords.slice(connectionType.newTrackConnectionIndex) })
         );
         return;
 
@@ -307,9 +306,16 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
             Math.abs(trackPoint[2]! - newTrackInit[2]!) <= DOWN_UP_HEIGHT;
 
           if (hasPoint) {
+            console.log(lastTrackCoords);
+
+            console.log(index);
+
             const cutIndex = currentTrack.coordinates.length - lastTrackCoords.length + index + 1;
-            const editedCurrentTrack = clipCurrentTrack({ currentTrack, cutIndex, trackSettings });
-            const editedTrackEnd = editedCurrentTrack.coordinates[editedCurrentTrack.coordinates.length - 1];
+            const editedCurrentTrack =
+              index + 1 === lastTrackCoords.length
+                ? currentTrack
+                : clipCurrentTrack({ currentTrack, cutIndex, trackSettings });
+            const editedTrackEnd = editedCurrentTrack.coordinates.at(-1)!;
 
             setCurrentTrack(
               addNewTrack({

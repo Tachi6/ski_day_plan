@@ -230,7 +230,7 @@ interface ClipCurrentTrackProps {
 export const clipCurrentTrack = ({ currentTrack, cutIndex, trackSettings }: ClipCurrentTrackProps): Track => {
   const lastTrack = currentTrack.trackSteps.at(-1)!;
 
-  const trackToRemove = currentTrack.coordinates.slice(cutIndex - 1);
+  const trackToRemove = currentTrack.coordinates.slice(cutIndex);
 
   const isDownhill = trackToRemove[0][2]! - trackToRemove[trackToRemove.length - 1][2]! >= 0;
 
@@ -247,7 +247,7 @@ export const clipCurrentTrack = ({ currentTrack, cutIndex, trackSettings }: Clip
   const newTrackStep: Run | Lift = {
     ...lastTrack,
     geometry: {
-      coordinates: [...lastTrack.geometry.coordinates.slice(0, lastTrackIndex)],
+      coordinates: [...lastTrack.geometry.coordinates.slice(0, lastTrackIndex + 1)],
       type: lastTrack.geometry.type,
     },
   };
