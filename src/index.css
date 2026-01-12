@@ -7,6 +7,7 @@
   --settings-box-responsive-width: 320px;
   --settings-box-show: 20px;
   --settings-box-hide: calc(var(--settings-box-width) * -1);
+  --tutorial-box-step-width: 380px;
 }
 
 * {
@@ -178,6 +179,74 @@
   border-style: solid;
 }
 
+/* Tutorial Box*/
+.tutorial-box {
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  height: 340px;
+  width: 400px;
+  padding: 10px 20px 20px 20px;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  transition: 0.5s;
+}
+
+h1 {
+  text-align: center;
+}
+
+.tutorial-box p {
+  font-size: 14px;
+  font-weight: 300;
+  text-align: center;
+  width: 360px;
+}
+
+.tutorial-steps-container {
+  position: relative;
+}
+
+.tutorial-steps {
+  position: absolute;
+  display: flex;
+  transition: 0.5s;
+  gap: 20px;
+}
+
+.tutorial-step {
+  width: 360px;
+}
+
+.tutorial-step-image {
+  width: 360px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.tutorial-box div img:nth-child(odd) {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+  height: 170px;
+}
+
+.tutorial-box button {
+  align-self: center;
+  width: 120px;
+  margin-top: 240px;
+  padding: 10px;
+  font-weight: 400;
+  border-radius: 4px;
+  border: none;
+  box-shadow: 0 0 2.5px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+}
+
 @media (max-width: 640px) {
   .leaflet-container {
     height: 100dvh;
@@ -225,5 +294,30 @@
     width: 65px;
     height: 60px;
     padding: 10px 5px 5px 5px;
+  }
+
+  .tutorial-box {
+    --tutorial-box-step-width: 310px;
+    top: 245px;
+    bottom: unset;
+    margin: 0 auto;
+    width: 320px;
+    padding: 0px 10px 10px 10px;
+  }
+
+  .tutorial-box p {
+    width: 300px;
+  }
+
+  .tutorial-steps {
+    gap: 10px;
+  }
+
+  .tutorial-step {
+    width: 300px;
+  }
+
+  .tutorial-step-image {
+    width: 300px;
   }
 }
