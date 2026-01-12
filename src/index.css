@@ -161,16 +161,21 @@
   font-weight: 500;
 }
 
-.custom-circle-icon {
+.circle-marker {
+  background: transparent;
+  border: none;
+}
+
+.track-step {
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
-  font-weight: bold;
-  font-size: 12px;
-  color: #400040;
-  border: 2px solid #400040;
-  background-color: #ff00ff;
+  font-size: 14px;
+  border-width: 2px;
+  border-style: solid;
 }
 
 @media (max-width: 640px) {

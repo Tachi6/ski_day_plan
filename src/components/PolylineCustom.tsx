@@ -48,7 +48,7 @@ export const PolylineCustom = ({ track }: Props): null => {
 
     const polylineArrows = L.polyline(positions, {
       color: 'transparent',
-      weight: 6,
+      weight: 4,
       interactive: false,
     }).arrowheads({
       yawn: 45,
@@ -56,7 +56,7 @@ export const PolylineCustom = ({ track }: Props): null => {
       fill: true,
       color: arrowColor(difficulty as RunTypes),
       weight: 1,
-      size: '6px',
+      size: '4px',
       pane: 'arrows',
     });
 
