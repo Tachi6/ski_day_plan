@@ -42,6 +42,7 @@ export const CustomPolyline = ({ track }: Props): null => {
       center: true,
       offset: -7,
       orientation: positions[positions.length - 1][1] > positions[0][1] ? 0 : 180,
+      attributes: { fill: '#1f2d3d' },
     });
 
     polyline.on('click', () => handleClick(track));

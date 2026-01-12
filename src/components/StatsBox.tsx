@@ -1,12 +1,12 @@
 import { use } from 'react';
 import { CurrentTrackContext } from '../context/currentTrack/CurrentTrackContext';
-import undo from '../assets/svg/undo.svg';
-import remove from '../assets/svg/remove.svg';
-import location from '../assets/svg/location.svg';
-import settings from '../assets/svg/settings.svg';
 import { ViewSettingsContext } from '../context/viewSettings/ViewSettingsContext';
 import { obtainPausesSeconds, timeToHoursAndMinutes } from '../helpers/times';
 import { TrackSettingsContext } from '../context/trackSettings/TrackSettingsContext';
+import { SettingsIcon } from '../assets/icons/SettingsIcon';
+import { LocationIcon } from '../assets/icons/LocationIcon';
+import { RemoveIcon } from '../assets/icons/RemoveIcon';
+import { UndoIcon } from '../assets/icons/UndoIcon';
 
 export const StatsBox = () => {
   const { currentTrack, undoLastTrack, clearTrack } = use(CurrentTrackContext);
@@ -98,16 +98,16 @@ export const StatsBox = () => {
 
       <div className="box-line buttons">
         <button className="stats-box-button" onClick={undoLastTrack}>
-          <img src={undo} alt="settings-icon" />
+          <UndoIcon />
         </button>
         <button className="stats-box-button" onClick={clearTrack}>
-          <img src={remove} alt="settings-icon" />
+          <RemoveIcon />
         </button>
         <button className="stats-box-button">
-          <img src={location} alt="settings-icon" />
+          <LocationIcon />
         </button>
         <button className="stats-box-button" onClick={changeVisibility}>
-          <img src={settings} alt="settings-icon" />
+          <SettingsIcon />
         </button>
       </div>
     </div>

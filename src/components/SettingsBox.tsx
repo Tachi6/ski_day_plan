@@ -93,7 +93,7 @@ export const SettingsBox = () => {
                 <button
                   key={buttonLine.label + option[0]}
                   id={buttonLine.label + option[0]}
-                  className={`box-button ${isSelected ? 'selected' : ''}`}
+                  className={`settings-box-button ${isSelected ? 'selected' : ''}`}
                   onClick={() =>
                     changeSettings({
                       [buttonLine.id]: buttonLine.id === 'pauses' ? [option[0]] : option[0],

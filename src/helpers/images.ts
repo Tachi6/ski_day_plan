@@ -6,6 +6,8 @@ import tut3a from '../assets/images/tut_3a.png';
 import tut3b from '../assets/images/tut_3b.png';
 import tut4a from '../assets/images/tut_4a.png';
 import tut4b from '../assets/images/tut_4b.png';
+import tut5a from '../assets/images/tut_5a.png';
+import tut5b from '../assets/images/tut_5b.png';
 
 export const tutorialImages = {
   tut1a: tut1a,
@@ -16,4 +18,6 @@ export const tutorialImages = {
   tut3b: tut3b,
   tut4a: tut4a,
   tut4b: tut4b,
+  tut5a: tut5a,
+  tut5b: tut5b,
 };

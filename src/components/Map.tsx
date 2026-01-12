@@ -1,6 +1,5 @@
 import 'leaflet-arrowheads';
-import { MapContainer, TileLayer } from 'react-leaflet';
-import { ZoomControlLayer } from './ZoomControlLayer';
+import { MapContainer, Pane, Rectangle, TileLayer } from 'react-leaflet';
 import { useIsPortrait } from '../hooks/useIsPortrait';
 import { RunsAndLifts } from './RunsAndLifts';
 import { CurrentTracks } from './CurrentTracks';
@@ -15,17 +14,42 @@ export const Map = () => {
       scrollWheelZoom={true}
       minZoom={14}
       zoomControl={false}
-      className="back-layer theme"
+      className="back-layer"
     >
+      {<Pane name="base-tiles" style={{ zIndex: 200 }} />}
       <TileLayer
-        // BASE OSM
-        // attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        // url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        // STADIA OUTDOORS
-        attribution='&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}{r}.png?api_key=$1c941a16-e805-4d4d-b32d-77401f1754f9"
+        attribution='&copy; <a href="https://carto.com/">CARTO</a> | &copy; OpenStreetMap contributors'
+        url="https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png"
+        subdomains={['a', 'b', 'c', 'd']}
+        pane="base-tiles"
       />
-      <ZoomControlLayer />
+      {/* Overlays blue-snow */}
+      <Pane name="snow-overlay" style={{ zIndex: 350 }}>
+        <Rectangle
+          bounds={[
+            [-90, -180],
+            [90, 180],
+          ]}
+          pathOptions={{ fillColor: '#EAF4FB', fillOpacity: 0.4, stroke: false, interactive: false }}
+          pane="snow-overlay"
+        />
+        <Rectangle
+          bounds={[
+            [-90, -180],
+            [90, 180],
+          ]}
+          pathOptions={{ fillColor: '#D6EAF8', fillOpacity: 0.12, stroke: false, interactive: false }}
+          pane="snow-overlay"
+        />
+        <Rectangle
+          bounds={[
+            [-90, -180],
+            [90, 180],
+          ]}
+          pathOptions={{ fillColor: '#FFFFFF', fillOpacity: 0.06, stroke: false }}
+          pane="snow-overlay"
+        />
+      </Pane>
       <RunsAndLifts />
       <CurrentTracks />
     </MapContainer>

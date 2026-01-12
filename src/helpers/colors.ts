@@ -1,4 +1,4 @@
-import type { RunTypes } from '../components/PolylineCustom';
+import type { RunTypes } from '../components/CustomPolyline';
 
 export const selectedColor = '#ffdf00';
 

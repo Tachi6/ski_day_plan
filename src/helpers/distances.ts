@@ -1,6 +1,6 @@
 import type { LatLngTuple } from 'leaflet';
 import type { Turn } from '../context/trackSettings/TrackSettingsContext';
-import type { RunTypes } from '../components/PolylineCustom';
+import type { RunTypes } from '../components/CustomPolyline';
 
 // Average radius of the Earth in kilometers
 const R_METERS = 6371000;

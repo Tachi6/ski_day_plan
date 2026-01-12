@@ -9,10 +9,10 @@ export const TutorialBox = () => {
   const [display, setDisplay] = useState('flex');
 
   const handleButton = () => {
-    if (step === -2) {
+    if (step === -3) {
       setButtonLabel('Comenzar');
     }
-    if (step === -3) {
+    if (step === -4) {
       setOpacity(0);
       setTimeout(() => setDisplay('none'), 500);
       return;
@@ -57,9 +57,31 @@ export const TutorialBox = () => {
               <img src={tutorialImages.tut4b} alt="tut4b" />
             </div>
           </div>
+          <div className="tutorial-step">
+            <p>Puedes seleccionar un remonte o pista mas de una vez, solo pulsa encima y se añadirá de nuevo.</p>
+            <div className="tutorial-step-image">
+              <img src={tutorialImages.tut5a} alt="tut4a" />
+              <img src={arrow} alt="arrow" />
+              <img src={tutorialImages.tut5b} alt="tut4b" />
+            </div>
+          </div>
         </div>
       </div>
-      <button onClick={handleButton}>{buttonLabel}</button>
+      <div className="tutorial-indicator">
+        {[0, -1, -2, -3, -4].map((currentStep) => (
+          <div
+            className="indicator"
+            style={{ backgroundColor: currentStep === step ? '#1E5FA8' : '#5C7FA3' }}
+            onClick={() => setStep(currentStep)}
+          ></div>
+        ))}
+      </div>
+      <button
+        onClick={handleButton}
+        style={{ backgroundColor: step === -4 ? '#1E88E5' : '#D6EAF8', color: step === -4 ? '#FFFFFF' : '#1E5FA8' }}
+      >
+        {buttonLabel}
+      </button>
     </div>
   );
 };

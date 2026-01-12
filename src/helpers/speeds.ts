@@ -1,4 +1,4 @@
-import type { RunTypes } from '../components/PolylineCustom';
+import type { RunTypes } from '../components/CustomPolyline';
 import { type Speed } from '../context/trackSettings/TrackSettingsContext';
 
 export type LiftsTypes = 'TC' | 'TSD' | 'TQ' | 'TS' | 'CT' | 'TCD' | 'TPV';
