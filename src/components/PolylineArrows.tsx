@@ -10,22 +10,26 @@ import { renderToString } from 'react-dom/server';
 interface Props {
   track: Run | Lift;
   index: number;
+  markerIndex: number;
 }
 
-export const PolylineArrows = ({ track, index }: Props): null => {
+export const PolylineArrows = ({ track, index, markerIndex }: Props): null => {
   const map = useMap();
 
   useEffect(() => {
     if (!map) return;
 
-    const basePolyline = L.polyline(track.geometry.coordinates, {
+    const positions = track.geometry.coordinates;
+    const difficulty = track.properties.difficulty;
+
+    const basePolyline = L.polyline(positions, {
       weight: 10,
-      color: borderColor(track.properties.difficulty as RunTypes),
+      color: borderColor(difficulty as RunTypes),
       interactive: false,
     });
 
-    const polyline = new HighlightablePolyline(track.geometry.coordinates, {
-      color: runColor(track.properties.difficulty as RunTypes),
+    const polyline = new HighlightablePolyline(positions, {
+      color: runColor(difficulty as RunTypes),
       weight: 4,
       raised: false,
       outlineWeight: 6,
@@ -40,19 +44,19 @@ export const PolylineArrows = ({ track, index }: Props): null => {
         <div
           className="track-step"
           style={{
-            borderColor: borderColor(track.properties.difficulty as RunTypes),
-            backgroundColor: runColor(track.properties.difficulty as RunTypes),
-            color: textColor(track.properties.difficulty as RunTypes),
+            borderColor: borderColor(difficulty as RunTypes),
+            backgroundColor: runColor(difficulty as RunTypes),
+            color: textColor(difficulty as RunTypes),
           }}
         >
-          {index}
+          {index + 1}
         </div>
       ),
       iconSize: [20, 20],
       iconAnchor: [10, 10],
     });
 
-    const marker = L.marker(track.geometry.coordinates[0], {
+    const marker = L.marker(positions[markerIndex], {
       icon: icon,
       pane: 'current-number',
     });
@@ -66,7 +70,7 @@ export const PolylineArrows = ({ track, index }: Props): null => {
       polyline.remove();
       marker.remove();
     };
-  }, [map, track, index]);
+  }, [map, track, index, markerIndex]);
 
   return null;
 };

@@ -22,11 +22,23 @@ export const CurrentTracks = () => {
     }
   }, [map]);
 
+  const getCenterIndex = (length: number, selectedIndex: number): number => {
+    const midIndex = Math.floor(length / 2);
+
+    if (selectedIndex === 0) return midIndex;
+
+    const offset = Math.ceil(selectedIndex / 2);
+
+    return selectedIndex % 2 === 1 ? Math.min(midIndex + offset, length - 1) : Math.max(midIndex - offset, 0);
+  };
+
   return (
     <>
-      {currentTrack.trackSteps.map((track, index) => (
-        <PolylineArrows key={`${track.id}-${index}`} track={track} index={index} />
-      ))}
+      {currentTrack.trackSteps.map((track, index) => {
+        const markerIndex = getCenterIndex(track.geometry.coordinates.length, index);
+
+        return <PolylineArrows key={`${track.id}-${index}`} track={track} index={index} markerIndex={markerIndex} />;
+      })}
     </>
   );
 };
