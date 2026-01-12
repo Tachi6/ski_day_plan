@@ -28,27 +28,25 @@
   z-index: 0;
 }
 
-/* Overlay azul hielo */
+/* Overlay blue-snow */
 .leaflet-pane.snow-overlay {
   mix-blend-mode: color; /* hace que los grises del mapa tomen el azul */
   pointer-events: none; /* deja interactuar con polylines y markers */
 }
 
-/* Opcional: filtro solo en los tiles para reforzar azul */
-.leaflet-pane.base-tiles {
-  /* filter: saturate(150%) hue-rotate(190deg) brightness(1.03); */
-  filter: saturate(140%) hue-rotate(195deg) brightness(1.03);
-  pointer-events: none;
+/* Filter more blue on Map */
+.leaflet-tile-pane .snow-filter {
+  filter: saturate(140%) hue-rotate(195deg) brightness(1.04);
 }
 
-/* Opcional, si usara pop-up de markers o tooltip */
-.leaflet-tooltip,
+/* Optional, if needed */
+/* .leaflet-tooltip,
 .leaflet-popup-content-wrapper {
   background: #eaf4fb;
   color: #1f2d3d;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(30, 45, 61, 0.5);
-}
+} */
 
 .box {
   position: absolute;

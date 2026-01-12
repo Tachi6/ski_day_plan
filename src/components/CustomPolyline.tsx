@@ -36,6 +36,7 @@ export const CustomPolyline = ({ track }: Props): null => {
       outlineWeight: 10,
       outlineColor: borderColor(difficulty as RunTypes),
       pane: difficulty ? 'runs' : 'lifts',
+      opacity: 0.95,
     });
 
     polyline.setText(track.properties.name, {

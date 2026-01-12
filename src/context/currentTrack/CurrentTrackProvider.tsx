@@ -47,15 +47,14 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
   const { connections } = useObtainData();
 
   const addRunToTrack = (newTrack: Run | Lift): void => {
+    const lastTrack = currentTrack.trackSteps.at(-1);
     const newTrackCoords: LatLngTuple[] = newTrack.geometry.coordinates;
-    // Last added track
-    // const lastTrackStepInit = currentTrack.trackSteps.at(-1)!.geometry.coordinates[0];
-    // const lastTrackStepEnd = currentTrack.trackSteps.at(-1)?.geometry.coordinates.at(-1);
-    // const lastTrack = currentTrack.coordinates.slice(lastTrackStepInit, lastTrackStepEnd);
-    const lastTrackCoords: LatLngTuple[] = currentTrack.trackSteps.at(-1)?.geometry.coordinates ?? [];
+    const lastTrackCoords: LatLngTuple[] = lastTrack?.geometry.coordinates ?? [];
 
     const newTrackInit = newTrackCoords[0];
     const lastTrackEnd = lastTrackCoords.at(-1)!;
+
+    if (newTrack.id === lastTrack?.id) return;
 
     const connectionType = getConnectionInfo({
       lastTrackCoords,

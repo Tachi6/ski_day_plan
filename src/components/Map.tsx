@@ -16,12 +16,11 @@ export const Map = () => {
       zoomControl={false}
       className="back-layer"
     >
-      {<Pane name="base-tiles" style={{ zIndex: 200 }} />}
       <TileLayer
         attribution='&copy; <a href="https://carto.com/">CARTO</a> | &copy; OpenStreetMap contributors'
         url="https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png"
         subdomains={['a', 'b', 'c', 'd']}
-        pane="base-tiles"
+        className="snow-filter"
       />
       {/* Overlays blue-snow */}
       <Pane name="snow-overlay" style={{ zIndex: 350 }}>
@@ -46,7 +45,7 @@ export const Map = () => {
             [-90, -180],
             [90, 180],
           ]}
-          pathOptions={{ fillColor: '#FFFFFF', fillOpacity: 0.06, stroke: false }}
+          pathOptions={{ fillColor: '#FFFFFF', fillOpacity: 0.06, stroke: false, interactive: false }}
           pane="snow-overlay"
         />
       </Pane>
