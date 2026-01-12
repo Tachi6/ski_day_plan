@@ -1,4 +1,4 @@
-import { PolylineCustom } from './PolylineCustom';
+import { CustomPolyline } from './CustomPolyline';
 import { useObtainData } from '../hooks/useObtainData';
 import { useMap } from 'react-leaflet';
 import { useEffect, useRef } from 'react';
@@ -13,10 +13,12 @@ export const RunsAndLifts = () => {
   useEffect(() => {
     // Panes to manage layers positions
     if (!isPanesCreated.current) {
-      map.createPane('runs-lifts');
+      map.createPane('runs');
+      map.createPane('lifts');
       map.createPane('arrows');
-      map.getPane('runs-lifts')!.style.zIndex = '400';
-      map.getPane('arrows')!.style.zIndex = '402';
+      map.getPane('lifts')!.style.zIndex = '400';
+      map.getPane('runs')!.style.zIndex = '401';
+      map.getPane('arrows')!.style.zIndex = '403';
 
       isPanesCreated.current = true;
     }
@@ -25,10 +27,10 @@ export const RunsAndLifts = () => {
   return (
     <>
       {runs.map((run) => (
-        <PolylineCustom key={run.id} track={run} />
+        <CustomPolyline key={run.id} track={run} />
       ))}
       {lifts.map((lift) => (
-        <PolylineCustom key={lift.id} track={lift} />
+        <CustomPolyline key={lift.id} track={lift} />
       ))}
     </>
   );

@@ -4,7 +4,7 @@ import { HighlightablePolyline } from 'leaflet-highlightable-layers';
 import type { Lift, Run } from '../hooks/useObtainData';
 import L from 'leaflet';
 import { borderColor, runColor, selectedColor, textColor } from '../helpers/colors';
-import type { RunTypes } from './PolylineCustom';
+import type { RunTypes } from './CustomPolyline';
 import { renderToString } from 'react-dom/server';
 
 interface Props {
@@ -13,7 +13,7 @@ interface Props {
   markerIndex: number;
 }
 
-export const PolylineArrows = ({ track, index, markerIndex }: Props): null => {
+export const CurrentTrackPolyline = ({ track, index, markerIndex }: Props): null => {
   const map = useMap();
 
   useEffect(() => {

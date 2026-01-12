@@ -13,7 +13,7 @@ interface Props {
   track: Run | Lift;
 }
 
-export const PolylineCustom = ({ track }: Props): null => {
+export const CustomPolyline = ({ track }: Props): null => {
   const map = useMap();
 
   const { addRunToTrack } = use(CurrentTrackContext);
@@ -35,7 +35,7 @@ export const PolylineCustom = ({ track }: Props): null => {
       raised: false,
       outlineWeight: 10,
       outlineColor: borderColor(difficulty as RunTypes),
-      pane: 'runs-lifts',
+      pane: difficulty ? 'runs' : 'lifts',
     });
 
     polyline.setText(track.properties.name, {

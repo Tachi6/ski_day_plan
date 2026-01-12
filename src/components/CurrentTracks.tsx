@@ -1,7 +1,7 @@
 import { useMap } from 'react-leaflet';
 import { use, useEffect, useRef } from 'react';
 import { CurrentTrackContext } from '../context/currentTrack/CurrentTrackContext';
-import { PolylineArrows } from './PolylineArrows';
+import { CurrentTrackPolyline } from './CurrentTrackPolyline';
 
 export const CurrentTracks = () => {
   const { currentTrack } = use(CurrentTrackContext);
@@ -15,8 +15,8 @@ export const CurrentTracks = () => {
     if (!isPanesCreated.current) {
       map.createPane('current-track');
       map.createPane('current-number');
-      map.getPane('current-track')!.style.zIndex = '401';
-      map.getPane('current-number')!.style.zIndex = '403';
+      map.getPane('current-track')!.style.zIndex = '402';
+      map.getPane('current-number')!.style.zIndex = '404';
 
       isPanesCreated.current = true;
     }
@@ -37,7 +37,9 @@ export const CurrentTracks = () => {
       {currentTrack.trackSteps.map((track, index) => {
         const markerIndex = getCenterIndex(track.geometry.coordinates.length, index);
 
-        return <PolylineArrows key={`${track.id}-${index}`} track={track} index={index} markerIndex={markerIndex} />;
+        return (
+          <CurrentTrackPolyline key={`${track.id}-${index}`} track={track} index={index} markerIndex={markerIndex} />
+        );
       })}
     </>
   );
