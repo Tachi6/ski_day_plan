@@ -1,5 +1,7 @@
 import type { RunTypes } from '../components/PolylineCustom';
 
+export const selectedColor = '#ffdf00';
+
 export const runColor = (type: RunTypes | undefined) => {
   switch (type) {
     case 'novice':

@@ -25,7 +25,7 @@ export const CurrentTracks = () => {
   return (
     <>
       {currentTrack.trackSteps.map((track, index) => (
-        <PolylineArrows key={`${track.id}${index}}`} track={track} index={index} />
+        <PolylineArrows key={`${track.id}-${index}`} track={track} index={index} />
       ))}
     </>
   );

@@ -3,7 +3,7 @@ import { useMap } from 'react-leaflet';
 import { HighlightablePolyline } from 'leaflet-highlightable-layers';
 import type { Lift, Run } from '../hooks/useObtainData';
 import L from 'leaflet';
-import { borderColor, runColor, textColor } from '../helpers/colors';
+import { borderColor, runColor, selectedColor, textColor } from '../helpers/colors';
 import type { RunTypes } from './PolylineCustom';
 import { renderToString } from 'react-dom/server';
 
@@ -18,13 +18,19 @@ export const PolylineArrows = ({ track, index }: Props): null => {
   useEffect(() => {
     if (!map) return;
 
+    const basePolyline = L.polyline(track.geometry.coordinates, {
+      weight: 10,
+      color: borderColor(track.properties.difficulty as RunTypes),
+      interactive: false,
+    });
+
     const polyline = new HighlightablePolyline(track.geometry.coordinates, {
       color: runColor(track.properties.difficulty as RunTypes),
       weight: 4,
       raised: false,
       outlineWeight: 6,
       interactive: false,
-      outlineColor: '#ffdf00',
+      outlineColor: selectedColor,
       pane: 'current-track',
     });
 
@@ -51,10 +57,12 @@ export const PolylineArrows = ({ track, index }: Props): null => {
       pane: 'current-number',
     });
 
+    basePolyline.addTo(map);
     polyline.addTo(map);
     marker.addTo(map);
 
     return () => {
+      basePolyline.remove();
       polyline.remove();
       marker.remove();
     };
