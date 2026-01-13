@@ -2,13 +2,13 @@ import { use } from 'react';
 import { SettingsBox } from './SettingsBox';
 import { StatsBox } from './StatsBox';
 import { TutorialBox } from './TutorialBox';
-import { ShowTutorialContext } from '../context/ShowTutorialContext/ShowTutorialContext';
+import { HideTutorialContext } from '../context/HideTutorialContext/HideTutorialContext';
 
 export const BoxesContainer = () => {
-  const { showTutorial } = use(ShowTutorialContext);
+  const { hideTutorial } = use(HideTutorialContext);
   return (
     <>
-      {showTutorial && <TutorialBox />}
+      {!hideTutorial && <TutorialBox />}
       <StatsBox />
       <SettingsBox />
     </>
