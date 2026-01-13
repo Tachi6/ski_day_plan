@@ -196,9 +196,9 @@
   top: 0;
   bottom: 0;
   margin: auto;
-  height: 375px;
+  height: 390px;
   width: 400px;
-  padding: 10px 20px 20px 20px;
+  padding: 15px 20px 20px 20px;
   flex-direction: column;
   justify-content: center;
   overflow: hidden;
@@ -281,6 +281,18 @@ h1 {
 .tutorial-box button.secondary {
   color: #1f2d3d;
   background-color: #e2e8f0;
+}
+
+.dont-show {
+  margin-top: 10px;
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.dont-show label {
+  margin-top: 1px;
 }
 
 @media (max-width: 640px) {

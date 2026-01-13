@@ -1,12 +1,15 @@
 import { tutorialImages } from '../helpers/images';
 import arrow from '../assets/svg/double_arrow_right.svg';
-import { useState } from 'react';
+import { use, useState } from 'react';
+import { ShowTutorialContext } from '../context/ShowTutorialContext/ShowTutorialContext';
 
 export const TutorialBox = () => {
   const [step, setStep] = useState(0);
   const [buttonLabel, setButtonLabel] = useState('Siguiente');
   const [opacity, setOpacity] = useState(1);
   const [display, setDisplay] = useState('flex');
+  const [dontShowCheckbox, setDontShowCheckbox] = useState(true);
+  const { changeVisibility } = use(ShowTutorialContext);
 
   const handleButton = () => {
     if (step === -3) {
@@ -15,6 +18,8 @@ export const TutorialBox = () => {
     if (step === -4) {
       setOpacity(0);
       setTimeout(() => setDisplay('none'), 500);
+      changeVisibility();
+
       return;
     }
     setStep(step - 1);
@@ -79,6 +84,15 @@ export const TutorialBox = () => {
       <button className={`${step === -4 ? 'primary' : 'secondary'}`} onClick={handleButton}>
         {buttonLabel}
       </button>
+      <div className="dont-show">
+        <input
+          type="checkbox"
+          name="myCheckbox"
+          checked={dontShowCheckbox}
+          onChange={() => setDontShowCheckbox(!dontShowCheckbox)}
+        />
+        <label>No mostrar de nuevo</label>
+      </div>
     </div>
   );
 };
