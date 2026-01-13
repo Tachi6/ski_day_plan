@@ -103,7 +103,7 @@ export const StatsBox = () => {
         <button className="stats-box-button" onClick={clearTrack}>
           <RemoveIcon />
         </button>
-        <button className="stats-box-button">
+        <button className="stats-box-button disabled">
           <LocationIcon />
         </button>
         <button className="stats-box-button" onClick={changeVisibility}>

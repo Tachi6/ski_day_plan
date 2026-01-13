@@ -71,16 +71,12 @@ export const TutorialBox = () => {
         {[0, -1, -2, -3, -4].map((currentStep) => (
           <div
             key={`tutorial-indicator-${currentStep}`}
-            className="indicator"
-            style={{ backgroundColor: currentStep === step ? '#1E5FA8' : '#5C7FA3' }}
+            className={`indicator ${currentStep === step ? 'primary' : 'secondary'}`}
             onClick={() => setStep(currentStep)}
           ></div>
         ))}
       </div>
-      <button
-        onClick={handleButton}
-        style={{ backgroundColor: step === -4 ? '#1E88E5' : '#D6EAF8', color: step === -4 ? '#FFFFFF' : '#1E5FA8' }}
-      >
+      <button className={`${step === -4 ? 'primary' : 'secondary'}`} onClick={handleButton}>
         {buttonLabel}
       </button>
     </div>

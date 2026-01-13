@@ -1,5 +1,7 @@
 import type { RunTypes } from '../components/CustomPolyline';
 
+export const primaryTextColor = '#1F2D3D';
+
 export const selectedColor = '#FFEA33';
 
 // export const runColor = (type: RunTypes | undefined) => {

@@ -28,34 +28,13 @@
   z-index: 0;
 }
 
-/* Overlay blue-snow */
-.leaflet-pane.snow-overlay {
-  mix-blend-mode: color; /* hace que los grises del mapa tomen el azul */
-  pointer-events: none; /* deja interactuar con polylines y markers */
-}
-
-/* Filter more blue on Map */
-.leaflet-tile-pane .snow-filter {
-  filter: saturate(140%) hue-rotate(195deg) brightness(1.04);
-  pointer-events: none;
-}
-
-/* Optional, if needed */
-/* .leaflet-tooltip,
-.leaflet-popup-content-wrapper {
-  background: #eaf4fb;
-  color: #1f2d3d;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(30, 45, 61, 0.5);
-} */
-
 .box {
   position: absolute;
-  background-color: #eaf4fb;
+  background-color: #f2f6fa;
   padding: 10px 10px 5px 10px;
   border-radius: 8px;
   z-index: 100;
-  box-shadow: 0 0 10px rgba(30, 45, 61, 0.5);
+  box-shadow: 0 0 10px rgba(31, 45, 61, 0.5);
 }
 
 .stats-box {
@@ -90,12 +69,21 @@
   background-color: transparent;
 }
 
+.stats-box-button svg {
+  fill: #475569;
+}
+
 .stats-box-button:hover {
-  background-color: #d6eaf8;
+  background-color: #e2e8f0;
 }
 
 .stats-box-button svg:hover {
-  fill: #1e5fa8;
+  fill: #1f2d3d;
+}
+
+.stats-box-button.disabled {
+  pointer-events: none;
+  fill: #94a3b8;
 }
 
 .box-element {
@@ -161,15 +149,15 @@
   align-items: center;
   font-weight: 300;
   color: #1e5fa8;
-  background-color: #d6eaf8;
+  background-color: #e2e8f0;
   border-radius: 4px;
   border: none;
-  box-shadow: 0 0 2.5px rgba(30, 45, 61, 0.5);
+  box-shadow: 0 0 2.5px rgba(31, 45, 61, 0.5);
   cursor: pointer;
 }
 
 .settings-box-button:hover {
-  box-shadow: 0 0 2.5px rgba(30, 45, 61, 1);
+  box-shadow: 0 0 2.5px rgba(31, 45, 61, 1);
 }
 
 .settings-box-button:hover p {
@@ -177,7 +165,7 @@
 }
 
 .settings-box-button.selected {
-  box-shadow: 0 0 5px rgba(30, 45, 61, 1);
+  box-shadow: 0 0 5px rgba(31, 45, 61, 1);
 }
 
 .settings-box-button.selected p {
@@ -252,7 +240,7 @@ h1 {
 }
 
 .tutorial-box div img:nth-child(odd) {
-  box-shadow: 0 0 10px rgba(30, 45, 61, 0.5);
+  box-shadow: 0 0 10px rgba(31, 45, 61, 0.5);
   border-radius: 8px;
   height: 170px;
 }
@@ -271,7 +259,6 @@ h1 {
   height: 8px;
   width: 8px;
   border-radius: 50%;
-  background-color: teal;
 }
 
 .tutorial-box button {
@@ -282,8 +269,18 @@ h1 {
   font-weight: 400;
   border-radius: 4px;
   border: none;
-  box-shadow: 0 0 2.5px rgba(30, 45, 61, 0.5);
+  box-shadow: 0 0 2.5px rgba(31, 45, 61, 0.5);
   cursor: pointer;
+}
+
+.tutorial-box button.primary {
+  color: #ffffff;
+  background-color: #2563eb;
+}
+
+.tutorial-box button.secondary {
+  color: #1f2d3d;
+  background-color: #e2e8f0;
 }
 
 @media (max-width: 640px) {

@@ -11,7 +11,6 @@ export const RunsAndLifts = () => {
   const isPanesCreated = useRef(false);
 
   useEffect(() => {
-    // Panes to manage layers positions
     if (!isPanesCreated.current) {
       map.createPane('runs');
       map.createPane('lifts');

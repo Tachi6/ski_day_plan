@@ -2,7 +2,7 @@ import { use, useEffect, useEffectEvent, useRef } from 'react';
 import { useMap } from 'react-leaflet';
 import 'leaflet-textpath';
 import { HighlightablePolyline } from 'leaflet-highlightable-layers';
-import { arrowColor, borderColor, runColor } from '../helpers/colors';
+import { arrowColor, borderColor, primaryTextColor, runColor } from '../helpers/colors';
 import L from 'leaflet';
 import type { Lift, Run } from '../hooks/useObtainData';
 import { CurrentTrackContext } from '../context/currentTrack/CurrentTrackContext';
@@ -43,7 +43,7 @@ export const CustomPolyline = ({ track }: Props): null => {
       center: true,
       offset: -7,
       orientation: positions[positions.length - 1][1] > positions[0][1] ? 0 : 180,
-      attributes: { fill: '#1f2d3d' },
+      attributes: { fill: primaryTextColor },
     });
 
     polyline.on('click', () => handleClick(track));

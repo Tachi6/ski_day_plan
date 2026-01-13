@@ -11,7 +11,6 @@ export const CurrentTracks = () => {
   const isPanesCreated = useRef(false);
 
   useEffect(() => {
-    // Panes to manage layers positions
     if (!isPanesCreated.current) {
       map.createPane('current-track');
       map.createPane('current-number');
