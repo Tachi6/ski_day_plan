@@ -37,6 +37,7 @@
 /* Filter more blue on Map */
 .leaflet-tile-pane .snow-filter {
   filter: saturate(140%) hue-rotate(195deg) brightness(1.04);
+  pointer-events: none;
 }
 
 /* Optional, if needed */
