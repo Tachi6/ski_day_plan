@@ -199,10 +199,16 @@
   height: 390px;
   width: 400px;
   padding: 15px 20px 20px 20px;
+  display: flex;
   flex-direction: column;
   justify-content: center;
   overflow: hidden;
   transition: 0.5s;
+}
+
+.tutorial-box.hide {
+  opacity: 0;
+  pointer-events: none;
 }
 
 h1 {
@@ -259,6 +265,15 @@ h1 {
   height: 8px;
   width: 8px;
   border-radius: 50%;
+  transition: 0.25s;
+}
+
+.indicator.primary {
+  background-color: #2563eb;
+}
+
+.indicator.secondary {
+  background-color: #cbd5e1;
 }
 
 .tutorial-box button {
@@ -283,7 +298,7 @@ h1 {
   background-color: #e2e8f0;
 }
 
-.dont-show {
+.hide-tutorial {
   margin-top: 10px;
   align-self: center;
   display: inline-flex;
@@ -291,8 +306,19 @@ h1 {
   gap: 5px;
 }
 
-.dont-show label {
+.hide-tutorial label {
   margin-top: 1px;
+}
+
+.hide-tutorial input[type='checkbox'] {
+  accent-color: #2563eb; /* azul del botón principal */
+  border-color: #cbd5e1;
+  background: #f2f6fa;
+  cursor: pointer;
+}
+
+.hide-tutorial input[type='checkbox']:hover {
+  border-color: #2563eb;
 }
 
 @media (max-width: 640px) {
