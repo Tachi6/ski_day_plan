@@ -111,7 +111,7 @@ export const getConnectionInfo = ({
         }
       }
       return hasMatch;
-    })
+    }),
   );
 
   if (!connectionInfo.hasConnection && lastTrackCoords.length > 0) {
@@ -138,7 +138,7 @@ export const getConnectionInfo = ({
           }
         }
         return hasMatch;
-      })
+      }),
     );
 
     if (connectionInfo.connectorTrack) {
@@ -164,7 +164,7 @@ export const getConnectionInfo = ({
             }
           }
           return hasMatch;
-        })
+        }),
       );
     }
   }
