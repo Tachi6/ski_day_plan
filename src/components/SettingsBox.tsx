@@ -35,7 +35,7 @@ const settingsButtons: ButtonLine[] = [
     id: 'turn',
     label: 'Giro preferido',
     options: [
-      ['xsmall', xsmall, 'Muy Corto'],
+      ['xsmall', xsmall, 'Muy corto'],
       ['small', small, 'Corto'],
       ['medium', medium, 'Medio'],
       ['large', large, 'Largo'],
