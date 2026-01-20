@@ -35,7 +35,6 @@ type Direction = 'Down' | 'Up';
 type Connection = 'Conex' | '';
 
 interface ConnectionInfo {
-  hasConnection: boolean;
   lastTrackConnection: Intersection | null;
   lastTrackConnectionIndex: number;
   lastTrackDirection: Direction | null;
@@ -44,24 +43,22 @@ interface ConnectionInfo {
   newTrackDirection: Direction | null;
   connectionType: ConnectionType | null;
   directions: Directions | null;
-  connectorTrack: LatLngTuple[] | null;
-  connectorTrackIndex: number;
+  connectorTrack: Run | undefined;
   connectorTrackConnection: Connection;
 }
 
 interface GetConnectionInfoProps {
   lastTrackCoords: LatLngTuple[];
   newTrackCoords: LatLngTuple[];
-  connections: Run[];
+  allRuns: Run[];
 }
 
 export const getConnectionInfo = ({
   lastTrackCoords,
   newTrackCoords,
-  connections,
+  allRuns,
 }: GetConnectionInfoProps): ConnectionInfo => {
   const connectionInfo: ConnectionInfo = {
-    hasConnection: false,
     lastTrackConnection: null,
     lastTrackConnectionIndex: -1,
     lastTrackDirection: null,
@@ -70,107 +67,95 @@ export const getConnectionInfo = ({
     newTrackDirection: null,
     connectionType: null,
     directions: null,
-    connectorTrack: null,
-    connectorTrackIndex: -1,
+    connectorTrack: undefined,
     connectorTrackConnection: '',
   };
 
-  lastTrackCoords.find((point1, index1) =>
-    newTrackCoords.some((point2, index2) => {
-      connectionInfo.lastTrackDirection = lastTrackCoords[0][2]! - lastTrackCoords.at(-1)![2]! >= 0 ? 'Down' : 'Up';
-      connectionInfo.newTrackDirection = newTrackCoords[0][2]! - newTrackCoords.at(-1)![2]! >= 0 ? 'Down' : 'Up';
+  if (lastTrackCoords.length === 0) {
+    return connectionInfo;
+  }
 
+  if (lastTrackCoords.at(-1)![0] === newTrackCoords[0][0] && lastTrackCoords.at(-1)![1] === newTrackCoords[0][1]) {
+    connectionInfo.connectionType = 'EndStart';
+    return connectionInfo;
+  }
+
+  connectionInfo.lastTrackDirection = lastTrackCoords[0][2]! - lastTrackCoords.at(-1)![2]! >= 0 ? 'Down' : 'Up';
+  connectionInfo.newTrackDirection = newTrackCoords[0][2]! - newTrackCoords.at(-1)![2]! >= 0 ? 'Down' : 'Up';
+
+  const hasConnection = lastTrackCoords.some((point1, index1) =>
+    newTrackCoords.some((point2, index2) => {
       if (index1 === 0) return false;
 
-      const hasMatch = point1[0] === point2[0] && point1[1] === point2[1] && point1[2] === point2[2];
+      const hasMatch = point1[0] === point2[0] && point1[1] === point2[1];
 
       if (hasMatch) {
-        connectionInfo.hasConnection = true;
         connectionInfo.lastTrackConnectionIndex = index1;
         connectionInfo.newTrackConnectionIndex = index2;
-
-        switch (index1) {
-          case lastTrackCoords.length - 1:
-            connectionInfo.lastTrackConnection = 'End';
-            break;
-          default:
-            connectionInfo.lastTrackConnection = 'Middle';
-            break;
-        }
-
-        switch (index2) {
-          case 0:
-            connectionInfo.newTrackConnection = 'Start';
-            break;
-          case newTrackCoords.length - 1:
-            connectionInfo.newTrackConnection = 'End';
-            break;
-          default:
-            connectionInfo.newTrackConnection = 'Middle';
-            break;
-        }
+        connectionInfo.lastTrackConnection = index1 === lastTrackCoords.length - 1 ? 'End' : 'Middle';
+        connectionInfo.newTrackConnection =
+          index2 === 0 ? 'Start' : index2 === newTrackCoords.length - 1 ? 'End' : 'Middle';
       }
       return hasMatch;
     }),
   );
 
-  if (!connectionInfo.hasConnection && lastTrackCoords.length > 0) {
-    lastTrackCoords.find((point, index) =>
-      connections.some((connection) => {
-        if (index === 0) return false;
+  if (!hasConnection) {
+    allRuns.find((run) => {
+      const usedConnection = structuredClone(run);
+      let lastTrackConnectionIndex = -1;
+      let newTrackConnectionIndex = -1;
+      let lastTrackConnection = null;
+      let newTrackConnection = null;
 
-        const hasMatch =
-          connection.geometry.coordinates[0][0] === point[0] &&
-          connection.geometry.coordinates[0][1] === point[1] &&
-          connection.geometry.coordinates[0][2] === point[2];
+      const hasMatchLastTrack = lastTrackCoords.some((point1, index1) => {
+        if (index1 === 0) return false;
 
-        if (hasMatch) {
-          connectionInfo.connectorTrack = connection.geometry.coordinates;
-          connectionInfo.lastTrackConnectionIndex = index;
-
-          switch (index) {
-            case lastTrackCoords.length - 1:
-              connectionInfo.lastTrackConnection = 'End';
-              break;
-            default:
-              connectionInfo.lastTrackConnection = 'Middle';
-              break;
-          }
-        }
-        return hasMatch;
-      }),
-    );
-
-    if (connectionInfo.connectorTrack) {
-      newTrackCoords.find((point1, index1) =>
-        connectionInfo.connectorTrack!.some((point2, index2) => {
-          if (index1 === newTrackCoords.length - 1) return false;
-
-          const hasMatch = point1[0] === point2[0] && point1[1] === point2[1] && point1[2] === point2[2];
+        return usedConnection.geometry.coordinates.some((point2, index) => {
+          const hasMatch = point2[0] === point1[0] && point2[1] === point1[1];
 
           if (hasMatch) {
-            connectionInfo.hasConnection = true;
-            connectionInfo.connectorTrackIndex = index2;
-            connectionInfo.newTrackConnectionIndex = index1;
-            connectionInfo.connectorTrackConnection = 'Conex';
+            lastTrackConnectionIndex = index1;
+            lastTrackConnection = index1 === lastTrackCoords.length - 1 ? 'End' : 'Middle';
+            usedConnection.geometry.coordinates = usedConnection.geometry.coordinates.slice(index);
+          }
 
-            switch (index1) {
-              case 0:
-                connectionInfo.newTrackConnection = 'Start';
-                break;
-              default:
-                connectionInfo.newTrackConnection = 'Middle';
-                break;
-            }
+          return hasMatch;
+        });
+      });
+
+      if (!hasMatchLastTrack) return false;
+
+      const hasMatchNewTrack = newTrackCoords.some((point3, index2) => {
+        if (index2 === newTrackCoords.length - 1) return false;
+
+        return usedConnection.geometry.coordinates.some((point4, index) => {
+          const hasMatch = point4[0] === point3[0] && point4[1] === point3[1];
+
+          if (hasMatch) {
+            newTrackConnectionIndex = index2;
+            newTrackConnection = index2 === 0 ? 'Start' : 'Middle';
+            usedConnection.geometry.coordinates = usedConnection.geometry.coordinates.slice(0, index + 1);
           }
           return hasMatch;
-        }),
-      );
-    }
+        });
+      });
+
+      if (hasMatchNewTrack) {
+        connectionInfo.connectorTrack = usedConnection;
+        connectionInfo.connectorTrackConnection = 'Conex';
+        connectionInfo.lastTrackConnectionIndex = lastTrackConnectionIndex;
+        connectionInfo.lastTrackConnection = lastTrackConnection;
+        connectionInfo.newTrackConnectionIndex = newTrackConnectionIndex;
+        connectionInfo.newTrackConnection = newTrackConnection;
+      }
+
+      return hasMatchNewTrack;
+    });
   }
 
   connectionInfo.connectionType =
-    connectionInfo.hasConnection || connectionInfo.connectorTrackConnection === 'Conex'
+    hasConnection || connectionInfo.connectorTrackConnection === 'Conex'
       ? `${connectionInfo.lastTrackConnection!}${connectionInfo.connectorTrackConnection!}${connectionInfo.newTrackConnection!}`
       : null;
 
@@ -184,39 +169,61 @@ export const getConnectionInfo = ({
 interface AddNewTrackProps {
   currentTrack: Track;
   newTrack: Run | Lift;
+  connectorTrack?: Run;
   trackSettings: TrackSettingsState;
 }
 
-export const addNewTrack = ({ currentTrack, newTrack, trackSettings }: AddNewTrackProps): Track => {
+export const addNewTrack = ({ currentTrack, newTrack, connectorTrack, trackSettings }: AddNewTrackProps): Track => {
   const newTrackCoords = newTrack.geometry.coordinates;
-  const isDownhill = newTrackCoords[0][2]! - newTrackCoords[newTrackCoords.length - 1][2]! >= 0;
-  const lastTrack = currentTrack.trackSteps.at(-1)?.geometry.coordinates;
-  const islastTrackDownhill = lastTrack && lastTrack[0][2]! - lastTrack[lastTrack.length - 1][2]! >= 0;
+  const connectorTrackCoords = connectorTrack?.geometry.coordinates;
+  const isDownhill = newTrackCoords[0][2]! - newTrackCoords.at(-1)![2]! >= 0;
+  const lastTrackCoords = currentTrack.trackSteps.at(-1)?.geometry.coordinates;
+  const islastTrackDownhill = lastTrackCoords && lastTrackCoords[0][2]! - lastTrackCoords.at(-1)![2]! >= 0;
 
   const newTrackDistance = trackDistance({
-    track: newTrack.geometry.coordinates,
+    track: newTrackCoords,
     turn: trackSettings.turn,
     runType: newTrack.properties.difficulty as RunTypes,
   });
+  const connectorTrackDistance = connectorTrack
+    ? trackDistance({
+        track: connectorTrackCoords!,
+        turn: trackSettings.turn,
+        runType:
+          connectorTrack.properties.uses !== 'connection'
+            ? (connectorTrack.properties.difficulty as RunTypes)
+            : 'novice',
+      })
+    : 0;
   const newTrackTime = obtainSeconds({
     distance: newTrackDistance,
     track: newTrack,
     speed: trackSettings.speed,
     stops: trackSettings.stops,
   });
+  const connectorTrackTime = connectorTrack
+    ? obtainSeconds({
+        distance: connectorTrackDistance,
+        track: connectorTrack,
+        speed: trackSettings.speed,
+        stops: trackSettings.stops,
+      })
+    : 0;
+  const newTrackElevation = Math.abs(newTrackCoords[0][2]! - newTrackCoords.at(-1)![2]!);
+  const connectorTrackElevation = connectorTrack
+    ? Math.abs(connectorTrackCoords![0][2]! - connectorTrackCoords!.at(-1)![2]!)
+    : 0;
 
-  const newTrackElevation = Math.abs(newTrackCoords[0][2]! - newTrackCoords[newTrackCoords.length - 1][2]!);
+  const newTrackSteps = connectorTrack ? [connectorTrack, newTrack] : [newTrack];
 
   return {
-    coordinates: [...currentTrack.coordinates, ...newTrackCoords],
-    trackSteps: [...currentTrack.trackSteps, newTrack],
-    downhillDistance: currentTrack.downhillDistance + (isDownhill ? newTrackDistance : 0),
-    uphillDistance: currentTrack.uphillDistance + (!isDownhill ? newTrackDistance : 0),
-    totalDistance: currentTrack.totalDistance + newTrackDistance,
-    totalTime: currentTrack.totalTime + newTrackTime,
-    descentElevation: currentTrack.descentElevation + (isDownhill ? newTrackElevation : 0),
-    climbElevation: currentTrack.climbElevation + (!isDownhill ? newTrackElevation : 0),
-    // TODO: refactor downhills
+    trackSteps: [...currentTrack.trackSteps, ...newTrackSteps],
+    downhillDistance: currentTrack.downhillDistance + (isDownhill ? connectorTrackDistance + newTrackDistance : 0),
+    uphillDistance: currentTrack.uphillDistance + (!isDownhill ? connectorTrackDistance + newTrackDistance : 0),
+    totalDistance: currentTrack.totalDistance + connectorTrackDistance + newTrackDistance,
+    totalTime: currentTrack.totalTime + connectorTrackTime + newTrackTime,
+    descentElevation: currentTrack.descentElevation + (isDownhill ? connectorTrackElevation + newTrackElevation : 0),
+    climbElevation: currentTrack.climbElevation + (!isDownhill ? connectorTrackElevation + newTrackElevation : 0),
     downhills: !islastTrackDownhill && isDownhill ? currentTrack.downhills + 1 : currentTrack.downhills,
   };
 };
@@ -230,34 +237,16 @@ interface ClipCurrentTrackProps {
 export const clipCurrentTrack = ({ currentTrack, cutIndex, trackSettings }: ClipCurrentTrackProps): Track => {
   const lastTrack = currentTrack.trackSteps.at(-1)!;
 
-  const trackToRemove = currentTrack.coordinates.slice(cutIndex);
+  const coordsToRemove = lastTrack.geometry.coordinates.slice(cutIndex);
 
-  const isDownhill = trackToRemove[0][2]! - trackToRemove[trackToRemove.length - 1][2]! >= 0;
-
-  const lastTrackIndex = lastTrack.geometry.coordinates.findLastIndex((coordinate) => {
-    const currentTrackCoordinate = currentTrack.coordinates[cutIndex - 1];
-
-    return (
-      coordinate[0] === currentTrackCoordinate[0] &&
-      coordinate[1] === currentTrackCoordinate[1] &&
-      coordinate[2] === currentTrackCoordinate[2]
-    );
-  });
-
-  const newTrackStep: Run | Lift = {
-    ...lastTrack,
-    geometry: {
-      coordinates: [...lastTrack.geometry.coordinates.slice(0, lastTrackIndex + 1)],
-      type: lastTrack.geometry.type,
-    },
-  };
+  const isDownhill = coordsToRemove[0][2]! - coordsToRemove.at(-1)![2]! >= 0;
 
   const removeDistance = trackDistance({
-    track: trackToRemove,
+    track: lastTrack.geometry.coordinates,
     turn: trackSettings.turn,
     runType: lastTrack.properties.difficulty as RunTypes,
   });
-  const removeElevation = Math.abs(trackToRemove[trackToRemove.length - 1][2]! - trackToRemove[0][2]!);
+  const removeElevation = Math.abs(coordsToRemove.at(-1)![2]! - coordsToRemove[0][2]!);
   const removeTime = obtainSeconds({
     distance: removeDistance,
     speed: trackSettings.speed,
@@ -265,9 +254,16 @@ export const clipCurrentTrack = ({ currentTrack, cutIndex, trackSettings }: Clip
     track: lastTrack,
   });
 
+  const newTrackStep: Run | Lift = {
+    ...lastTrack,
+    geometry: {
+      coordinates: [...lastTrack.geometry.coordinates.slice(0, cutIndex)],
+      type: lastTrack.geometry.type,
+    },
+  };
+
   return {
-    coordinates: [...currentTrack.coordinates.slice(0, cutIndex)],
-    trackSteps: [...currentTrack.trackSteps.slice(0, currentTrack.trackSteps.length - 1), newTrackStep],
+    trackSteps: [...currentTrack.trackSteps.slice(0, currentTrack.trackSteps.length - 2), newTrackStep],
     downhillDistance: currentTrack.downhillDistance - (isDownhill ? removeDistance : 0),
     uphillDistance: currentTrack.uphillDistance - (!isDownhill ? removeDistance : 0),
     totalDistance: currentTrack.totalDistance - removeDistance,
@@ -280,27 +276,19 @@ export const clipCurrentTrack = ({ currentTrack, cutIndex, trackSettings }: Clip
 
 export const removeLastTrack = (currentTrack: Track, trackSettings: TrackSettingsState): Track => {
   const lastTrack = currentTrack.trackSteps.at(-1)!;
-  const cutIndex = currentTrack.coordinates.findLastIndex((coordinate) => {
-    const lastInitCoordinate = currentTrack.trackSteps.at(-1)!.geometry.coordinates[0];
 
-    return (
-      coordinate[0] === lastInitCoordinate[0] &&
-      coordinate[1] === lastInitCoordinate[1] &&
-      coordinate[2] === lastInitCoordinate[2]
-    );
-  });
-  const trackToRemove = lastTrack.geometry.coordinates;
+  const coordsToRemove = lastTrack.geometry.coordinates;
 
-  const isDownhill = trackToRemove[0][2]! - trackToRemove.at(-1)![2]! >= 0;
+  const isDownhill = coordsToRemove[0][2]! - coordsToRemove.at(-1)![2]! >= 0;
   const previousTrack = currentTrack.trackSteps.at(-2)?.geometry.coordinates;
   const isPreviousTrackDownhill = previousTrack && previousTrack[0][2]! - previousTrack!.at(-1)![2]! >= 0;
 
   const removeDistance = trackDistance({
-    track: trackToRemove,
+    track: coordsToRemove,
     turn: trackSettings.turn,
     runType: lastTrack.properties.difficulty as RunTypes,
   });
-  const removeElevation = Math.abs(trackToRemove[trackToRemove.length - 1][2]! - trackToRemove[0][2]!);
+  const removeElevation = Math.abs(coordsToRemove.at(-1)![2]! - coordsToRemove[0][2]!);
   const removeTime = obtainSeconds({
     distance: removeDistance,
     speed: trackSettings.speed,
@@ -309,7 +297,6 @@ export const removeLastTrack = (currentTrack: Track, trackSettings: TrackSetting
   });
 
   return {
-    coordinates: [...currentTrack.coordinates.slice(0, cutIndex)],
     trackSteps: [...currentTrack.trackSteps.slice(0, currentTrack.trackSteps.length - 1)],
     downhillDistance: currentTrack.downhillDistance - (isDownhill ? removeDistance : 0),
     uphillDistance: currentTrack.uphillDistance - (!isDownhill ? removeDistance : 0),

@@ -76,10 +76,10 @@ interface StopsSecondsProps {
 const obtainStopsSeconds = ({ distance, stops }: StopsSecondsProps) => (distance / 1000) * stopsValues[stops];
 
 export const obtainSeconds = ({ distance, track, speed, stops }: ObtainTimeProps): number => {
-  if (track.properties.difficulty) {
-    return (
-      distance / runSpeedTable[speed][track.properties.difficulty as RunTypes] + obtainStopsSeconds({ distance, stops })
-    );
+  if (track.properties.difficulty || track.properties.difficulty === null) {
+    const trackDifficulty = track.properties.difficulty !== null ? track.properties.difficulty : 'novice';
+
+    return distance / runSpeedTable[speed][trackDifficulty as RunTypes] + obtainStopsSeconds({ distance, stops });
   }
   const liftType = track.properties.name.split(' ')[0] as LiftsTypes;
   const liftSeconds = track.properties.duration ?? distance / liftSpeed[liftType];

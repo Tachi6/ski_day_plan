@@ -84,7 +84,7 @@ const parseCoordinates = (coordinates: LatLngTuple[]): LatLngTuple[] => {
 export const useObtainData = () => {
   const [runs, setRuns] = useState<Run[]>([]);
   const [lifts, setLifts] = useState<Lift[]>([]);
-  const [connections, setConnections] = useState<Run[]>([]);
+  const [allRuns, setAllRuns] = useState<Run[]>([]);
 
   useEffect(() => {
     const obtainRuns = async () => {
@@ -99,7 +99,7 @@ export const useObtainData = () => {
       }));
 
       setRuns(loadedRuns.filter((run) => run.properties.uses === 'downhill'));
-      setConnections(loadedRuns.filter((run) => run.properties.uses === 'connection'));
+      setAllRuns(loadedRuns);
     };
 
     const obtainLifts = async () => {
@@ -120,5 +120,5 @@ export const useObtainData = () => {
     obtainLifts();
   }, []);
 
-  return { runs, lifts, connections };
+  return { runs, lifts, allRuns };
 };
