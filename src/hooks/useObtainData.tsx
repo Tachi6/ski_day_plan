@@ -100,7 +100,9 @@ export const useObtainData = () => {
       }));
 
       setRuns(loadedRuns.filter((run) => run.properties.uses === 'downhill'));
-      setAllRuns(loadedRuns);
+      setAllRuns(
+        loadedRuns.filter((run) => run.properties.uses === 'downhill' || run.properties.uses === 'connection'),
+      );
     };
 
     const obtainLifts = async () => {
