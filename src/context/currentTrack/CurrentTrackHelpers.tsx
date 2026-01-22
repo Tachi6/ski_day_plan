@@ -176,9 +176,9 @@ interface AddNewTrackProps {
 export const addNewTrack = ({ currentTrack, newTrack, connectorTrack, trackSettings }: AddNewTrackProps): Track => {
   const newTrackCoords = newTrack.geometry.coordinates;
   const connectorTrackCoords = connectorTrack?.geometry.coordinates;
-  const isDownhill = newTrackCoords[0][2]! - newTrackCoords.at(-1)![2]! >= 0;
-  const lastTrackCoords = currentTrack.trackSteps.at(-1)?.geometry.coordinates;
-  const islastTrackDownhill = lastTrackCoords && lastTrackCoords[0][2]! - lastTrackCoords.at(-1)![2]! >= 0;
+  const isDownhill = newTrack.properties.uses ? true : false;
+  const lastTrack = currentTrack.trackSteps.at(-1);
+  const islastTrackDownhill = lastTrack && lastTrack.properties.uses ? true : false;
 
   const newTrackDistance = obtainDistance({
     track: newTrackCoords,
@@ -239,7 +239,7 @@ export const clipCurrentTrack = ({ currentTrack, cutIndex, trackSettings }: Clip
 
   const coordsToRemove = lastTrack.geometry.coordinates.slice(cutIndex);
 
-  const isDownhill = coordsToRemove[0][2]! - coordsToRemove.at(-1)![2]! >= 0;
+  const isDownhill = lastTrack.properties.uses ? true : false;
 
   const removeDistance = obtainDistance({
     track: lastTrack.geometry.coordinates,
@@ -279,9 +279,9 @@ export const removeLastTrack = (currentTrack: Track, trackSettings: TrackSetting
 
   const coordsToRemove = lastTrack.geometry.coordinates;
 
-  const isDownhill = coordsToRemove[0][2]! - coordsToRemove.at(-1)![2]! >= 0;
-  const previousTrack = currentTrack.trackSteps.at(-2)?.geometry.coordinates;
-  const isPreviousTrackDownhill = previousTrack && previousTrack[0][2]! - previousTrack!.at(-1)![2]! >= 0;
+  const isDownhill = lastTrack.properties.uses ? true : false;
+  const previousTrack = currentTrack.trackSteps.at(-2);
+  const isPreviousTrackDownhill = previousTrack && previousTrack.properties.uses ? true : false;
 
   const removeDistance = obtainDistance({
     track: coordsToRemove,
