@@ -27,7 +27,7 @@ interface RunProperties {
   countries: string;
   regions: string;
   localities?: string;
-  uses: string;
+  uses?: string;
   ref?: string;
   description?: string;
   difficulty: string;
@@ -56,6 +56,7 @@ interface LiftProperties {
   countries: string;
   regions: string;
   localities?: string;
+  uses?: string;
   lift_type: string;
   ref?: string;
   ref_fr_cairn?: string;

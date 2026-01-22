@@ -1,4 +1,4 @@
-import { use } from 'react';
+import { use, useEffect, useEffectEvent } from 'react';
 import { CurrentTrackContext } from '../context/currentTrack/CurrentTrackContext';
 import { ViewSettingsContext } from '../context/viewSettings/ViewSettingsContext';
 import { obtainPausesSeconds, timeToHoursAndMinutes } from '../helpers/times';
@@ -9,9 +9,15 @@ import { RemoveIcon } from '../assets/icons/RemoveIcon';
 import { UndoIcon } from '../assets/icons/UndoIcon';
 
 export const StatsBox = () => {
-  const { currentTrack, undoLastTrack, clearTrack } = use(CurrentTrackContext);
+  const { currentTrack, undoLastTrack, clearTrack, recalculateStats } = use(CurrentTrackContext);
   const { changeVisibility } = use(ViewSettingsContext);
   const { trackSettings } = use(TrackSettingsContext);
+
+  const reloadStats = useEffectEvent(() => recalculateStats());
+
+  useEffect(() => {
+    reloadStats();
+  }, [trackSettings]);
 
   const skiSeconds = currentTrack.totalTime;
   const pausesSeconds = obtainPausesSeconds(trackSettings.pauses);

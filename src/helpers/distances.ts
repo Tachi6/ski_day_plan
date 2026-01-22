@@ -76,7 +76,7 @@ interface TrackDistanceProps {
   runType?: RunTypes;
 }
 
-export const trackDistance = ({ track, turn, runType }: TrackDistanceProps) => {
+export const obtainDistance = ({ track, turn, runType }: TrackDistanceProps) => {
   let lastCoordinates: LatLngTuple;
   const straightDistance = track.reduce((accumulator: number, currentValue: LatLngTuple) => {
     if (lastCoordinates === undefined) {

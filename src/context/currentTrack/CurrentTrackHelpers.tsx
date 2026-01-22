@@ -1,5 +1,5 @@
 import { type LatLngTuple } from 'leaflet';
-import { trackDistance } from '../../helpers/distances';
+import { obtainDistance } from '../../helpers/distances';
 import type { Track } from './CurrentTrackProvider';
 import type { Lift, Run } from '../../hooks/useObtainData';
 import { obtainSeconds } from '../../helpers/times';
@@ -180,13 +180,13 @@ export const addNewTrack = ({ currentTrack, newTrack, connectorTrack, trackSetti
   const lastTrackCoords = currentTrack.trackSteps.at(-1)?.geometry.coordinates;
   const islastTrackDownhill = lastTrackCoords && lastTrackCoords[0][2]! - lastTrackCoords.at(-1)![2]! >= 0;
 
-  const newTrackDistance = trackDistance({
+  const newTrackDistance = obtainDistance({
     track: newTrackCoords,
     turn: trackSettings.turn,
     runType: newTrack.properties.difficulty as RunTypes,
   });
   const connectorTrackDistance = connectorTrack
-    ? trackDistance({
+    ? obtainDistance({
         track: connectorTrackCoords!,
         turn: trackSettings.turn,
         runType:
@@ -241,7 +241,7 @@ export const clipCurrentTrack = ({ currentTrack, cutIndex, trackSettings }: Clip
 
   const isDownhill = coordsToRemove[0][2]! - coordsToRemove.at(-1)![2]! >= 0;
 
-  const removeDistance = trackDistance({
+  const removeDistance = obtainDistance({
     track: lastTrack.geometry.coordinates,
     turn: trackSettings.turn,
     runType: lastTrack.properties.difficulty as RunTypes,
@@ -283,7 +283,7 @@ export const removeLastTrack = (currentTrack: Track, trackSettings: TrackSetting
   const previousTrack = currentTrack.trackSteps.at(-2)?.geometry.coordinates;
   const isPreviousTrackDownhill = previousTrack && previousTrack[0][2]! - previousTrack!.at(-1)![2]! >= 0;
 
-  const removeDistance = trackDistance({
+  const removeDistance = obtainDistance({
     track: coordsToRemove,
     turn: trackSettings.turn,
     runType: lastTrack.properties.difficulty as RunTypes,

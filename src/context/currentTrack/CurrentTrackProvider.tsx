@@ -1,10 +1,12 @@
 import { type PropsWithChildren, use, useState } from 'react';
 import { type LatLngTuple } from 'leaflet';
-import { distanceHaversine } from '../../helpers/distances';
+import { distanceHaversine, obtainDistance } from '../../helpers/distances';
 import { CurrentTrackContext } from './CurrentTrackContext';
 import { addNewTrack, clipCurrentTrack, getConnectionInfo, removeLastTrack } from './CurrentTrackHelpers';
 import { useObtainData, type Lift, type Run } from '../../hooks/useObtainData';
 import { TrackSettingsContext } from '../trackSettings/TrackSettingsContext';
+import type { RunTypes } from '../../components/CustomPolyline';
+import { obtainSeconds } from '../../helpers/times';
 
 export interface Track {
   trackSteps: (Run | Lift)[];
@@ -343,8 +345,50 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
 
   const clearTrack = () => setCurrentTrack(initTrackState);
 
+  const recalculateStats = () => {
+    const newCurrentTrack: Track = {
+      ...currentTrack,
+      downhillDistance: 0,
+      uphillDistance: 0,
+      totalDistance: 0,
+      totalTime: 0,
+    };
+
+    currentTrack.trackSteps.forEach((track) => {
+      const trackDistance = obtainDistance({
+        track: track.geometry.coordinates,
+        turn: trackSettings.turn,
+        runType: track.properties.difficulty as RunTypes,
+      });
+
+      const trackTime = obtainSeconds({
+        distance: trackDistance,
+        track: track,
+        speed: trackSettings.speed,
+        stops: trackSettings.stops,
+      });
+
+      const isDownhill = track.properties.uses ? true : false;
+
+      newCurrentTrack.downhillDistance = newCurrentTrack.totalDistance + (isDownhill ? trackDistance : 0);
+      newCurrentTrack.uphillDistance = newCurrentTrack.totalDistance + +(!isDownhill ? trackDistance : 0);
+      newCurrentTrack.totalDistance = newCurrentTrack.totalDistance + trackDistance;
+      newCurrentTrack.totalTime = newCurrentTrack.totalTime + trackTime;
+    });
+
+    setCurrentTrack(newCurrentTrack);
+  };
+
   return (
-    <CurrentTrackContext value={{ currentTrack, addRunToTrack, undoLastTrack, clearTrack }}>
+    <CurrentTrackContext
+      value={{
+        currentTrack,
+        addRunToTrack,
+        undoLastTrack,
+        clearTrack,
+        recalculateStats,
+      }}
+    >
       {children}
     </CurrentTrackContext>
   );

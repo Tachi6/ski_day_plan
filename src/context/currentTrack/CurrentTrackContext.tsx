@@ -7,6 +7,7 @@ interface CurrentTrackContextProps {
   addRunToTrack: (track: Run | Lift) => void;
   undoLastTrack: () => void;
   clearTrack: () => void;
+  recalculateStats: () => void;
 }
 
 export const CurrentTrackContext = createContext({} as CurrentTrackContextProps);
