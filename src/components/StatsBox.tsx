@@ -7,11 +7,15 @@ import { SettingsIcon } from '../assets/icons/SettingsIcon';
 import { LocationIcon } from '../assets/icons/LocationIcon';
 import { RemoveIcon } from '../assets/icons/RemoveIcon';
 import { UndoIcon } from '../assets/icons/UndoIcon';
+import { createGPXContent, mergeTracks } from '../helpers/createGPX';
+import { useDownloadGPX } from '../hooks/useDownloadGPX';
+import { DownloadIcon } from '../assets/icons/DownloadIcon';
 
 export const StatsBox = () => {
   const { currentTrack, undoLastTrack, clearTrack, recalculateStats } = use(CurrentTrackContext);
   const { changeVisibility } = use(ViewSettingsContext);
   const { trackSettings } = use(TrackSettingsContext);
+  const downloadGPX = useDownloadGPX();
 
   const reloadStats = useEffectEvent(() => recalculateStats());
 
@@ -25,6 +29,12 @@ export const StatsBox = () => {
 
   const distanceToString = (distance: number): string => {
     return `${(distance / 1000).toFixed(1)}`;
+  };
+
+  const handleDownload = () => {
+    const mergedTracks = mergeTracks(currentTrack.trackSteps);
+    const fileContent = createGPXContent(mergedTracks);
+    downloadGPX(fileContent);
   };
 
   return (
@@ -111,6 +121,9 @@ export const StatsBox = () => {
         </button>
         <button className="stats-box-button disabled">
           <LocationIcon />
+        </button>
+        <button className="stats-box-button" onClick={handleDownload}>
+          <DownloadIcon />
         </button>
         <button className="stats-box-button" onClick={changeVisibility}>
           <SettingsIcon />
