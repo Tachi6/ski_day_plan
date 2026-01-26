@@ -3,9 +3,10 @@ import { useMap } from 'react-leaflet';
 import { HighlightablePolyline } from 'leaflet-highlightable-layers';
 import type { Lift, Run } from '../hooks/useObtainData';
 import L from 'leaflet';
-import { borderColor, runColor, selectedColor, textColor } from '../helpers/colors';
+import { borderColor, runColor, selectedColor } from '../helpers/colors';
 import type { RunTypes } from './CustomPolyline';
 import { renderToString } from 'react-dom/server';
+import { CirclePosition } from './CirclePosition';
 
 interface Props {
   track: Run | Lift;
@@ -40,18 +41,7 @@ export const CurrentTrackPolyline = ({ track, index, markerIndex }: Props): null
 
     const icon = L.divIcon({
       className: 'circle-marker',
-      html: renderToString(
-        <div
-          className="track-step"
-          style={{
-            borderColor: borderColor(difficulty as RunTypes),
-            backgroundColor: runColor(difficulty as RunTypes),
-            color: textColor(difficulty as RunTypes),
-          }}
-        >
-          {index + 1}
-        </div>
-      ),
+      html: renderToString(<CirclePosition difficulty={track.properties.difficulty} position={index + 1} />),
       iconSize: [20, 20],
       iconAnchor: [10, 10],
     });

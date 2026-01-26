@@ -2,6 +2,15 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap');
 
+@keyframes add-track {
+  0% {
+    transform: translateX(-180px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
 :root {
   --settings-box-width: 390px;
   --settings-box-responsive-width: 320px;
@@ -319,6 +328,35 @@ h1 {
 
 .hide-tutorial input[type='checkbox']:hover {
   border-color: #2563eb;
+}
+
+/* TRACK STEPS */
+.steps-box-container {
+  position: absolute;
+  top: 250px;
+  left: 20px;
+  width: 160px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.steps-box {
+  height: 30px;
+  background-color: #f2f6fa60;
+  justify-self: center;
+  padding: 5px 10px;
+  border-radius: 8px;
+  z-index: 100;
+  box-shadow: 0 0 5px rgba(31, 45, 61, 0.35);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: 0.5s;
+  animation-name: add-track;
+  animation-duration: 0.5s;
+  animation-timing-function: ease-out;
+  animation-iteration-count: 1;
 }
 
 @media (max-width: 640px) {
