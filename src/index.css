@@ -141,6 +141,12 @@
   right: var(--settings-box-show);
 }
 
+.close-button {
+  position: absolute;
+  right: 7.5px;
+  top: 7.5px;
+}
+
 .turn-image {
   height: 40px;
   transform: translateY(-2.5px);

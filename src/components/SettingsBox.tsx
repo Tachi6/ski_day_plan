@@ -24,6 +24,7 @@ import {
   type Pauses,
   type TrackSettingsState,
 } from '../context/trackSettings/TrackSettingsContext';
+import { CloseIcon } from '../assets/icons/CloseIcon';
 
 interface ButtonLine {
   id: keyof TrackSettingsState;
@@ -75,11 +76,14 @@ const settingsButtons: ButtonLine[] = [
 ];
 
 export const SettingsBox = () => {
-  const { view } = use(ViewSettingsContext);
+  const { view, changeVisibility } = use(ViewSettingsContext);
   const { trackSettings, changeSettings } = use(TrackSettingsContext);
 
   return (
     <div className={`box settings-box ${view ? 'show' : 'hide'}`}>
+      <button className="stats-box-button close-button" onClick={changeVisibility}>
+        <CloseIcon />
+      </button>
       {settingsButtons.map((buttonLine) => (
         <Fragment key={buttonLine.id + buttonLine.label}>
           <h3>{buttonLine.label}</h3>
