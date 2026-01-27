@@ -1,10 +1,7 @@
 import { use, useEffect, useEffectEvent, useLayoutEffect, useState } from 'react';
 import { CurrentTrackContext } from '../context/currentTrack/CurrentTrackContext';
 import { CirclePosition } from './CirclePosition';
-
-const STEPS_BOX_HEIGHT = 30;
-const STEPS_BOX_GAP = 10;
-const STEPS_BOX_FULL = STEPS_BOX_HEIGHT + STEPS_BOX_GAP;
+import { useCSSVariable } from '../hooks/useCSSVariable';
 
 export const StepsBox = () => {
   const { currentTrack } = use(CurrentTrackContext);
@@ -13,14 +10,18 @@ export const StepsBox = () => {
   const [maxRows, setMaxRows] = useState(0);
   const [scrollStep, setScrollStep] = useState(0);
 
+  const stepsBoxHeight = Number(useCSSVariable('--steps-box-height').replace('px', ''));
+  const stepsBoxGap = Number(useCSSVariable('--steps-box-gap').replace('px', ''));
+  const stepsBoxUnit = stepsBoxHeight + stepsBoxGap;
+
   useLayoutEffect(() => {
     const updateHeight = () => {
       const windowHeight = window.innerHeight;
       // TODO: Globalizar 270px!!!
-      const innerRows = Math.floor((windowHeight - 270) / STEPS_BOX_FULL);
+      const innerRows = Math.floor((windowHeight - 270) / stepsBoxUnit);
 
       setMaxRows(innerRows);
-      setHeight(innerRows * STEPS_BOX_FULL);
+      setHeight(innerRows * stepsBoxUnit);
     };
 
     updateHeight();
@@ -28,10 +29,10 @@ export const StepsBox = () => {
     window.addEventListener('resize', updateHeight);
 
     return () => window.removeEventListener('resize', updateHeight);
-  }, []);
+  }, [stepsBoxUnit]);
 
   const handleTopPosition = useEffectEvent(() => {
-    if (height >= currentTrack.trackSteps.length * STEPS_BOX_FULL) {
+    if (height >= currentTrack.trackSteps.length * stepsBoxUnit) {
       return;
     }
     setScrollStep(maxRows - currentTrack.trackSteps.length);
@@ -54,14 +55,10 @@ export const StepsBox = () => {
 
   return (
     <div className="steps-box-container" style={{ height: `${height}px` }}>
-      <div
-        className="steps-box-scroll"
-        style={{ top: `${scrollStep * STEPS_BOX_FULL}px`, gap: `${STEPS_BOX_GAP}px` }}
-        onWheel={handleMouseWheel}
-      >
+      <div className="steps-box-scroll" style={{ top: `${scrollStep * stepsBoxUnit}px` }} onWheel={handleMouseWheel}>
         {currentTrack.trackSteps.length > 0 &&
           currentTrack.trackSteps.map((track, index) => (
-            <div key={`${track.id}-${index}`} className="steps-box" style={{ height: `${STEPS_BOX_HEIGHT}px` }}>
+            <div key={`${track.id}-${index}`} className="steps-box">
               <CirclePosition difficulty={track.properties.difficulty} position={index + 1} />
               <p>{track.properties.name ?? 'Conexión'}</p>
             </div>
