@@ -30,6 +30,7 @@ interface ButtonLine {
   label: string;
   options: [Turn | Speed | Stops | Pauses, string, string][];
 }
+
 const settingsButtons: ButtonLine[] = [
   {
     id: 'turn',

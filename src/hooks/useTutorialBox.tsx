@@ -30,7 +30,7 @@ export const useTutorialBox = (): UseTutorialBox => {
   const changeStep = (index: number) => setStep(index);
 
   const handleTransitionEnd = () => {
-    if (hide) setDisplay('none'); // una vez termina la animación, quita del layout
+    if (hide) setDisplay('none');
   };
 
   return {
