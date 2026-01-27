@@ -334,9 +334,6 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
             connectorTrack.properties.uses = 'connection';
             connectorTrack.geometry.coordinates = [editedTrackEnd, newTrackCoords[0]];
 
-            console.log(connectorTrack.geometry.coordinates);
-            console.log(newTrackCoords);
-
             setCurrentTrack(
               addNewTrack({
                 currentTrack: editedCurrentTrack,

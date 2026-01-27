@@ -333,16 +333,25 @@ h1 {
 /* TRACK STEPS */
 .steps-box-container {
   position: absolute;
-  top: 250px;
-  left: 20px;
-  width: 160px;
+  top: 245px;
+  left: 15px;
+  width: 170px;
+  overflow: hidden;
+}
+
+.steps-box-scroll {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  margin-top: 5px;
+  margin-left: 5px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  transition: 0.25s ease-out;
 }
 
 .steps-box {
-  height: 30px;
+  width: 160px;
   background-color: #f2f6fa60;
   justify-self: center;
   padding: 5px 10px;
@@ -354,7 +363,7 @@ h1 {
   gap: 10px;
   transition: 0.5s;
   animation-name: add-track;
-  animation-duration: 0.5s;
+  animation-duration: 0.25s;
   animation-timing-function: ease-out;
   animation-iteration-count: 1;
 }
@@ -431,5 +440,9 @@ h1 {
 
   .tutorial-step-image {
     width: 300px;
+  }
+
+  .steps-box-container {
+    display: none;
   }
 }
