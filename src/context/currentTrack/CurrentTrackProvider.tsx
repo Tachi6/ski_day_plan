@@ -222,16 +222,19 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
           distanceHaversine(lastTrackEnd, newTrackInit) <= UP_UP_DISTANCE &&
           Math.abs(lastTrackEnd[2]! - newTrackInit[2]!) <= UP_UP_HEIGHT
         ) {
+          const connectorTrack: Run = structuredClone({ ...(newTrack as Run) });
+
+          connectorTrack.id = Date.now();
+          connectorTrack.properties.name = null;
+          connectorTrack.properties.difficulty = 'easy';
+          connectorTrack.properties.uses = 'connection';
+          connectorTrack.geometry.coordinates = [lastTrackEnd, newTrackCoords[0]];
+
           setCurrentTrack(
             addNewTrack({
               currentTrack,
-              newTrack: {
-                ...newTrack,
-                geometry: {
-                  coordinates: [lastTrackEnd, ...newTrackCoords],
-                  type: newTrack.geometry.type,
-                },
-              },
+              newTrack: newTrack,
+              connectorTrack: connectorTrack,
               trackSettings: trackSettings,
             }),
           );
@@ -247,16 +250,25 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
             trackPoint[2]! - lastTrackEnd[2]! <= UP_DOWN_HEIGHT;
 
           if (hasPoint) {
+            const connectorTrack: Run = structuredClone({ ...(newTrack as Run) });
+
+            connectorTrack.id = Date.now();
+            connectorTrack.properties.name = null;
+            connectorTrack.properties.difficulty = 'easy';
+            connectorTrack.properties.uses = 'connection';
+            connectorTrack.geometry.coordinates = [lastTrackEnd, newTrackCoords[index]];
+
             setCurrentTrack(
               addNewTrack({
                 currentTrack,
                 newTrack: {
                   ...newTrack,
                   geometry: {
-                    coordinates: [lastTrackEnd, ...newTrackCoords.slice(index)],
+                    coordinates: [...newTrackCoords.slice(index)],
                     type: newTrack.geometry.type,
                   },
                 },
+                connectorTrack: connectorTrack,
                 trackSettings: trackSettings,
               }),
             );
@@ -273,16 +285,25 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
             lastTrackEnd[2]! - trackPoint[2]! >= DOWN_DOWN_HEIGHT;
 
           if (hasPoint) {
+            const connectorTrack: Run = structuredClone({ ...(newTrack as Run) });
+
+            connectorTrack.id = Date.now();
+            connectorTrack.properties.name = null;
+            connectorTrack.properties.difficulty = 'easy';
+            connectorTrack.properties.uses = 'connection';
+            connectorTrack.geometry.coordinates = [lastTrackEnd, newTrackCoords[index]];
+
             setCurrentTrack(
               addNewTrack({
                 currentTrack,
                 newTrack: {
                   ...newTrack,
                   geometry: {
-                    coordinates: [lastTrackEnd, ...newTrackCoords.slice(index)],
+                    coordinates: [...newTrackCoords.slice(index)],
                     type: newTrack.geometry.type,
                   },
                 },
+                connectorTrack: connectorTrack,
                 trackSettings: trackSettings,
               }),
             );
@@ -305,16 +326,22 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
                 : clipCurrentTrack({ currentTrack, cutIndex: index, trackSettings });
             const editedTrackEnd = lastTrackCoords.at(-1)!;
 
+            const connectorTrack: Run = structuredClone({ ...(newTrack as Run) });
+
+            connectorTrack.id = Date.now();
+            connectorTrack.properties.name = null;
+            connectorTrack.properties.difficulty = 'easy';
+            connectorTrack.properties.uses = 'connection';
+            connectorTrack.geometry.coordinates = [editedTrackEnd, newTrackCoords[0]];
+
+            console.log(connectorTrack.geometry.coordinates);
+            console.log(newTrackCoords);
+
             setCurrentTrack(
               addNewTrack({
                 currentTrack: editedCurrentTrack,
-                newTrack: {
-                  ...newTrack,
-                  geometry: {
-                    coordinates: [editedTrackEnd, ...newTrackCoords],
-                    type: newTrack.geometry.type,
-                  },
-                },
+                newTrack: newTrack,
+                connectorTrack: connectorTrack,
                 trackSettings: trackSettings,
               }),
             );

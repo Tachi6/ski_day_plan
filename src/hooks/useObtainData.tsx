@@ -17,7 +17,7 @@ export interface Lift {
 
 interface RunProperties {
   feature_id: string;
-  name: string;
+  name: string | null;
   status: string;
   sources: string;
   websites: string;
@@ -30,7 +30,7 @@ interface RunProperties {
   uses?: string;
   ref?: string;
   description?: string;
-  difficulty: string;
+  difficulty?: string;
   difficulty_convention: string;
   oneway: number;
   duration?: number;

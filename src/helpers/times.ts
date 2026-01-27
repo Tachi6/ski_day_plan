@@ -81,7 +81,7 @@ export const obtainSeconds = ({ distance, track, speed, stops }: ObtainTimeProps
 
     return distance / runSpeedTable[speed][trackDifficulty as RunTypes] + obtainStopsSeconds({ distance, stops });
   }
-  const liftType = track.properties.name.split(' ')[0] as LiftsTypes;
+  const liftType = (track.properties.name?.split(' ')[0] as LiftsTypes) ?? 'TS';
   const liftSeconds = track.properties.duration ?? distance / liftSpeed[liftType];
 
   return liftSeconds + liftsWaitingTime[liftType].wait + liftsWaitingTime[liftType].prepare;
