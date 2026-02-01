@@ -6,5 +6,5 @@ import { SkiPlanning } from './SkiPlanning';
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <SkiPlanning />
-  </StrictMode>
+  </StrictMode>,
 );

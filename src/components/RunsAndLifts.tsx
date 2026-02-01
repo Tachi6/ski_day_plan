@@ -2,9 +2,10 @@ import { CustomPolyline } from './CustomPolyline';
 import { useObtainData } from '../hooks/useObtainData';
 import { useMap } from 'react-leaflet';
 import { useEffect, useRef } from 'react';
+import { MapLoadingSpinner } from './MapLoadingSpinner';
 
 export const RunsAndLifts = () => {
-  const { runs, lifts } = useObtainData();
+  const { runs, lifts, isLoading } = useObtainData();
 
   const map = useMap();
 
@@ -22,6 +23,12 @@ export const RunsAndLifts = () => {
       isPanesCreated.current = true;
     }
   }, [map]);
+
+  if (isLoading) {
+    return <MapLoadingSpinner />;
+  }
+
+  // TODO: error!!!
 
   return (
     <>

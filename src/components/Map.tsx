@@ -15,6 +15,7 @@ export const Map = () => {
       minZoom={14}
       zoomControl={false}
       className="back-layer"
+      preferCanvas={true}
     >
       <TileLayer
         attribution='&copy; <a href="https://carto.com/">CARTO</a> | &copy; OpenStreetMap contributors'

@@ -11,6 +11,18 @@
   }
 }
 
+@keyframes hide-loading {
+  0% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
 :root {
   --settings-box-width: 390px;
   --settings-box-responsive-width: 320px;
@@ -377,6 +389,22 @@ h1 {
   animation-duration: 0.25s;
   animation-timing-function: ease-out;
   animation-iteration-count: 1;
+}
+
+/* SPINNER CONTAINER */
+.spinner-container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.spinner-container svg {
+  height: 120px;
+  width: 120px;
+  fill: #1f2d3d;
 }
 
 @media (max-width: 640px) {

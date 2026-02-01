@@ -7,6 +7,7 @@ import { StepsBox } from './StepsBox';
 
 export const BoxesContainer = () => {
   const { hideTutorial } = use(HideTutorialContext);
+
   return (
     <>
       {!hideTutorial && <TutorialBox />}

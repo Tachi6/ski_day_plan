@@ -12,6 +12,7 @@
   "dependencies": {
     "@types/leaflet": "^1.9.21",
     "@types/leaflet-textpath": "^1.2.6",
+    "firebase": "^12.8.0",
     "leaflet": "^1.9.4",
     "leaflet-arrowheads": "^1.4.0",
     "leaflet-highlightable-layers": "^4.0.4",

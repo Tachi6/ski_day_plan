@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { LatLngTuple } from 'leaflet';
+import { get, getDatabase, ref } from 'firebase/database';
+import { app } from '../../firebase/firebaseConfig';
 
 export interface Run {
   id: number;
@@ -86,42 +88,56 @@ export const useObtainData = () => {
   const [runs, setRuns] = useState<Run[]>([]);
   const [lifts, setLifts] = useState<Lift[]>([]);
   const [allRuns, setAllRuns] = useState<Run[]>([]);
+  const [isError, setIsError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const obtainRuns = async () => {
-      const resp = await fetch('baqueira_runs.json');
-      const data = await resp.json();
-      const loadedRuns: Run[] = data.runs.map((run: Run) => ({
-        ...run,
-        geometry: {
-          type: run.geometry.type,
-          coordinates: parseCoordinates(run.geometry.coordinates),
-        },
-      }));
-
-      setRuns(loadedRuns.filter((run) => run.properties.uses === 'downhill'));
-      setAllRuns(
-        loadedRuns.filter((run) => run.properties.uses === 'downhill' || run.properties.uses === 'connection'),
-      );
+    const obtainData = async () => {
+      try {
+        const runsLiftsDB = ref(getDatabase(app), `baqueira`);
+        const snapshot = await get(runsLiftsDB);
+        const data = snapshot.val();
+        const loadedRuns: Run[] = data.runs.map((run: Run) => ({
+          ...run,
+          geometry: {
+            type: run.geometry.type,
+            coordinates: parseCoordinates(run.geometry.coordinates),
+          },
+        }));
+        const loadedLifts: Lift[] = data.lifts.map((lift: Lift) => ({
+          ...lift,
+          geometry: {
+            type: lift.geometry.type,
+            coordinates: parseCoordinates(lift.geometry.coordinates),
+          },
+        }));
+        setRuns(loadedRuns.filter((run) => run.properties.uses === 'downhill'));
+        setAllRuns(
+          loadedRuns.filter((run) => run.properties.uses === 'downhill' || run.properties.uses === 'connection'),
+        );
+        setLifts(loadedLifts);
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (_) {
+        setIsError(true);
+      }
     };
 
-    const obtainLifts = async () => {
-      const resp = await fetch('baqueira_lifts.json');
-      const data = await resp.json();
-      const loadedLifts: Lift[] = data.lifts.map((lift: Lift) => ({
-        ...lift,
-        geometry: {
-          type: lift.geometry.type,
-          coordinates: parseCoordinates(lift.geometry.coordinates),
-        },
-      }));
-
-      setLifts(loadedLifts);
-    };
-
-    obtainRuns();
-    obtainLifts();
+    obtainData();
   }, []);
 
-  return { runs, lifts, allRuns };
+  useEffect(() => {
+    setTimeout(() => {
+      if (runs.length > 0) {
+        setIsLoading(false);
+      }
+    }, 2020);
+  }, [runs]);
+
+  return {
+    runs,
+    lifts,
+    allRuns,
+    isError,
+    isLoading,
+  };
 };
