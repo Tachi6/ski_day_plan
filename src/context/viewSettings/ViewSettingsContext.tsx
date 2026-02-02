@@ -1,8 +1,8 @@
 import { createContext } from 'react';
 
-interface ViewSettingsContextProps {
-  view: boolean;
-  changeVisibility: () => void;
+interface ViewSettings {
+  viewSettings: boolean;
+  changeSettingsVisibility: () => void;
 }
 
-export const ViewSettingsContext = createContext({} as ViewSettingsContextProps);
+export const ViewSettingsContext = createContext({} as ViewSettings);

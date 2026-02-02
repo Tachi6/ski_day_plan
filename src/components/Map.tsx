@@ -1,18 +1,16 @@
 import 'leaflet-arrowheads';
 import { MapContainer, TileLayer } from 'react-leaflet';
-import { useIsPortrait } from '../hooks/useIsPortrait';
 import { RunsAndLifts } from './RunsAndLifts';
 import { CurrentTracks } from './CurrentTracks';
+import { defaultCenter } from '../data/resorts';
 
 export const Map = () => {
-  const isPortrait = useIsPortrait();
-
   return (
     <MapContainer
-      center={isPortrait ? [42.701199, 0.937167] : [42.699522, 0.946113]}
+      center={defaultCenter}
       zoom={16}
       scrollWheelZoom={true}
-      minZoom={14}
+      minZoom={12}
       zoomControl={false}
       className="back-layer"
       preferCanvas={true}

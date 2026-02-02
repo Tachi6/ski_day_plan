@@ -76,12 +76,12 @@ const settingsButtons: ButtonLine[] = [
 ];
 
 export const SettingsBox = () => {
-  const { view, changeVisibility } = use(ViewSettingsContext);
+  const { viewSettings, changeSettingsVisibility } = use(ViewSettingsContext);
   const { trackSettings, changeSettings } = use(TrackSettingsContext);
 
   return (
-    <div className={`box settings-box ${view ? 'show' : 'hide'}`}>
-      <button className="stats-box-button close-button" onClick={changeVisibility}>
+    <div className={`box settings-box ${viewSettings ? 'show' : 'hide'}`}>
+      <button className="stats-box-button close-button" onClick={changeSettingsVisibility}>
         <CloseIcon />
       </button>
       {settingsButtons.map((buttonLine) => (

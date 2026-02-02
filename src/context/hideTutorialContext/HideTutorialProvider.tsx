@@ -6,7 +6,7 @@ export const HideTutorialProvider = ({ children }: PropsWithChildren) => {
 
   const changeVisibility = (hide: boolean) => {
     localStorage.setItem('hideTutorial', JSON.stringify(hide));
-    setHideTutorial(hide);
+    setHideTutorial(true);
   };
 
   return <HideTutorialContext value={{ hideTutorial, changeVisibility }}>{children}</HideTutorialContext>;

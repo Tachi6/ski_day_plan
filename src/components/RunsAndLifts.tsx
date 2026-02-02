@@ -1,13 +1,21 @@
 import { CustomPolyline } from './CustomPolyline';
 import { useObtainData } from '../hooks/useObtainData';
 import { useMap } from 'react-leaflet';
-import { useEffect, useRef } from 'react';
-import { MapLoadingSpinner } from './MapLoadingSpinner';
+import { useContext, useEffect, useEffectEvent, useRef } from 'react';
+import { CenterMessage } from './CenterMessage';
+import { ErrorMessage } from './ErrorMessage';
+import { LoadingSpiner } from '../assets/spiners/LoadingSpiner';
+import { SelectResortContext } from '../context/selectResortContext/SelectResortContext';
+import { useIsPortrait } from '../hooks/useIsPortrait';
 
 export const RunsAndLifts = () => {
-  const { runs, lifts, isLoading } = useObtainData();
-
   const map = useMap();
+
+  const isPortrait = useIsPortrait();
+
+  const { selectedResort } = useContext(SelectResortContext);
+
+  const { runs, lifts, status } = useObtainData(selectedResort?.dbName);
 
   const isPanesCreated = useRef(false);
 
@@ -24,11 +32,27 @@ export const RunsAndLifts = () => {
     }
   }, [map]);
 
-  if (isLoading) {
-    return <MapLoadingSpinner />;
+  const centerMap = useEffectEvent(() => {
+    if (selectedResort) {
+      map.setView(isPortrait ? selectedResort.centerPortrait : selectedResort.centerLandscape);
+    }
+  });
+
+  useEffect(() => {
+    centerMap();
+  }, [selectedResort]);
+
+  if (status === 'idle') {
+    return null;
   }
 
-  // TODO: error!!!
+  if (status === 'loading') {
+    return <CenterMessage size={100} renderElement={<LoadingSpiner />} />;
+  }
+
+  if (status === 'error') {
+    return <CenterMessage size={250} renderElement={<ErrorMessage />} />;
+  }
 
   return (
     <>

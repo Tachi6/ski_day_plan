@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { HideTutorialContext } from '../context/HideTutorialContext/HideTutorialContext';
+import { HideTutorialContext } from '../context/hideTutorialContext/HideTutorialContext';
 import { lastStep } from '../data/tutorialBoxData';
 
 interface UseTutorialBox {

@@ -4,13 +4,13 @@ import { ViewSettingsContext } from './ViewSettingsContext';
 export const ViewSettingsProvider = ({ children }: PropsWithChildren) => {
   const [viewSettings, setViewSettings] = useState(false);
 
-  const changeVisibility = () => setViewSettings(!viewSettings);
+  const changeSettingsVisibility = () => setViewSettings(!viewSettings);
 
   return (
     <ViewSettingsContext
       value={{
-        view: viewSettings,
-        changeVisibility: changeVisibility,
+        viewSettings,
+        changeSettingsVisibility,
       }}
     >
       {children}

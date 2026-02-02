@@ -84,19 +84,25 @@ const parseCoordinates = (coordinates: LatLngTuple[]): LatLngTuple[] => {
   return coordinates.map((coordinate) => [coordinate[1], coordinate[0], coordinate[2]]);
 };
 
-export const useObtainData = () => {
+type Status = 'idle' | 'loading' | 'success' | 'error';
+
+export const useObtainData = (dbName: string | undefined) => {
   const [runs, setRuns] = useState<Run[]>([]);
   const [lifts, setLifts] = useState<Lift[]>([]);
   const [allRuns, setAllRuns] = useState<Run[]>([]);
-  const [isError, setIsError] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [status, setStatus] = useState<Status>('idle');
 
   useEffect(() => {
     const obtainData = async () => {
+      if (!dbName) return;
+
+      setStatus('loading');
+
       try {
-        const runsLiftsDB = ref(getDatabase(app), `baqueira`);
+        const runsLiftsDB = ref(getDatabase(app), dbName);
         const snapshot = await get(runsLiftsDB);
         const data = snapshot.val();
+
         const loadedRuns: Run[] = data.runs.map((run: Run) => ({
           ...run,
           geometry: {
@@ -111,33 +117,27 @@ export const useObtainData = () => {
             coordinates: parseCoordinates(lift.geometry.coordinates),
           },
         }));
+
+        console.log(loadedRuns);
+
         setRuns(loadedRuns.filter((run) => run.properties.uses === 'downhill'));
         setAllRuns(
           loadedRuns.filter((run) => run.properties.uses === 'downhill' || run.properties.uses === 'connection'),
         );
         setLifts(loadedLifts);
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        setStatus('success');
       } catch (_) {
-        setIsError(true);
+        setStatus('error');
       }
     };
 
     obtainData();
-  }, []);
-
-  useEffect(() => {
-    setTimeout(() => {
-      if (runs.length > 0) {
-        setIsLoading(false);
-      }
-    }, 2020);
-  }, [runs]);
+  }, [dbName]);
 
   return {
     runs,
     lifts,
     allRuns,
-    isError,
-    isLoading,
+    status,
   };
 };

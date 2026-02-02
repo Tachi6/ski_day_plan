@@ -11,10 +11,12 @@ import { createGPXContent, mergeTracks } from '../helpers/createGPX';
 import { useDownloadGPX } from '../hooks/useDownloadGPX';
 import { DownloadIcon } from '../assets/icons/DownloadIcon';
 import { InfoIcon } from '../assets/icons/InfoIcon';
+import { ViewSelectResortContext } from '../context/viewSelectResortContext/ViewSelectResortContext';
 
 export const StatsBox = () => {
   const { currentTrack, undoLastTrack, clearTrack, recalculateStats } = useContext(CurrentTrackContext);
-  const { changeVisibility } = useContext(ViewSettingsContext);
+  const { changeSettingsVisibility } = useContext(ViewSettingsContext);
+  const { view, showSelectedResort, hideSelectedResort } = useContext(ViewSelectResortContext);
   const { trackSettings } = useContext(TrackSettingsContext);
   const downloadGPX = useDownloadGPX();
 
@@ -31,6 +33,8 @@ export const StatsBox = () => {
   const distanceToString = (distance: number): string => {
     return `${(distance / 1000).toFixed(1)}`;
   };
+
+  const handleSelectedResortVisibility = () => (view ? hideSelectedResort() : showSelectedResort());
 
   const handleDownload = () => {
     const mergedTracks = mergeTracks(currentTrack.trackSteps);
@@ -120,13 +124,13 @@ export const StatsBox = () => {
         <button className="stats-box-button" onClick={clearTrack}>
           <RemoveIcon />
         </button>
-        <button className="stats-box-button disabled">
+        <button className="stats-box-button" onClick={handleSelectedResortVisibility}>
           <LocationIcon />
         </button>
         <button className="stats-box-button" onClick={handleDownload}>
           <DownloadIcon />
         </button>
-        <button className="stats-box-button" onClick={changeVisibility}>
+        <button className="stats-box-button" onClick={changeSettingsVisibility}>
           <SettingsIcon />
         </button>
         <button className="stats-box-button disabled">
