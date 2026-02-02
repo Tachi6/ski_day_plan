@@ -86,7 +86,7 @@ const parseCoordinates = (coordinates: LatLngTuple[]): LatLngTuple[] => {
 
 type Status = 'idle' | 'loading' | 'success' | 'error';
 
-export const useObtainData = (dbName: string | undefined) => {
+export const useObtainData = (dbName?: string) => {
   const [runs, setRuns] = useState<Run[]>([]);
   const [lifts, setLifts] = useState<Lift[]>([]);
   const [allRuns, setAllRuns] = useState<Run[]>([]);
