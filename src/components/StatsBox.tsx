@@ -1,4 +1,4 @@
-import { use, useEffect, useEffectEvent } from 'react';
+import { useContext, useEffect, useEffectEvent } from 'react';
 import { CurrentTrackContext } from '../context/currentTrack/CurrentTrackContext';
 import { ViewSettingsContext } from '../context/viewSettings/ViewSettingsContext';
 import { obtainPausesSeconds, timeToHoursAndMinutes } from '../helpers/times';
@@ -10,11 +10,12 @@ import { UndoIcon } from '../assets/icons/UndoIcon';
 import { createGPXContent, mergeTracks } from '../helpers/createGPX';
 import { useDownloadGPX } from '../hooks/useDownloadGPX';
 import { DownloadIcon } from '../assets/icons/DownloadIcon';
+import { InfoIcon } from '../assets/icons/InfoIcon';
 
 export const StatsBox = () => {
-  const { currentTrack, undoLastTrack, clearTrack, recalculateStats } = use(CurrentTrackContext);
-  const { changeVisibility } = use(ViewSettingsContext);
-  const { trackSettings } = use(TrackSettingsContext);
+  const { currentTrack, undoLastTrack, clearTrack, recalculateStats } = useContext(CurrentTrackContext);
+  const { changeVisibility } = useContext(ViewSettingsContext);
+  const { trackSettings } = useContext(TrackSettingsContext);
   const downloadGPX = useDownloadGPX();
 
   const reloadStats = useEffectEvent(() => recalculateStats());
@@ -127,6 +128,9 @@ export const StatsBox = () => {
         </button>
         <button className="stats-box-button" onClick={changeVisibility}>
           <SettingsIcon />
+        </button>
+        <button className="stats-box-button disabled">
+          <InfoIcon />
         </button>
       </div>
     </div>
