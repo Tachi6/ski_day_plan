@@ -13,7 +13,7 @@ export interface Resort {
   dbName: string;
   centerLandscape: LatLngExpression;
   centerPortrait: LatLngExpression;
-  specialFilter?: (tagName: string) => void;
+  specialFilter?: string;
   image: string;
 }
 
@@ -35,11 +35,11 @@ export const resorts: Record<ResortName, Resort> = {
   },
   masella: {
     name: 'Masella',
-    dbName: 'masella',
+    dbName: 'alp2500',
     centerLandscape: [42.3495221, 1.9005201999999992],
     // TODO:
     centerPortrait: [43.701199, 0.957167],
-    specialFilter: (tagName: string) => tagName,
+    specialFilter: 'Masella',
     image: masella,
   },
   molina: {
@@ -48,7 +48,7 @@ export const resorts: Record<ResortName, Resort> = {
     centerLandscape: [42.3349779, 1.9373790999999994],
     // TODO:
     centerPortrait: [43.701199, 0.957167],
-    specialFilter: (tagName: string) => tagName,
+    specialFilter: 'Molina',
     image: molina,
   },
 };

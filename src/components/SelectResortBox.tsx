@@ -23,7 +23,7 @@ export const SelectResortBox = () => {
         {Object.values(resorts).map((resort: Resort) => (
           <div
             key={resort.name}
-            className={`resort-button-container ${selectedResort?.dbName === resort.dbName ? 'selected' : ''}`}
+            className={`resort-button-container ${selectedResort?.name === resort.name ? 'selected' : ''}`}
           >
             <button className="resort-button" onClick={() => handleSelectResort(resort)}>
               <img src={resort.image} alt={resort.name} />

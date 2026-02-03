@@ -15,7 +15,7 @@ export const RunsAndLifts = () => {
 
   const { selectedResort } = useContext(SelectResortContext);
 
-  const { runs, lifts, status } = useObtainData(selectedResort?.dbName);
+  const { runs, lifts, status } = useObtainData(selectedResort?.dbName, selectedResort?.specialFilter);
 
   const isPanesCreated = useRef(false);
 

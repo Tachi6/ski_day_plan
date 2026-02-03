@@ -86,7 +86,7 @@ const parseCoordinates = (coordinates: LatLngTuple[]): LatLngTuple[] => {
 
 type Status = 'idle' | 'loading' | 'success' | 'error';
 
-export const useObtainData = (dbName?: string) => {
+export const useObtainData = (dbName?: string, specialTag?: string) => {
   const [runs, setRuns] = useState<Run[]>([]);
   const [lifts, setLifts] = useState<Lift[]>([]);
   const [allRuns, setAllRuns] = useState<Run[]>([]);
@@ -118,13 +118,18 @@ export const useObtainData = (dbName?: string) => {
           },
         }));
 
-        console.log(loadedRuns);
+        const filteredRuns = specialTag
+          ? loadedRuns.filter((run) => run.properties.ski_area_names.includes(specialTag))
+          : loadedRuns;
+        const filteredLifts = specialTag
+          ? loadedLifts.filter((lift) => lift.properties.ski_area_names.includes(specialTag))
+          : loadedLifts;
 
-        setRuns(loadedRuns.filter((run) => run.properties.uses === 'downhill'));
+        setRuns(filteredRuns.filter((run) => run.properties.uses === 'downhill'));
         setAllRuns(
-          loadedRuns.filter((run) => run.properties.uses === 'downhill' || run.properties.uses === 'connection'),
+          filteredRuns.filter((run) => run.properties.uses === 'downhill' || run.properties.uses === 'connection'),
         );
-        setLifts(loadedLifts);
+        setLifts(filteredLifts);
         setStatus('success');
       } catch (_) {
         setStatus('error');
@@ -132,7 +137,7 @@ export const useObtainData = (dbName?: string) => {
     };
 
     obtainData();
-  }, [dbName]);
+  }, [dbName, specialTag]);
 
   return {
     runs,
