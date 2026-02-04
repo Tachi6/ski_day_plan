@@ -1,16 +1,18 @@
 import type { RunTypes } from '../components/CustomPolyline';
 import { type Speed } from '../context/trackSettings/TrackSettingsContext';
 
-export type LiftsTypes = 'TC' | 'TSD' | 'TQ' | 'TS' | 'CT' | 'TCD' | 'TPV';
+export type LiftsTypes = 'TC' | 'TSD' | 'TQ' | 'TS' | 'CT' | 'TCD' | 'TPV' | 'TCB' | 'TSC';
 
 export const liftSpeed: Record<LiftsTypes, number> = {
   TC: 6.0,
+  TSC: 5.0,
   TSD: 5.0,
   TQ: 3.0,
   TS: 2.5,
   TCD: 1.5,
   CT: 0.65,
   TPV: 7.5,
+  TCB: 7.0,
 };
 
 type RunSpeed = {

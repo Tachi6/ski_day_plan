@@ -43,6 +43,10 @@ const liftsWaitingTime: Record<LiftsTypes, Waiting> = {
   },
   TS: {
     wait: 180,
+    prepare: 50,
+  },
+  TSC: {
+    wait: 180,
     prepare: 45,
   },
   TQ: {
@@ -60,6 +64,10 @@ const liftsWaitingTime: Record<LiftsTypes, Waiting> = {
   TC: {
     wait: 240,
     prepare: 90,
+  },
+  TCB: {
+    wait: 210,
+    prepare: 80,
   },
   TPV: {
     wait: 600,

@@ -514,7 +514,7 @@
       "type": "Feature",
       "properties": {
         "feature_id": "c5ba02532a46028c7c1c00c397b1e0a78c48a67c",
-        "name": "Telecorda",
+        "name": "TCD Telecorda",
         "status": "operating",
         "sources": "[{\"type\":\"openstreetmap\",\"id\":\"way/259994510\"}]",
         "websites": "[]",
@@ -707,7 +707,7 @@
       "type": "Feature",
       "properties": {
         "feature_id": "b93e2dd48c80af09148b8e87676d4aa5a5032199",
-        "name": "Telecorda Freestyle",
+        "name": "TCD Freestyle",
         "status": "operating",
         "sources": "[{\"type\":\"openstreetmap\",\"id\":\"way/259995397\"}]",
         "websites": "[]",
@@ -781,7 +781,7 @@
       "type": "Feature",
       "properties": {
         "feature_id": "cf1e4e34433ddf2a99d919846406533fc226e35e",
-        "name": "Telecabina Cadí-Moixeró",
+        "name": "TCB Cadí-Moixeró",
         "status": "operating",
         "sources": "[{\"type\":\"openstreetmap\",\"id\":\"way/47853184\"}]",
         "websites": "[]",
@@ -1425,7 +1425,7 @@
       "type": "Feature",
       "properties": {
         "feature_id": "208ff76adc7d3431e763a3e7206d78d6625b83af",
-        "name": "Telecabina Cadí-Moixeró",
+        "name": "TCB Cadí-Moixeró",
         "status": "operating",
         "sources": "[{\"type\":\"openstreetmap\",\"id\":\"way/589088066\"}]",
         "websites": "[]",
