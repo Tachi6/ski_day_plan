@@ -30,7 +30,7 @@ export const resorts: Record<ResortName, Resort> = {
     dbName: 'alp2500',
     centerLandscape: [42.331421899999995, 1.9124601999999993],
     // TODO:
-    centerPortrait: [43.701199, 0.957167],
+    centerPortrait: [42.331421899999995, 1.9124601999999993],
     image: alp2500,
   },
   masella: {
@@ -38,7 +38,7 @@ export const resorts: Record<ResortName, Resort> = {
     dbName: 'alp2500',
     centerLandscape: [42.3495221, 1.9005201999999992],
     // TODO:
-    centerPortrait: [43.701199, 0.957167],
+    centerPortrait: [42.3495221, 1.9005201999999992],
     specialFilter: 'Masella',
     image: masella,
   },
@@ -47,7 +47,7 @@ export const resorts: Record<ResortName, Resort> = {
     dbName: 'alp2500',
     centerLandscape: [42.3349779, 1.9373790999999994],
     // TODO:
-    centerPortrait: [43.701199, 0.957167],
+    centerPortrait: [42.3349779, 1.9373790999999994],
     specialFilter: 'Molina',
     image: molina,
   },
