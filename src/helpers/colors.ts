@@ -1,4 +1,4 @@
-import type { RunTypes } from '../components/CustomPolyline';
+import type { RunTypes } from '../map/CustomPolyline';
 
 export const primaryTextColor = '#1F2D3D';
 

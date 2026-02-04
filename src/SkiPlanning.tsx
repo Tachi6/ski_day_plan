@@ -1,11 +1,11 @@
-import { Map } from './components/Map';
 import { CurrentTrackContextProvider } from './context/currentTrack/CurrentTrackProvider';
 import { ViewSettingsProvider } from './context/viewSettings/ViewSettingsProvider';
 import { TrackSettingsProvider } from './context/trackSettings/TrackSettingsProvider';
-import { BoxesContainer } from './components/BoxesContainer';
+import { BoxesContainer } from './boxes/BoxesContainer';
 import { HideTutorialProvider } from './context/hideTutorialContext/HideTutorialProvider';
 import { SelectResortProvider } from './context/selectResortContext/SelectResortProvider';
 import { ViewSelectResortProvider } from './context/viewSelectResortContext/ViewSelectResortProvider';
+import { Map } from './views/Map';
 
 export const SkiPlanning = () => {
   return (

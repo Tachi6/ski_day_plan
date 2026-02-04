@@ -5,7 +5,7 @@ import { CurrentTrackContext } from './CurrentTrackContext';
 import { addNewTrack, clipCurrentTrack, getConnectionInfo, removeLastTrack } from './CurrentTrackHelpers';
 import { useObtainData, type Lift, type Run } from '../../hooks/useObtainData';
 import { TrackSettingsContext } from '../trackSettings/TrackSettingsContext';
-import type { RunTypes } from '../../components/CustomPolyline';
+import type { RunTypes } from '../../map/CustomPolyline';
 import { obtainSeconds } from '../../helpers/times';
 
 export interface Track {

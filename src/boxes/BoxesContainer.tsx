@@ -1,10 +1,10 @@
 import { useContext } from 'react';
 import { SettingsBox } from './SettingsBox';
-import { StatsBox } from './StatsBox';
-import { TutorialBox } from './TutorialBox';
 import { HideTutorialContext } from '../context/hideTutorialContext/HideTutorialContext';
-import { StepsBox } from './StepsBox';
 import { SelectResortBox } from './SelectResortBox';
+import { StatsBox } from './StatsBox';
+import { StepsBox } from './StepsBox';
+import { TutorialBox } from './TutorialBox';
 
 export const BoxesContainer = () => {
   const { hideTutorial } = useContext(HideTutorialContext);

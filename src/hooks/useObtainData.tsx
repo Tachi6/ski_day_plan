@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { LatLngTuple } from 'leaflet';
 import { get, getDatabase, ref } from 'firebase/database';
-import { app } from '../../firebase/firebaseConfig';
+import { app } from '../firebase/firebaseConfig';
 
 export interface Run {
   id: number;

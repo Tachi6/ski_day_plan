@@ -1,12 +1,12 @@
-import { CustomPolyline } from './CustomPolyline';
 import { useObtainData } from '../hooks/useObtainData';
 import { useMap } from 'react-leaflet';
 import { useContext, useEffect, useEffectEvent, useRef } from 'react';
 import { CenterMessage } from './CenterMessage';
-import { ErrorMessage } from './ErrorMessage';
+import { ErrorMessage } from '../components/ErrorMessage';
 import { LoadingSpiner } from '../assets/spiners/LoadingSpiner';
 import { SelectResortContext } from '../context/selectResortContext/SelectResortContext';
 import { useIsPortrait } from '../hooks/useIsPortrait';
+import { CustomPolyline } from './CustomPolyline';
 
 export const RunsAndLifts = () => {
   const map = useMap();

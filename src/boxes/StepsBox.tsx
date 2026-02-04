@@ -1,6 +1,6 @@
 import { use, useEffect, useEffectEvent, useLayoutEffect, useState } from 'react';
 import { CurrentTrackContext } from '../context/currentTrack/CurrentTrackContext';
-import { CirclePosition } from './CirclePosition';
+import { CirclePosition } from '../components/CirclePosition';
 import { useCSSVariable } from '../hooks/useCSSVariable';
 
 export const StepsBox = () => {

@@ -1,8 +1,8 @@
 import 'leaflet-arrowheads';
 import { MapContainer, TileLayer } from 'react-leaflet';
-import { RunsAndLifts } from './RunsAndLifts';
-import { CurrentTracks } from './CurrentTracks';
 import { defaultCenter } from '../data/resorts';
+import { RunsAndLifts } from '../map/RunsAndLifts';
+import { CurrentTracks } from '../map/CurrentTracks';
 
 export const Map = () => {
   return (

@@ -6,7 +6,7 @@ import L from 'leaflet';
 import { borderColor, runColor, selectedColor } from '../helpers/colors';
 import type { RunTypes } from './CustomPolyline';
 import { renderToString } from 'react-dom/server';
-import { CirclePosition } from './CirclePosition';
+import { CirclePosition } from '../components/CirclePosition';
 
 interface Props {
   track: Run | Lift;

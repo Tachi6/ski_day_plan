@@ -1,5 +1,5 @@
 import { borderColor, runColor, textColor } from '../helpers/colors';
-import type { RunTypes } from './CustomPolyline';
+import type { RunTypes } from '../map/CustomPolyline';
 
 interface Props {
   difficulty: string | undefined;
