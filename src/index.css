@@ -226,7 +226,7 @@
   top: 0;
   bottom: 0;
   margin: auto;
-  height: 390px;
+  height: 417px;
   width: 400px;
   padding: 15px 20px 20px 20px;
   display: flex;
@@ -241,7 +241,8 @@
   pointer-events: none;
 }
 
-h1 {
+h1,
+h2 {
   text-align: center;
 }
 
@@ -275,14 +276,13 @@ h1 {
   margin-top: 10px;
 }
 
-.tutorial-box div img:nth-child(odd) {
+.tutorial-step-image img:nth-child(odd) {
   box-shadow: 0 0 10px rgba(31, 45, 61, 0.5);
   border-radius: 8px;
   height: 170px;
 }
 
 .tutorial-indicator {
-  width: 80px;
   height: 10px;
   margin-top: 240px;
   display: flex;
@@ -349,6 +349,23 @@ h1 {
 
 .hide-tutorial input[type='checkbox']:hover {
   border-color: #2563eb;
+}
+
+.tutorial-first-page {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  gap: 10px;
+}
+
+.tutorial-first-page img {
+  padding: 8px;
+  box-shadow: 0 0 5px rgba(31, 45, 61, 0.5);
+  border-radius: 4px;
+  height: 80px;
+  width: 80px;
 }
 
 /* TRACK STEPS */

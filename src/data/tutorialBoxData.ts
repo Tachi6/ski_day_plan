@@ -8,39 +8,54 @@ import tut4a from '../assets/images/tut_4a.png';
 import tut4b from '../assets/images/tut_4b.png';
 import tut5a from '../assets/images/tut_5a.png';
 import tut5b from '../assets/images/tut_5b.png';
+import tut6a from '../assets/images/tut_6a.png';
+import tut6b from '../assets/images/tut_6b.png';
+import skiIcon from '../assets/images/ski-icon.png';
 
 interface TutorialBoxData {
   text: string;
   image1: string;
-  image2: string;
+  image2?: string;
   alt1: string;
-  alt2: string;
+  alt2?: string;
 }
 
 export const tutorialBoxData: TutorialBoxData[] = [
   {
-    text: 'Pulsa encima del remonte o la pista por la que quieras comenzar y se añadirá a tu recorrido.',
+    text: 'Planifica paso a paso tu jornada de esqui para recorrer los lugares preferidos de tu estación. Selecciona las pistas y remontes de tu recorrido y estimaremos el tiempo necesario para realizar tu itinerario en base a tus preferencias de esqui. Selecciona tu estación de esqui preferida de nuestra base de datos real. Exporta tu  itinerario en un fichero .gpx para utilizarlo en tu dispositivo habitual.',
+    image1: skiIcon,
+    alt1: 'skiIcon',
+  },
+  {
+    text: 'Pulsa encima del remonte o la pista por la que quieras comenzar tu recorrido y se añadirá a tu itinerario.',
     image1: tut1a,
     image2: tut1b,
     alt1: 'tut1a',
     alt2: 'tut1b',
   },
   {
-    text: 'Busca el remonte o la pista que conecte o esté cerca del final de tu recorrido y se enlazarán.',
+    text: 'Busca el remonte o la pista que conecte o esté cerca del final de tu itinerario actual y se enlazarán.',
     image1: tut2a,
     image2: tut2b,
     alt1: 'tut2a',
     alt2: 'tut2b',
   },
   {
-    text: 'Si la pista elegida comienza en otra, añade la otra primero, que se recortara y después la elegid',
+    text: 'Puedes enlazar pistas sin seleccionar la intermedia, siempre y cuando no haya mas de una pista de conexion entre medio.',
+    image1: tut6a,
+    image2: tut6b,
+    alt1: 'tut6a',
+    alt2: 'tut6b',
+  },
+  {
+    text: 'Si la pista elegida comienza fuera de tu itinerario, añade primero esta última y después la elegida para enlazarlas.',
     image1: tut3a,
     image2: tut3b,
     alt1: 'tut3a',
     alt2: 'tut3b',
   },
   {
-    text: 'Si tu recorrido termina en medio de una pista, añádela y se añadirá solo el tramo necesario.',
+    text: 'Si tu itinerario termina en medio de una pista, añáde esa pista y se añadirá solo el tramo necesario de ella.',
     image1: tut4a,
     image2: tut4b,
     alt1: 'tut4a',
