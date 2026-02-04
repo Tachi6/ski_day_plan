@@ -3,12 +3,15 @@ import { resorts, type Resort } from '../data/resorts';
 import { SelectResortContext } from '../context/selectResortContext/SelectResortContext';
 import { ViewSelectResortContext } from '../context/viewSelectResortContext/ViewSelectResortContext';
 import { CloseIcon } from '../assets/icons/CloseIcon';
+import { CurrentTrackContext } from '../context/currentTrack/CurrentTrackContext';
 
 export const SelectResortBox = () => {
   const { selectedResort, changeResort } = useContext(SelectResortContext);
   const { view, emptySelection, hideSelectedResort } = useContext(ViewSelectResortContext);
+  const { clearTrack } = useContext(CurrentTrackContext);
 
   const handleSelectResort = (resort: Resort) => {
+    clearTrack();
     changeResort(resort);
     hideSelectedResort(true);
   };
