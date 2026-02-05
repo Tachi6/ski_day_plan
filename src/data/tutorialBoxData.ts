@@ -22,7 +22,7 @@ interface TutorialBoxData {
 
 export const tutorialBoxData: TutorialBoxData[] = [
   {
-    text: 'Planifica paso a paso tu jornada de esqui para recorrer los lugares preferidos de tu estación. Selecciona las pistas y remontes de tu recorrido y estimaremos el tiempo necesario para realizar tu itinerario en base a tus preferencias de esqui. Selecciona tu estación de esqui preferida de nuestra base de datos real. Exporta tu  itinerario en un fichero .gpx para utilizarlo en tu dispositivo habitual.',
+    text: 'Planifica paso a paso tu jornada de esqui para recorrer los lugares preferidos de tu estación. Selecciona las pistas y remontes para crear tu itinerario y estimaremos el tiempo necesario para realizarlo en base a tus preferencias y tipo de esqui. Disponemos de una base de datos real de estaciones de esquí. Puedes exportar tu itinerario en un fichero .gpx para importarlo y utilizarlo en tu dispositivo habitual.',
     image1: skiIcon,
     alt1: 'skiIcon',
   },
