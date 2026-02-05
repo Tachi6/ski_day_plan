@@ -11,11 +11,14 @@ import { createGPXContent, mergeTracks } from '../helpers/createGPX';
 import { useDownloadGPX } from '../hooks/useDownloadGPX';
 import { DownloadIcon } from '../assets/icons/DownloadIcon';
 import { InfoIcon } from '../assets/icons/InfoIcon';
-import { ViewSelectResortContext } from '../context/viewSelectResortContext/ViewSelectResortContext';
+import { ViewSelectResortContext } from '../context/viewSelectResort/ViewSelectResortContext';
+import { IconButton } from '../components/IconButton';
+import { ViewInfoContext } from '../context/viewInfo/ViewInfoContext';
 
 export const StatsBox = () => {
   const { currentTrack, undoLastTrack, clearTrack, recalculateStats } = useContext(CurrentTrackContext);
   const { changeSettingsVisibility } = useContext(ViewSettingsContext);
+  const { changeInfoVisibility } = useContext(ViewInfoContext);
   const { view, showSelectedResort, hideSelectedResort } = useContext(ViewSelectResortContext);
   const { trackSettings } = useContext(TrackSettingsContext);
   const downloadGPX = useDownloadGPX();
@@ -45,21 +48,21 @@ export const StatsBox = () => {
   return (
     <div className="box stats-box">
       <div className="box-line">
-        <div className="box-element">
+        <div className="stats-box-element">
           <p>
             {distanceToString(currentTrack.downhillDistance)}
             <span>km</span>
           </p>
           <p>Distancia esqui</p>
         </div>
-        <div className="box-element">
+        <div className="stats-box-element">
           <p>
             {distanceToString(currentTrack.uphillDistance)}
             <span>km</span>
           </p>
           <p>Distancia subida</p>
         </div>
-        <div className="box-element">
+        <div className="stats-box-element">
           <p>
             {distanceToString(currentTrack.totalDistance)}
             <span>km</span>
@@ -68,27 +71,27 @@ export const StatsBox = () => {
         </div>
       </div>
       <div className="box-line">
-        <div className="box-element">
+        <div className="stats-box-element">
           <p>
             {currentTrack.descentElevation.toFixed(0)}
             <span>m</span>
           </p>
           <p>Descenso</p>
         </div>
-        <div className="box-element">
+        <div className="stats-box-element">
           <p>
             {currentTrack.climbElevation.toFixed(0)}
             <span>m</span>
           </p>
           <p>Ascenso</p>
         </div>
-        <div className="box-element">
+        <div className="stats-box-element">
           <p>{currentTrack.downhills}</p>
           <p>Descensos</p>
         </div>
       </div>
       <div className="box-line">
-        <div className="box-element">
+        <div className="stats-box-element">
           <p>
             {timeToHoursAndMinutes(skiSeconds).hours}
             <span>h</span>
@@ -97,7 +100,7 @@ export const StatsBox = () => {
           </p>
           <p>Tiempo esqui</p>
         </div>
-        <div className="box-element">
+        <div className="stats-box-element">
           <p>
             {timeToHoursAndMinutes(pausesSeconds).hours}
             <span>h</span>
@@ -106,7 +109,7 @@ export const StatsBox = () => {
           </p>
           <p>Descansos</p>
         </div>
-        <div className="box-element">
+        <div className="stats-box-element">
           <p>
             {timeToHoursAndMinutes(totalSeconds).hours}
             <span>h</span>
@@ -118,24 +121,12 @@ export const StatsBox = () => {
       </div>
 
       <div className="box-line buttons">
-        <button className="stats-box-button" onClick={undoLastTrack}>
-          <UndoIcon />
-        </button>
-        <button className="stats-box-button" onClick={clearTrack}>
-          <RemoveIcon />
-        </button>
-        <button className="stats-box-button" onClick={handleSelectedResortVisibility}>
-          <LocationIcon />
-        </button>
-        <button className="stats-box-button" onClick={handleDownload}>
-          <DownloadIcon />
-        </button>
-        <button className="stats-box-button" onClick={changeSettingsVisibility}>
-          <SettingsIcon />
-        </button>
-        <button className="stats-box-button disabled">
-          <InfoIcon />
-        </button>
+        <IconButton icon={<UndoIcon />} onClick={undoLastTrack} />
+        <IconButton icon={<RemoveIcon />} onClick={clearTrack} />
+        <IconButton icon={<LocationIcon />} onClick={handleSelectedResortVisibility} />
+        <IconButton icon={<DownloadIcon />} onClick={handleDownload} />
+        <IconButton icon={<SettingsIcon />} onClick={changeSettingsVisibility} />
+        <IconButton icon={<InfoIcon />} onClick={changeInfoVisibility} />
       </div>
     </div>
   );

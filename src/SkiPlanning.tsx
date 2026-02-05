@@ -3,9 +3,10 @@ import { ViewSettingsProvider } from './context/viewSettings/ViewSettingsProvide
 import { TrackSettingsProvider } from './context/trackSettings/TrackSettingsProvider';
 import { BoxesContainer } from './boxes/BoxesContainer';
 import { HideTutorialProvider } from './context/hideTutorialContext/HideTutorialProvider';
-import { SelectResortProvider } from './context/selectResortContext/SelectResortProvider';
-import { ViewSelectResortProvider } from './context/viewSelectResortContext/ViewSelectResortProvider';
+import { SelectResortProvider } from './context/selectResort/SelectResortProvider';
+import { ViewSelectResortProvider } from './context/viewSelectResort/ViewSelectResortProvider';
 import { MapView } from './views/MapView';
+import { ViewInfoProvider } from './context/viewInfo/ViewInfoProvider';
 
 export const SkiPlanning = () => {
   return (
@@ -16,9 +17,11 @@ export const SkiPlanning = () => {
             <MapView />
             <ViewSettingsProvider>
               <HideTutorialProvider>
-                <ViewSelectResortProvider>
-                  <BoxesContainer />
-                </ViewSelectResortProvider>
+                <ViewInfoProvider>
+                  <ViewSelectResortProvider>
+                    <BoxesContainer />
+                  </ViewSelectResortProvider>
+                </ViewInfoProvider>
               </HideTutorialProvider>
             </ViewSettingsProvider>
           </div>

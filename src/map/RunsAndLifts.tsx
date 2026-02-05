@@ -4,7 +4,7 @@ import { useContext, useEffect, useEffectEvent, useRef } from 'react';
 import { CenterMessage } from './CenterMessage';
 import { ErrorMessage } from '../components/ErrorMessage';
 import { LoadingSpiner } from '../assets/spiners/LoadingSpiner';
-import { SelectResortContext } from '../context/selectResortContext/SelectResortContext';
+import { SelectResortContext } from '../context/selectResort/SelectResortContext';
 import { useIsPortrait } from '../hooks/useIsPortrait';
 import { CustomPolyline } from './CustomPolyline';
 

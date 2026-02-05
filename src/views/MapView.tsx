@@ -15,7 +15,7 @@ export const MapView = () => {
       className="back-layer"
     >
       <TileLayer
-        attribution='&copy; <a href="https://carto.com/">CARTO</a> | &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> | Ski data &copy; <a href="https://openskimap.org">OpenSkiMap</a> & &copy; <a href="https://skimap.org">Skimap.org</a>'
+        attribution='&copy; <a href="https://carto.com/">CARTO</a> | &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> | &copy; <a href="https://openskimap.org">OpenSkiMap</a> | &copy; <a href="https://skimap.org">Skimap.org</a>'
         url="https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png"
         subdomains={['a', 'b', 'c', 'd']}
       />

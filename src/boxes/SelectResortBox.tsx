@@ -1,9 +1,10 @@
 import { useContext } from 'react';
 import { resorts, type Resort } from '../data/resorts';
-import { SelectResortContext } from '../context/selectResortContext/SelectResortContext';
-import { ViewSelectResortContext } from '../context/viewSelectResortContext/ViewSelectResortContext';
+import { SelectResortContext } from '../context/selectResort/SelectResortContext';
+import { ViewSelectResortContext } from '../context/viewSelectResort/ViewSelectResortContext';
 import { CloseIcon } from '../assets/icons/CloseIcon';
 import { CurrentTrackContext } from '../context/currentTrack/CurrentTrackContext';
+import { IconButton } from '../components/IconButton';
 
 export const SelectResortBox = () => {
   const { selectedResort, changeResort } = useContext(SelectResortContext);
@@ -18,9 +19,7 @@ export const SelectResortBox = () => {
 
   return (
     <div className={`box resort-box ${view ? 'show' : 'hide'}`}>
-      <button className="stats-box-button close-button" onClick={() => hideSelectedResort()}>
-        <CloseIcon />
-      </button>
+      <IconButton icon={<CloseIcon />} closeClass="close-button" onClick={() => hideSelectedResort(undefined)} />
       <h3>Selecciona estación de esquí</h3>
       <div className="box-line">
         {Object.values(resorts).map((resort: Resort) => (

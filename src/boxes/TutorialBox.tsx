@@ -24,12 +24,7 @@ export const TutorialBox = () => {
             !data.image2 ? (
               <div key={data.text} className="tutorial-step">
                 <div className="tutorial-first-page">
-                  <p>
-                    Planifica paso a paso tu jornada de esqui para recorrer los lugares preferidos de tu estación.
-                    Selecciona las pistas y remontes de tu recorrido y estimaremos el tiempo necesario para realizarlo
-                    en base a tus preferencias de esqui. Selecciona tu estación de esqui preferida de nuestra base de
-                    datos real. Exporta tu ruta en un fichero .gpx para utilizarlo en tu dispositivo habitual.
-                  </p>
+                  <p>{data.text}</p>
                   <img src={data.image1} alt={data.alt1}></img>
                 </div>
               </div>

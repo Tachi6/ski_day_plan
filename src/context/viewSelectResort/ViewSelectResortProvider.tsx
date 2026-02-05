@@ -1,6 +1,6 @@
 import { useContext, useState, type PropsWithChildren } from 'react';
 import { ViewSelectResortContext } from './ViewSelectResortContext';
-import { SelectResortContext } from '../selectResortContext/SelectResortContext';
+import { SelectResortContext } from '../selectResort/SelectResortContext';
 
 export const ViewSelectResortProvider = ({ children }: PropsWithChildren) => {
   const [viewSelectedResort, setViewSelectedResort] = useState(true);

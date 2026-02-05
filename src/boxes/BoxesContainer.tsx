@@ -1,10 +1,6 @@
 import { useContext } from 'react';
-import { SettingsBox } from './SettingsBox';
 import { HideTutorialContext } from '../context/hideTutorialContext/HideTutorialContext';
-import { SelectResortBox } from './SelectResortBox';
-import { StatsBox } from './StatsBox';
-import { StepsBox } from './StepsBox';
-import { TutorialBox } from './TutorialBox';
+import { InfoBox, SelectResortBox, SettingsBox, StatsBox, StepsBox, TutorialBox } from '../boxes';
 
 export const BoxesContainer = () => {
   const { hideTutorial } = useContext(HideTutorialContext);
@@ -16,6 +12,7 @@ export const BoxesContainer = () => {
       <StatsBox />
       <SettingsBox />
       <StepsBox />
+      <InfoBox />
     </>
   );
 };
