@@ -579,7 +579,7 @@ h2 {
     height: min-content;
     top: 245px;
     padding: 10px 17.5px 15px 17.5px;
-    gap: 8px;
+    gap: 6px;
     right: 0;
     left: 0;
     margin: 0 auto;
@@ -607,6 +607,10 @@ h2 {
     width: 65px;
     height: 62px;
     padding: 10px 5px 5px 5px;
+  }
+
+  .settings-box-button p {
+    font-size: 12px;
   }
 
   .tutorial-box {
@@ -649,11 +653,13 @@ h2 {
 
   .resort-box {
     width: var(--responsive-width);
+    max-height: calc(100dvh - 245px - 20px);
     padding: 10px 17.5px 15px 17.5px;
     gap: 8px;
     /* TODO: GLOBAL 245px */
     top: 245px;
     bottom: unset;
+    overflow: scroll;
   }
 
   .resort-button-container {
@@ -667,7 +673,7 @@ h2 {
 
   .info-box {
     width: var(--responsive-width);
-    max-height: calc(100dvh - 245px);
+    max-height: calc(100dvh - 245px - 20px);
     top: 245px;
     left: 0;
     right: 0;

@@ -105,7 +105,7 @@ export const SettingsBox = () => {
                   }
                 >
                   <img className="turn-image" src={option[1]} alt={`${buttonLine.id}-${option[0]}`} />
-                  <p className="settings-button-text">{option[2]}</p>
+                  <p>{option[2]}</p>
                 </button>
               );
             })}
