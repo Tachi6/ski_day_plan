@@ -5,7 +5,7 @@ import { BoxesContainer } from './boxes/BoxesContainer';
 import { HideTutorialProvider } from './context/hideTutorialContext/HideTutorialProvider';
 import { SelectResortProvider } from './context/selectResortContext/SelectResortProvider';
 import { ViewSelectResortProvider } from './context/viewSelectResortContext/ViewSelectResortProvider';
-import { Map } from './views/Map';
+import { MapView } from './views/MapView';
 
 export const SkiPlanning = () => {
   return (
@@ -13,7 +13,7 @@ export const SkiPlanning = () => {
       <TrackSettingsProvider>
         <CurrentTrackContextProvider>
           <div className="leaflet-container">
-            <Map />
+            <MapView />
             <ViewSettingsProvider>
               <HideTutorialProvider>
                 <ViewSelectResortProvider>

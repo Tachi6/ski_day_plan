@@ -4,7 +4,7 @@ import { defaultCenter } from '../data/resorts';
 import { RunsAndLifts } from '../map/RunsAndLifts';
 import { CurrentTracks } from '../map/CurrentTracks';
 
-export const Map = () => {
+export const MapView = () => {
   return (
     <MapContainer
       center={defaultCenter}
@@ -15,7 +15,7 @@ export const Map = () => {
       className="back-layer"
     >
       <TileLayer
-        attribution='&copy; <a href="https://carto.com/">CARTO</a> | &copy; OpenStreetMap contributors'
+        attribution='&copy; <a href="https://carto.com/">CARTO</a> | &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> | Ski data &copy; <a href="https://openskimap.org">OpenSkiMap</a> & &copy; <a href="https://skimap.org">Skimap.org</a>'
         url="https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png"
         subdomains={['a', 'b', 'c', 'd']}
       />
