@@ -58,9 +58,11 @@ export const StepsBox = () => {
       <div className="steps-box-scroll" style={{ top: `${scrollStep * stepsBoxUnit}px` }} onWheel={handleMouseWheel}>
         {currentTrack.trackSteps.length > 0 &&
           currentTrack.trackSteps.map((track, index) => (
-            <div key={`${track.id}-${index}`} className="steps-box">
-              <CirclePosition difficulty={track.properties.difficulty} position={index + 1} />
-              <p>{track.properties.name ?? 'Conexión'}</p>
+            <div className="animation-wrapper">
+              <div key={`${track.id}-${index}`} className="steps-box">
+                <CirclePosition difficulty={track.properties.difficulty} position={index + 1} />
+                <p>{track.properties.name ?? 'Conexión'}</p>
+              </div>
             </div>
           ))}
       </div>

@@ -7,7 +7,19 @@
     transform: translateX(-180px);
   }
   100% {
-    transform: translateX(0);
+    transform: translateX(-5px);
+  }
+}
+
+@keyframes add-track-portrait {
+  0% {
+    transform: translateX(-140px);
+  }
+  50% {
+    transform: translateX(0px);
+  }
+  100% {
+    transform: translateX(-110px);
   }
 }
 
@@ -410,10 +422,19 @@ h2 {
   align-items: center;
   gap: 10px;
   transition: 0.5s;
+}
+
+.animation-wrapper {
   animation-name: add-track;
   animation-duration: 0.25s;
   animation-timing-function: ease-out;
   animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+.steps-box p {
+  line-height: 1;
+  text-align: left;
 }
 
 /* SPINNER CONTAINER */
@@ -647,10 +668,6 @@ h2 {
     width: 300px;
   }
 
-  .steps-box-container {
-    display: none;
-  }
-
   .resort-box {
     width: var(--responsive-width);
     max-height: calc(100dvh - 245px - 20px);
@@ -688,5 +705,32 @@ h2 {
     opacity: 1;
     pointer-events: auto;
     left: 0;
+  }
+
+  .steps-box-container {
+    left: 0;
+  }
+
+  .steps-box {
+    justify-content: end;
+    width: 120px;
+    transition: transform 0.25s ease-out;
+  }
+
+  .animation-wrapper {
+    animation-name: add-track-portrait;
+    animation-duration: 0.5s;
+  }
+
+  .steps-box div {
+    order: 2;
+  }
+  .steps-box p {
+    text-align: right;
+    order: 1;
+  }
+
+  .steps-box:hover {
+    transform: translateX(80px);
   }
 }
