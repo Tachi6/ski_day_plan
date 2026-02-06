@@ -37,7 +37,12 @@ export const CurrentTracks = () => {
         const markerIndex = getCenterIndex(track.geometry.coordinates.length, index);
 
         return (
-          <CurrentTrackPolyline key={`${track.id}-${index}`} track={track} index={index} markerIndex={markerIndex} />
+          <CurrentTrackPolyline
+            key={`${track.id}-${index}-polyline`}
+            track={track}
+            index={index}
+            markerIndex={markerIndex}
+          />
         );
       })}
     </>

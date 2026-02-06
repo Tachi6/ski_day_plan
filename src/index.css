@@ -396,6 +396,7 @@ h2 {
   left: calc(var(--box-margin) - 5px);
   width: 170px;
   overflow: hidden;
+  pointer-events: none;
 }
 
 .steps-box-scroll {
@@ -422,6 +423,7 @@ h2 {
   align-items: center;
   gap: 10px;
   transition: 0.5s;
+  pointer-events: auto;
 }
 
 .animation-wrapper {
