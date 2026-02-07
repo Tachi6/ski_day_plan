@@ -220,7 +220,7 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
       case 'UpUp': {
         if (
           distanceHaversine(lastTrackEnd, newTrackInit) <= UP_UP_DISTANCE &&
-          Math.abs(lastTrackEnd[2]! - newTrackInit[2]!) <= UP_UP_HEIGHT
+          newTrackInit[2]! - lastTrackEnd[2]! <= UP_UP_HEIGHT
         ) {
           const connectorTrack: Run = structuredClone({ ...(newTrack as Run) });
 
@@ -317,7 +317,7 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
         lastTrackCoords.findLast((trackPoint, index) => {
           const hasPoint =
             distanceHaversine(trackPoint, newTrackInit) <= DOWN_UP_DISTANCE &&
-            Math.abs(trackPoint[2]! - newTrackInit[2]!) <= DOWN_UP_HEIGHT;
+            newTrackInit[2]! - trackPoint[2]! <= DOWN_UP_HEIGHT;
 
           if (hasPoint) {
             const editedCurrentTrack =
