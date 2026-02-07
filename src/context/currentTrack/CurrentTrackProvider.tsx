@@ -33,7 +33,7 @@ const initTrackState: Track = {
 const UP_UP_DISTANCE: number = 250;
 const UP_UP_HEIGHT: number = 7.5;
 const UP_DOWN_DISTANCE: number = 250;
-const UP_DOWN_HEIGHT: number = 0;
+const UP_DOWN_HEIGHT: number = 2.5;
 const DOWN_DOWN_DISTANCE: number = 125;
 const DOWN_DOWN_HEIGHT: number = 2.5;
 const DOWN_UP_DISTANCE: number = 250;
@@ -248,6 +248,8 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
           const hasPoint =
             distanceHaversine(lastTrackEnd, trackPoint) <= UP_DOWN_DISTANCE &&
             trackPoint[2]! - lastTrackEnd[2]! <= UP_DOWN_HEIGHT;
+
+          console.log(trackPoint[2]! - lastTrackEnd[2]!);
 
           if (hasPoint) {
             const connectorTrack: Run = structuredClone({ ...(newTrack as Run) });
