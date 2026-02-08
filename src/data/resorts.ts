@@ -2,12 +2,12 @@ import baqueira from '../assets/images/baqueira.png';
 import alp2500 from '../assets/images/alp2500.png';
 import masella from '../assets/images/masella.png';
 import molina from '../assets/images/molina.png';
-import sellaronda from '../assets/images/sellaronda.png';
+// import sellaronda from '../assets/images/sellaronda.png';
 import type { LatLngExpression } from 'leaflet';
 
 export const defaultCenter: LatLngExpression = [41.786389, 1.096389];
 
-type ResortName = 'baqueira' | 'alp2500' | 'masella' | 'molina' | 'sellaronda';
+type ResortName = 'baqueira' | 'alp2500' | 'masella' | 'molina';
 
 export interface Resort {
   name: string;
@@ -52,12 +52,12 @@ export const resorts: Record<ResortName, Resort> = {
     specialFilter: 'Molina',
     image: molina,
   },
-  sellaronda: {
-    name: 'Sella Ronda',
-    dbName: 'sellaronda',
-    centerLandscape: [46.510082499999996, 11.757369699999998],
-    // TODO:
-    centerPortrait: [46.510082499999996, 11.757369699999998],
-    image: sellaronda,
-  },
+  // sellaronda: {
+  //   name: 'Sella Ronda',
+  //   dbName: 'sellaronda',
+  //   centerLandscape: [46.510082499999996, 11.757369699999998],
+  //   // TODO:
+  //   centerPortrait: [46.510082499999996, 11.757369699999998],
+  //   image: sellaronda,
+  // },
 };
