@@ -284,7 +284,7 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
         newTrackCoords.find((trackPoint, index) => {
           const hasPoint =
             distanceHaversine(lastTrackEnd, trackPoint) <= DOWN_DOWN_DISTANCE &&
-            lastTrackEnd[2]! - trackPoint[2]! >= DOWN_DOWN_HEIGHT;
+            trackPoint[2]! - lastTrackEnd[2]! <= DOWN_DOWN_HEIGHT;
 
           if (hasPoint) {
             const connectorTrack: Run = structuredClone({ ...(newTrack as Run) });
