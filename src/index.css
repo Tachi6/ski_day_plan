@@ -492,6 +492,11 @@ h2 {
   pointer-events: none;
 }
 
+.resort-box .box-line {
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
 .resort-box-label {
   font-size: 2em;
   margin-block-start: 0em;
