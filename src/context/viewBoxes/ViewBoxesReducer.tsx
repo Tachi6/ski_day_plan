@@ -8,7 +8,7 @@ export interface ViewBoxesState {
 export interface ViewBoxesPayload {
   isPortrait: boolean;
   hideTutorialForever?: boolean;
-  hasSelectedResort?: boolean;
+  hasSelectedResort: boolean;
 }
 
 export type ViewBoxesAction =
@@ -20,7 +20,7 @@ export type ViewBoxesAction =
 export const viewBoxesReducer = (state: ViewBoxesState, action: ViewBoxesAction) => {
   switch (action.type) {
     case 'INFO_BOX': {
-      if (state.tutorialBox) return state;
+      if (state.tutorialBox || (action.payload.isPortrait && !action.payload.hasSelectedResort)) return state;
 
       if (action.payload.isPortrait && !state.infoBox) {
         return {
@@ -52,7 +52,7 @@ export const viewBoxesReducer = (state: ViewBoxesState, action: ViewBoxesAction)
       };
     }
     case 'SETTINGS_BOX': {
-      if (state.tutorialBox) return state;
+      if (state.tutorialBox || (action.payload.isPortrait && !action.payload.hasSelectedResort)) return state;
 
       if (action.payload.isPortrait && !state.settingsBox) {
         return {
