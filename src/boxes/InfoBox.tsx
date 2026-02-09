@@ -1,14 +1,14 @@
 import { useContext } from 'react';
 import { CloseIcon } from '../assets/icons/CloseIcon';
 import { IconButton } from '../components/IconButton';
-import { ViewInfoContext } from '../context/viewInfo/ViewInfoContext';
+import { ViewBoxesContext } from '../context/viewBoxes/ViewBoxesContext';
 
 export const InfoBox = () => {
-  const { viewInfo, changeInfoVisibility } = useContext(ViewInfoContext);
-  
+  const { state, handleDispatch } = useContext(ViewBoxesContext);
+
   return (
-    <section className={`box info-box ${viewInfo ? 'show' : ''}`}>
-      <IconButton icon={<CloseIcon />} closeClass="close-button" onClick={changeInfoVisibility} />
+    <section className={`box info-box ${state.infoBox ? 'show' : ''}`}>
+      <IconButton icon={<CloseIcon />} closeClass="close-button" onClick={() => handleDispatch({ type: 'INFO_BOX' })} />
       <article>
         <h3>Acerca de</h3>
         <p>
@@ -36,44 +36,39 @@ export const InfoBox = () => {
           <p>
             <b>Base Map</b>
             {' - '}
-            &copy;
-            {' '}
-            <a href="https://carto.com/">CARTO</a>
+            &copy; <a href="https://carto.com/">CARTO</a>
             {' | '}
-            &copy;
-            {' '}
-            <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>
+            &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>
           </p>
           <p>
             <b>Ski Data</b>
             {' - '}
-            &copy;
-            {' '}
-            <a href="https://openskimap.org/" target="_blank">OpenSkiMap.org</a>
+            &copy;{' '}
+            <a href="https://openskimap.org/" target="_blank">
+              OpenSkiMap.org
+            </a>
             {' | '}
-            &copy;
-            {' '}
-            <a href="https://skimap.org/" target="_blank">SkiMap.org</a>
+            &copy;{' '}
+            <a href="https://skimap.org/" target="_blank">
+              SkiMap.org
+            </a>
             {' | '}
-            &copy;
-            {' '}
-            <a href="https://www.openstreetmap.org/copyright" target="_blank">OSM contributors</a>
+            &copy;{' '}
+            <a href="https://www.openstreetmap.org/copyright" target="_blank">
+              OSM contributors
+            </a>
           </p>
           <p>
             <b>Ski Icon</b>
             {' - '}
-            &copy;
-            {' '}
-            <a href="https://www.freepik.com/icon/ski_94150">Ski icon</a>
+            &copy; <a href="https://www.freepik.com/icon/ski_94150">Ski icon</a>
             {' by '}
             <a href="https://www.freepik.com/">FREEPIK</a>
           </p>
           <p>
             <b>Smash Icons</b>
             {' - '}
-            &copy;
-            {' '}
-            <a href="https://www.freepik.com/author/smashicons">Smashicons</a>
+            &copy; <a href="https://www.freepik.com/author/smashicons">Smashicons</a>
             {' by '}
             <a href="https://www.freepik.com/">FREEPIK</a>
           </p>

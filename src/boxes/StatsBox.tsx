@@ -1,6 +1,5 @@
 import { useContext, useEffect, useEffectEvent } from 'react';
 import { CurrentTrackContext } from '../context/currentTrack/CurrentTrackContext';
-import { ViewSettingsContext } from '../context/viewSettings/ViewSettingsContext';
 import { obtainPausesSeconds, timeToHoursAndMinutes } from '../helpers/times';
 import { TrackSettingsContext } from '../context/trackSettings/TrackSettingsContext';
 import { SettingsIcon } from '../assets/icons/SettingsIcon';
@@ -11,16 +10,15 @@ import { createGPXContent, mergeTracks } from '../helpers/createGPX';
 import { useDownloadGPX } from '../hooks/useDownloadGPX';
 import { DownloadIcon } from '../assets/icons/DownloadIcon';
 import { InfoIcon } from '../assets/icons/InfoIcon';
-import { ViewSelectResortContext } from '../context/viewSelectResort/ViewSelectResortContext';
 import { IconButton } from '../components/IconButton';
-import { ViewInfoContext } from '../context/viewInfo/ViewInfoContext';
+import { ViewBoxesContext } from '../context/viewBoxes/ViewBoxesContext';
+import { EmptyResortContext } from '../context/emptyResort/EmptyResortContext';
 
 export const StatsBox = () => {
   const { currentTrack, undoLastTrack, clearTrack, recalculateStats } = useContext(CurrentTrackContext);
-  const { changeSettingsVisibility } = useContext(ViewSettingsContext);
-  const { changeInfoVisibility } = useContext(ViewInfoContext);
-  const { view, showSelectedResort, hideSelectedResort } = useContext(ViewSelectResortContext);
+  const { handleDispatch } = useContext(ViewBoxesContext);
   const { trackSettings } = useContext(TrackSettingsContext);
+  const { handleEmptyResort } = useContext(EmptyResortContext);
   const downloadGPX = useDownloadGPX();
 
   const reloadStats = useEffectEvent(() => recalculateStats());
@@ -37,12 +35,16 @@ export const StatsBox = () => {
     return `${(distance / 1000).toFixed(1)}`;
   };
 
-  const handleSelectedResortVisibility = () => (view ? hideSelectedResort() : showSelectedResort());
-
   const handleDownload = () => {
     const mergedTracks = mergeTracks(currentTrack.trackSteps);
     const fileContent = createGPXContent(mergedTracks);
     downloadGPX(fileContent);
+  };
+
+  const handleSelectResort = () => {
+    if (!handleEmptyResort()) {
+      handleDispatch({ type: 'SELECT_RESORT_BOX' });
+    }
   };
 
   return (
@@ -123,10 +125,10 @@ export const StatsBox = () => {
       <div className="box-line buttons">
         <IconButton icon={<UndoIcon />} onClick={undoLastTrack} />
         <IconButton icon={<RemoveIcon />} onClick={clearTrack} />
-        <IconButton icon={<LocationIcon />} onClick={handleSelectedResortVisibility} />
+        <IconButton icon={<LocationIcon />} onClick={handleSelectResort} />
         <IconButton icon={<DownloadIcon />} onClick={handleDownload} />
-        <IconButton icon={<SettingsIcon />} onClick={changeSettingsVisibility} />
-        <IconButton icon={<InfoIcon />} onClick={changeInfoVisibility} />
+        <IconButton icon={<SettingsIcon />} onClick={() => handleDispatch({ type: 'SETTINGS_BOX' })} />
+        <IconButton icon={<InfoIcon />} onClick={() => handleDispatch({ type: 'INFO_BOX' })} />
       </div>
     </div>
   );

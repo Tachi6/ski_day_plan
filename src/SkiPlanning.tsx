@@ -1,12 +1,9 @@
 import { CurrentTrackContextProvider } from './context/currentTrack/CurrentTrackProvider';
-import { ViewSettingsProvider } from './context/viewSettings/ViewSettingsProvider';
 import { TrackSettingsProvider } from './context/trackSettings/TrackSettingsProvider';
 import { BoxesContainer } from './boxes/BoxesContainer';
-import { HideTutorialProvider } from './context/hideTutorialContext/HideTutorialProvider';
 import { SelectResortProvider } from './context/selectResort/SelectResortProvider';
-import { ViewSelectResortProvider } from './context/viewSelectResort/ViewSelectResortProvider';
 import { MapView } from './views/MapView';
-import { ViewInfoProvider } from './context/viewInfo/ViewInfoProvider';
+import { ViewBoxesProvider } from './context/viewBoxes/ViewBoxesProvider';
 
 export const SkiPlanning = () => {
   return (
@@ -15,15 +12,9 @@ export const SkiPlanning = () => {
         <CurrentTrackContextProvider>
           <div className="leaflet-container">
             <MapView />
-            <ViewSettingsProvider>
-              <HideTutorialProvider>
-                <ViewInfoProvider>
-                  <ViewSelectResortProvider>
-                    <BoxesContainer />
-                  </ViewSelectResortProvider>
-                </ViewInfoProvider>
-              </HideTutorialProvider>
-            </ViewSettingsProvider>
+            <ViewBoxesProvider>
+              <BoxesContainer />
+            </ViewBoxesProvider>
           </div>
         </CurrentTrackContextProvider>
       </TrackSettingsProvider>

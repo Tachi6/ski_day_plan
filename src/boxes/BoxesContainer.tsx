@@ -1,15 +1,14 @@
-import { useContext } from 'react';
-import { HideTutorialContext } from '../context/hideTutorialContext/HideTutorialContext';
 import { InfoBox, SelectResortBox, SettingsBox, StatsBox, StepsBox, TutorialBox } from '../boxes';
+import { EmptyResortProvider } from '../context/emptyResort/EmptyResortProvider';
 
 export const BoxesContainer = () => {
-  const { hideTutorial } = useContext(HideTutorialContext);
-
   return (
     <>
-      {!hideTutorial && <TutorialBox />}
-      {hideTutorial && <SelectResortBox />}
-      <StatsBox />
+      <TutorialBox />
+      <EmptyResortProvider>
+        <SelectResortBox />
+        <StatsBox />
+      </EmptyResortProvider>
       <SettingsBox />
       <StepsBox />
       <InfoBox />

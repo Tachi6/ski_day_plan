@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useTutorialBox } from '../hooks/useTutorialBox';
 import { lastStep, tutorialBoxData } from '../data/tutorialBoxData';
 import arrow from '../assets/svg/double_arrow_right.svg';
+import { ViewBoxesContext } from '../context/viewBoxes/ViewBoxesContext';
 
 type ButtonClass = 'primary' | 'secondary';
 type ButtonLabel = 'Comenzar' | 'Siguiente';
@@ -9,13 +10,27 @@ type ButtonLabel = 'Comenzar' | 'Siguiente';
 export const TutorialBox = () => {
   const [isChecked, setIsChecked] = useState<boolean>(true);
 
-  const { step, hide, display, handleButton, changeStep, handleTransitionEnd } = useTutorialBox();
+  const { state, handleDispatch } = useContext(ViewBoxesContext);
+
+  const { step, display, handleNextStep, moveToStep, handleTransitionEnd } = useTutorialBox();
 
   const buttonClass: ButtonClass = step === lastStep ? 'primary' : 'secondary';
   const buttonLabel: ButtonLabel = step === lastStep ? 'Comenzar' : 'Siguiente';
 
+  const handleButton = () => {
+    if (step === lastStep) {
+      handleDispatch({ type: 'TUTORIAL_BOX', hideTutorialForever: !isChecked });
+      return;
+    }
+    handleNextStep();
+  };
+
   return (
-    <div className={`box tutorial-box ${hide ? 'hide' : ''}`} onTransitionEnd={handleTransitionEnd} style={{ display }}>
+    <div
+      className={`box tutorial-box ${state.tutorialBox ? '' : 'hide'}`}
+      onTransitionEnd={() => handleTransitionEnd(!state.tutorialBox)}
+      style={{ display }}
+    >
       <h1>Ski Day Plan</h1>
       <h2>Planifica tu jornada de esqui</h2>
       <div className="tutorial-steps-container">
@@ -49,12 +64,12 @@ export const TutorialBox = () => {
             <div
               key={`${data.text}-${index}`}
               className={`indicator ${indicatorClass}`}
-              onClick={() => changeStep(index)}
+              onClick={() => moveToStep(index)}
             ></div>
           );
         })}
       </div>
-      <button className={buttonClass} onClick={() => handleButton(isChecked)}>
+      <button className={buttonClass} onClick={() => handleButton()}>
         {buttonLabel}
       </button>
       <div className="hide-tutorial">

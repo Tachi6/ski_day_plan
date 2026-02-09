@@ -14,8 +14,7 @@ import coffee from '../assets/images/coffee.png';
 import coke from '../assets/images/coke.png';
 import dinner from '../assets/images/dinner.png';
 import breakfast from '../assets/images/breakfast.png';
-import { Fragment, use } from 'react';
-import { ViewSettingsContext } from '../context/viewSettings/ViewSettingsContext';
+import { Fragment, useContext } from 'react';
 import {
   TrackSettingsContext,
   type Speed,
@@ -26,6 +25,7 @@ import {
 } from '../context/trackSettings/TrackSettingsContext';
 import { CloseIcon } from '../assets/icons/CloseIcon';
 import { IconButton } from '../components/IconButton';
+import { ViewBoxesContext } from '../context/viewBoxes/ViewBoxesContext';
 
 interface ButtonLine {
   id: keyof TrackSettingsState;
@@ -77,12 +77,16 @@ const settingsButtons: ButtonLine[] = [
 ];
 
 export const SettingsBox = () => {
-  const { viewSettings, changeSettingsVisibility } = use(ViewSettingsContext);
-  const { trackSettings, changeSettings } = use(TrackSettingsContext);
+  const { state, handleDispatch } = useContext(ViewBoxesContext);
+  const { trackSettings, changeSettings } = useContext(TrackSettingsContext);
 
   return (
-    <div className={`box settings-box ${viewSettings ? 'show' : ''}`}>
-      <IconButton icon={<CloseIcon />} closeClass="close-button" onClick={changeSettingsVisibility} />
+    <div className={`box settings-box ${state.settingsBox ? 'show' : ''}`}>
+      <IconButton
+        icon={<CloseIcon />}
+        closeClass="close-button"
+        onClick={() => handleDispatch({ type: 'SETTINGS_BOX' })}
+      />
       {settingsButtons.map((buttonLine) => (
         <Fragment key={buttonLine.id + buttonLine.label}>
           <h3>{buttonLine.label}</h3>
