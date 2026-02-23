@@ -12,6 +12,7 @@
   "dependencies": {
     "@types/leaflet": "^1.9.21",
     "@types/leaflet-textpath": "^1.2.6",
+    "catmull-rom": "^1.0.0",
     "firebase": "^12.9.0",
     "leaflet": "^1.9.4",
     "leaflet-arrowheads": "^1.4.0",
