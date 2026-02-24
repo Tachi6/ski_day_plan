@@ -37,37 +37,50 @@ export const distanceHaversine = (point1: LatLngTuple, point2: LatLngTuple): num
 
 const distanceToIncrement: Record<Turn, Record<RunTypes, number>> = {
   xsmall: {
-    novice: 10,
-    easy: 14,
-    intermediate: 18,
-    advanced: 22,
-    expert: 22,
-    freeride: 25,
+    novice: 1.1,
+    easy: 1.14,
+    intermediate: 1.18,
+    advanced: 1.22,
+    expert: 1.22,
+    freeride: 1.25,
   },
   small: {
-    novice: 7,
-    easy: 10,
-    intermediate: 13,
-    advanced: 16,
-    expert: 16,
-    freeride: 18,
+    novice: 1.07,
+    easy: 1.1,
+    intermediate: 1.13,
+    advanced: 1.16,
+    expert: 1.16,
+    freeride: 1.18,
   },
   medium: {
-    novice: 4,
-    easy: 6,
-    intermediate: 8,
-    advanced: 11,
-    expert: 11,
-    freeride: 13,
+    novice: 1.04,
+    easy: 1.06,
+    intermediate: 1.08,
+    advanced: 1.11,
+    expert: 1.11,
+    freeride: 1.13,
   },
   large: {
-    novice: 2,
-    easy: 3,
-    intermediate: 5,
-    advanced: 7,
-    expert: 7,
-    freeride: 9,
+    novice: 1.02,
+    easy: 1.03,
+    intermediate: 1.05,
+    advanced: 1.07,
+    expert: 1.07,
+    freeride: 1.09,
   },
+};
+
+const distanceCorrection = (pointsDistance: number, initPoint: LatLngTuple, endPoint: LatLngTuple): number => {
+  const straightDistance = distanceHaversine(initPoint, endPoint);
+
+  // Validate distance if points are near
+  if (straightDistance < 10) {
+    return pointsDistance * 1.02;
+  }
+
+  const sinuosity = pointsDistance / straightDistance;
+
+  return pointsDistance * Math.min(1.1, 1 + sinuosity * 0.02);
 };
 
 interface TrackDistanceProps {
@@ -76,23 +89,31 @@ interface TrackDistanceProps {
   runType?: RunTypes;
 }
 
-export const obtainDistance = ({ track, turn, runType }: TrackDistanceProps) => {
-  let lastCoordinates: LatLngTuple;
-  const straightDistance = track.reduce((accumulator: number, currentValue: LatLngTuple) => {
-    if (lastCoordinates === undefined) {
-      lastCoordinates = currentValue;
-      return 0;
-    }
+interface Distances {
+  distance: number;
+  skiDistance: number;
+}
 
-    const distance = distanceHaversine(lastCoordinates, currentValue);
+export const obtainDistance = ({ track, turn, runType }: TrackDistanceProps): Distances => {
+  const pointsDistance = track.reduce((accumulator: number, currentValue: LatLngTuple, index) => {
+    if (index === 0) return accumulator;
 
-    lastCoordinates = currentValue;
+    const distance = distanceHaversine(track[index - 1], currentValue);
 
     return accumulator + distance;
   }, 0);
 
-  if (runType) {
-    return straightDistance + straightDistance * (distanceToIncrement[turn][runType] / 100);
+  if (!runType) {
+    return {
+      distance: pointsDistance,
+      skiDistance: pointsDistance,
+    };
   }
-  return straightDistance;
+
+  const correctDistance = distanceCorrection(pointsDistance, track[0], track.at(-1)!);
+
+  return {
+    distance: correctDistance,
+    skiDistance: correctDistance * distanceToIncrement[turn][runType],
+  };
 };

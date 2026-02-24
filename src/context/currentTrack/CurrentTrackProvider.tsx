@@ -64,7 +64,7 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
 
     const connect = connectionType.connectionType ?? connectionType.directions;
 
-    console.log(connect);
+    // console.log(connect);
 
     switch (connect) {
       case null:
@@ -249,8 +249,6 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
             distanceHaversine(lastTrackEnd, trackPoint) <= UP_DOWN_DISTANCE &&
             trackPoint[2]! - lastTrackEnd[2]! <= UP_DOWN_HEIGHT;
 
-          console.log(trackPoint[2]! - lastTrackEnd[2]!);
-
           if (hasPoint) {
             const connectorTrack: Run = structuredClone({ ...(newTrack as Run) });
 
@@ -388,7 +386,7 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
       });
 
       const trackTime = obtainSeconds({
-        distance: trackDistance,
+        distance: trackDistance.skiDistance,
         track: track,
         speed: trackSettings.speed,
         stops: trackSettings.stops,
@@ -396,9 +394,9 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
 
       const isDownhill = track.properties.uses ? true : false;
 
-      newCurrentTrack.downhillDistance = newCurrentTrack.totalDistance + (isDownhill ? trackDistance : 0);
-      newCurrentTrack.uphillDistance = newCurrentTrack.totalDistance + +(!isDownhill ? trackDistance : 0);
-      newCurrentTrack.totalDistance = newCurrentTrack.totalDistance + trackDistance;
+      newCurrentTrack.downhillDistance = newCurrentTrack.totalDistance + (isDownhill ? trackDistance.distance : 0);
+      newCurrentTrack.uphillDistance = newCurrentTrack.totalDistance + +(!isDownhill ? trackDistance.distance : 0);
+      newCurrentTrack.totalDistance = newCurrentTrack.totalDistance + trackDistance.distance;
       newCurrentTrack.totalTime = newCurrentTrack.totalTime + trackTime;
     });
 

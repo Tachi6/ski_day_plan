@@ -193,10 +193,10 @@ export const addNewTrack = ({ currentTrack, newTrack, connectorTrack, trackSetti
           connectorTrack.properties.uses !== 'connection'
             ? (connectorTrack.properties.difficulty as RunTypes)
             : 'novice',
-      })
+      }).skiDistance
     : 0;
   const newTrackTime = obtainSeconds({
-    distance: newTrackDistance,
+    distance: newTrackDistance.skiDistance,
     track: newTrack,
     speed: trackSettings.speed,
     stops: trackSettings.stops,
@@ -218,9 +218,11 @@ export const addNewTrack = ({ currentTrack, newTrack, connectorTrack, trackSetti
 
   return {
     trackSteps: [...currentTrack.trackSteps, ...newTrackSteps],
-    downhillDistance: currentTrack.downhillDistance + (isDownhill ? connectorTrackDistance + newTrackDistance : 0),
-    uphillDistance: currentTrack.uphillDistance + (!isDownhill ? connectorTrackDistance + newTrackDistance : 0),
-    totalDistance: currentTrack.totalDistance + connectorTrackDistance + newTrackDistance,
+    downhillDistance:
+      currentTrack.downhillDistance + (isDownhill ? connectorTrackDistance + newTrackDistance.distance : 0),
+    uphillDistance:
+      currentTrack.uphillDistance + (!isDownhill ? connectorTrackDistance + newTrackDistance.distance : 0),
+    totalDistance: currentTrack.totalDistance + connectorTrackDistance + newTrackDistance.distance,
     totalTime: currentTrack.totalTime + connectorTrackTime + newTrackTime,
     descentElevation: currentTrack.descentElevation + (isDownhill ? connectorTrackElevation + newTrackElevation : 0),
     climbElevation: currentTrack.climbElevation + (!isDownhill ? connectorTrackElevation + newTrackElevation : 0),
@@ -248,7 +250,7 @@ export const clipCurrentTrack = ({ currentTrack, cutIndex, trackSettings }: Clip
   });
   const removeElevation = Math.abs(coordsToRemove.at(-1)![2]! - coordsToRemove[0][2]!);
   const removeTime = obtainSeconds({
-    distance: removeDistance,
+    distance: removeDistance.skiDistance,
     speed: trackSettings.speed,
     stops: trackSettings.stops,
     track: lastTrack,
@@ -264,9 +266,9 @@ export const clipCurrentTrack = ({ currentTrack, cutIndex, trackSettings }: Clip
 
   return {
     trackSteps: [...currentTrack.trackSteps.slice(0, currentTrack.trackSteps.length - 2), newTrackStep],
-    downhillDistance: currentTrack.downhillDistance - (isDownhill ? removeDistance : 0),
-    uphillDistance: currentTrack.uphillDistance - (!isDownhill ? removeDistance : 0),
-    totalDistance: currentTrack.totalDistance - removeDistance,
+    downhillDistance: currentTrack.downhillDistance - (isDownhill ? removeDistance.distance : 0),
+    uphillDistance: currentTrack.uphillDistance - (!isDownhill ? removeDistance.distance : 0),
+    totalDistance: currentTrack.totalDistance - removeDistance.distance,
     totalTime: currentTrack.totalTime - removeTime,
     descentElevation: currentTrack.descentElevation - (isDownhill ? removeElevation : 0),
     climbElevation: currentTrack.climbElevation - (!isDownhill ? removeElevation : 0),
@@ -290,7 +292,7 @@ export const removeLastTrack = (currentTrack: Track, trackSettings: TrackSetting
   });
   const removeElevation = Math.abs(coordsToRemove.at(-1)![2]! - coordsToRemove[0][2]!);
   const removeTime = obtainSeconds({
-    distance: removeDistance,
+    distance: removeDistance.skiDistance,
     speed: trackSettings.speed,
     stops: trackSettings.stops,
     track: lastTrack,
@@ -298,9 +300,9 @@ export const removeLastTrack = (currentTrack: Track, trackSettings: TrackSetting
 
   return {
     trackSteps: [...currentTrack.trackSteps.slice(0, currentTrack.trackSteps.length - 1)],
-    downhillDistance: currentTrack.downhillDistance - (isDownhill ? removeDistance : 0),
-    uphillDistance: currentTrack.uphillDistance - (!isDownhill ? removeDistance : 0),
-    totalDistance: currentTrack.totalDistance - removeDistance,
+    downhillDistance: currentTrack.downhillDistance - (isDownhill ? removeDistance.distance : 0),
+    uphillDistance: currentTrack.uphillDistance - (!isDownhill ? removeDistance.distance : 0),
+    totalDistance: currentTrack.totalDistance - removeDistance.distance,
     totalTime: currentTrack.totalTime - removeTime,
     descentElevation: currentTrack.descentElevation - (isDownhill ? removeElevation : 0),
     climbElevation: currentTrack.climbElevation - (!isDownhill ? removeElevation : 0),
