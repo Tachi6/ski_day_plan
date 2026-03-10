@@ -4,10 +4,8 @@ import 'leaflet-textpath';
 import { HighlightablePolyline } from 'leaflet-highlightable-layers';
 import { arrowColor, borderColor, primaryTextColor, runColor } from '../helpers/colors';
 import L from 'leaflet';
-import type { Lift, Run } from '../hooks/useObtainData';
 import { CurrentTrackContext } from '../context/currentTrack/CurrentTrackContext';
-
-export type RunTypes = 'novice' | 'easy' | 'intermediate' | 'advanced' | 'expert' | 'freeride';
+import type { Lift, Run } from '../interfaces/interfacesRunLift';
 
 interface Props {
   track: Run | Lift;
@@ -26,20 +24,20 @@ export const CustomPolyline = ({ track }: Props): null => {
   useEffect(() => {
     if (!map) return;
 
-    const positions = track.geometry.coordinates;
-    const difficulty = track.properties.difficulty;
+    const positions = track.coordinates;
+    const difficulty = track.type === 'run' ? track.difficulty : undefined;
 
     const polyline = new HighlightablePolyline(positions, {
-      color: runColor(difficulty as RunTypes),
+      color: runColor(difficulty),
       weight: 6,
       raised: false,
       outlineWeight: 10,
-      outlineColor: borderColor(difficulty as RunTypes),
+      outlineColor: borderColor(difficulty),
       pane: difficulty ? 'runs' : 'lifts',
       opacity: 0.95,
     });
 
-    polyline.setText(track.properties.name, {
+    polyline.setText(track.name, {
       center: true,
       offset: -7,
       orientation: positions[positions.length - 1][1] > positions[0][1] ? 0 : 180,
@@ -56,7 +54,7 @@ export const CustomPolyline = ({ track }: Props): null => {
       yawn: 45,
       frequency: '100m',
       fill: true,
-      color: arrowColor(difficulty as RunTypes),
+      color: arrowColor(difficulty),
       weight: 1,
       size: '4px',
       pane: 'arrows',

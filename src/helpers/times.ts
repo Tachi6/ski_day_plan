@@ -1,19 +1,7 @@
-import type { RunTypes } from '../map/CustomPolyline';
 import type { Pauses, Speed, Stops } from '../context/trackSettings/TrackSettingsContext';
-import type { Lift, Run } from '../hooks/useObtainData';
-import { liftSpeed, runSpeedTable, type LiftsTypes } from './speeds';
-
-interface ObtainTimeProps {
-  distance: number;
-  track: Run | Lift;
-  speed: Speed;
-  stops: Stops;
-}
-
-interface Time {
-  hours: string;
-  minutes: string;
-}
+import type { Lift, Run } from '../interfaces/interfacesRunLift';
+import { LIFTS_INFO } from './liftsInfo';
+import { runSpeedTable } from './speeds';
 
 // Stops in seconds
 const stopsValues: Record<Stops, number> = {
@@ -31,74 +19,44 @@ const pausesValues: Record<Pauses, number> = {
   coke: 20 * 60,
 };
 
-interface Waiting {
-  wait: number;
-  prepare: number;
-}
-
-const liftsWaitingTime: Record<LiftsTypes, Waiting> = {
-  TSD: {
-    wait: 120,
-    prepare: 30,
-  },
-  TS: {
-    wait: 180,
-    prepare: 50,
-  },
-  TSC: {
-    wait: 180,
-    prepare: 45,
-  },
-  TQ: {
-    wait: 40,
-    prepare: 5,
-  },
-  TCD: {
-    wait: 90,
-    prepare: 60,
-  },
-  CT: {
-    wait: 60,
-    prepare: 20,
-  },
-  TC: {
-    wait: 240,
-    prepare: 90,
-  },
-  TCB: {
-    wait: 210,
-    prepare: 80,
-  },
-  TPV: {
-    wait: 600,
-    prepare: 120,
-  },
-};
-
-interface StopsSecondsProps {
+interface ObtainStopsSeconds {
   distance: number;
   stops: Stops;
 }
 
 // Stops seconds every 1000m
-const obtainStopsSeconds = ({ distance, stops }: StopsSecondsProps) => (distance / 1000) * stopsValues[stops];
+const obtainStopsSeconds = ({ distance, stops }: ObtainStopsSeconds) =>
+  (distance / 1000) * stopsValues[stops];
 
-export const obtainSeconds = ({ distance, track, speed, stops }: ObtainTimeProps): number => {
-  if (track.properties.difficulty || track.properties.difficulty === null) {
-    const trackDifficulty = track.properties.difficulty !== null ? track.properties.difficulty : 'novice';
+interface ObtainSeconds {
+  distance: number;
+  track: Run | Lift;
+  speed: Speed;
+  stops: Stops;
+}
 
-    return distance / runSpeedTable[speed][trackDifficulty as RunTypes] + obtainStopsSeconds({ distance, stops });
+export const obtainSeconds = ({ distance, track, speed, stops }: ObtainSeconds): number => {
+  const difficulty = track.type === 'run' ? track.difficulty : undefined;
+
+  if (difficulty) {
+    return distance / runSpeedTable[speed][difficulty] + obtainStopsSeconds({ distance, stops });
   }
-  const liftType = (track.properties.name?.split(' ')[0] as LiftsTypes) ?? 'TS';
-  const liftSeconds = track.properties.duration ?? distance / liftSpeed[liftType];
+  const liftType = (track as Lift).lift_type;
+  const duration = (track as Lift).duration;
+  const liftSeconds = duration ?? distance / LIFTS_INFO[liftType].speed;
 
-  return liftSeconds + liftsWaitingTime[liftType].wait + liftsWaitingTime[liftType].prepare;
+  return liftSeconds + LIFTS_INFO[liftType].wait + LIFTS_INFO[liftType].prepare;
 };
 
-export const obtainPausesSeconds = (pauses: Pauses[]) =>
+export const obtainPausesSeconds = (pauses: Pauses[]): number =>
   pauses.reduce((total, pause) => total + pausesValues[pause], 0);
 
-export const timeToHoursAndMinutes = (seconds: number): Time => {
+interface TimeToHoursAndMinutes {
+  hours: string;
+  minutes: string;
+}
+
+export const timeToHoursAndMinutes = (seconds: number): TimeToHoursAndMinutes => {
   const hours = Math.floor(seconds / 3600);
   // Round up minutes and limit to 59 max minutes
   const minutes = Math.min(Math.ceil((seconds % 3600) / 60), 59);

@@ -28,13 +28,15 @@ export const CurrentTracks = () => {
 
     const offset = Math.ceil(selectedIndex / 2);
 
-    return selectedIndex % 2 === 1 ? Math.min(midIndex + offset, length - 1) : Math.max(midIndex - offset, 0);
+    return selectedIndex % 2 === 1
+      ? Math.min(midIndex + offset, length - 1)
+      : Math.max(midIndex - offset, 0);
   };
 
   return (
     <>
       {currentTrack.trackSteps.map((track, index) => {
-        const markerIndex = getCenterIndex(track.geometry.coordinates.length, index);
+        const markerIndex = getCenterIndex(track.coordinates.length, index);
 
         return (
           <CurrentTrackPolyline

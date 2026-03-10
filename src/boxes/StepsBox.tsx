@@ -55,16 +55,24 @@ export const StepsBox = () => {
 
   return (
     <div className="steps-box-container" style={{ height: `${height}px` }}>
-      <div className="steps-box-scroll" style={{ top: `${scrollStep * stepsBoxUnit}px` }} onWheel={handleMouseWheel}>
+      <div
+        className="steps-box-scroll"
+        style={{ top: `${scrollStep * stepsBoxUnit}px` }}
+        onWheel={handleMouseWheel}
+      >
         {currentTrack.trackSteps.length > 0 &&
-          currentTrack.trackSteps.map((track, index) => (
-            <div key={`${track.id}-${index}-steps`} className="animation-wrapper">
-              <div className="steps-box">
-                <CirclePosition difficulty={track.properties.difficulty} position={index + 1} />
-                <p>{track.properties.name ?? 'Conexión'}</p>
+          currentTrack.trackSteps.map((track, index) => {
+            const difficulty = track.type === 'run' ? track.difficulty : undefined;
+
+            return (
+              <div key={`${track.id}-${index}-steps`} className="animation-wrapper">
+                <div className="steps-box">
+                  <CirclePosition difficulty={difficulty} position={index + 1} />
+                  <p>{track.name ?? 'Conexión'}</p>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
       </div>
     </div>
   );

@@ -1,88 +1,7 @@
 import { useEffect, useState } from 'react';
-import type { LatLngTuple } from 'leaflet';
 import { get, getDatabase, ref } from 'firebase/database';
 import { app } from '../firebase/firebaseConfig';
-
-export interface Run {
-  id: number;
-  type: string;
-  properties: RunProperties;
-  geometry: Geometry;
-}
-
-export interface Lift {
-  id: number;
-  type: string;
-  properties: LiftProperties;
-  geometry: Geometry;
-}
-
-interface RunProperties {
-  feature_id: string;
-  name: string | null;
-  status: string;
-  sources: string;
-  websites: string;
-  wikidata_id?: string;
-  country_codes: string;
-  region_codes: string;
-  countries: string;
-  regions: string;
-  localities?: string;
-  uses?: string;
-  ref?: string;
-  description?: string;
-  difficulty?: string;
-  difficulty_convention: string;
-  oneway: number;
-  duration?: number;
-  lit: number;
-  gladed: number;
-  patrolled: number;
-  grooming: string;
-  elevation_profile_heights: string;
-  elevation_profile_resolution: number;
-  ski_area_ids: string;
-  ski_area_names: string;
-}
-
-interface LiftProperties {
-  feature_id: string;
-  name: string;
-  status: string;
-  sources: string;
-  websites: string;
-  wikidata_id?: string;
-  country_codes: string;
-  region_codes: string;
-  countries: string;
-  regions: string;
-  localities?: string;
-  uses?: string;
-  lift_type: string;
-  ref?: string;
-  ref_fr_cairn?: string;
-  description?: string;
-  difficulty?: string;
-  oneway: number;
-  occupancy: number;
-  capacity: number;
-  duration?: number;
-  detachable: number;
-  bubble: number;
-  heating: number;
-  ski_area_ids: string;
-  ski_area_names: string;
-}
-
-interface Geometry {
-  type: string;
-  coordinates: LatLngTuple[];
-}
-
-const parseCoordinates = (coordinates: LatLngTuple[]): LatLngTuple[] => {
-  return coordinates.map((coordinate) => [coordinate[1], coordinate[0], coordinate[2]]);
-};
+import type { Lift, Run } from '../interfaces/interfacesRunLift';
 
 type Status = 'idle' | 'loading' | 'success' | 'error';
 
@@ -99,36 +18,28 @@ export const useObtainData = (dbName?: string, specialTag?: string) => {
       setStatus('loading');
 
       try {
-        const runsLiftsDB = ref(getDatabase(app), dbName);
+        // TODO: change name
+        const runsLiftsDB = ref(getDatabase(app), `t-${dbName}`);
         const snapshot = await get(runsLiftsDB);
         const data = snapshot.val();
 
-        const loadedRuns: Run[] = data.runs.map((run: Run) => ({
-          ...run,
-          geometry: {
-            type: run.geometry.type,
-            coordinates: parseCoordinates(run.geometry.coordinates),
-          },
-        }));
-        const loadedLifts: Lift[] = data.lifts.map((lift: Lift) => ({
-          ...lift,
-          geometry: {
-            type: lift.geometry.type,
-            coordinates: parseCoordinates(lift.geometry.coordinates),
-          },
-        }));
+        const loadedRuns: Run[] = data.runs;
+        const loadedLifts: Lift[] = data.lifts;
 
         const filteredRuns = specialTag
-          ? loadedRuns.filter((run) => run.properties.ski_area_names.includes(specialTag))
+          ? loadedRuns.filter((run) => run.ski_area_names.includes(specialTag))
           : loadedRuns;
         const filteredLifts = specialTag
-          ? loadedLifts.filter((lift) => lift.properties.ski_area_names.includes(specialTag))
+          ? loadedLifts.filter((lift) => lift.ski_area_names.includes(specialTag))
           : loadedLifts;
 
-        setRuns(filteredRuns.filter((run) => run.properties.uses === 'downhill'));
+        setRuns(filteredRuns.filter((run) => run.uses.includes('downhill')));
         setAllRuns(
-          filteredRuns.filter((run) => run.properties.uses === 'downhill' || run.properties.uses === 'connection'),
+          filteredRuns.filter(
+            (run) => run.uses.includes('downhill') || run.uses.includes('connection'),
+          ),
         );
+
         setLifts(filteredLifts);
         setStatus('success');
       } catch (_) {

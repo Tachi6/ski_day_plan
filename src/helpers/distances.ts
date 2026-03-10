@@ -1,6 +1,6 @@
 import type { LatLngTuple } from 'leaflet';
 import type { Turn } from '../context/trackSettings/TrackSettingsContext';
-import type { RunTypes } from '../map/CustomPolyline';
+import type { Difficulty } from '../types/types';
 
 // Average radius of the Earth in kilometers
 const R_METERS = 6371000;
@@ -35,13 +35,14 @@ export const distanceHaversine = (point1: LatLngTuple, point2: LatLngTuple): num
   return distance3D;
 };
 
-const distanceToIncrement: Record<Turn, Record<RunTypes, number>> = {
+const distanceToIncrement: Record<Turn, Record<Difficulty, number>> = {
   xsmall: {
     novice: 1.1,
     easy: 1.14,
     intermediate: 1.18,
     advanced: 1.22,
     expert: 1.22,
+    extreme: 1.25,
     freeride: 1.25,
   },
   small: {
@@ -50,6 +51,7 @@ const distanceToIncrement: Record<Turn, Record<RunTypes, number>> = {
     intermediate: 1.13,
     advanced: 1.16,
     expert: 1.16,
+    extreme: 1.18,
     freeride: 1.18,
   },
   medium: {
@@ -58,6 +60,7 @@ const distanceToIncrement: Record<Turn, Record<RunTypes, number>> = {
     intermediate: 1.08,
     advanced: 1.11,
     expert: 1.11,
+    extreme: 1.13,
     freeride: 1.13,
   },
   large: {
@@ -66,11 +69,16 @@ const distanceToIncrement: Record<Turn, Record<RunTypes, number>> = {
     intermediate: 1.05,
     advanced: 1.07,
     expert: 1.07,
+    extreme: 1.09,
     freeride: 1.09,
   },
 };
 
-const distanceCorrection = (pointsDistance: number, initPoint: LatLngTuple, endPoint: LatLngTuple): number => {
+const distanceCorrection = (
+  pointsDistance: number,
+  initPoint: LatLngTuple,
+  endPoint: LatLngTuple,
+): number => {
   const straightDistance = distanceHaversine(initPoint, endPoint);
 
   // Validate distance if points are near
@@ -86,7 +94,7 @@ const distanceCorrection = (pointsDistance: number, initPoint: LatLngTuple, endP
 interface TrackDistanceProps {
   track: LatLngTuple[];
   turn: Turn;
-  runType?: RunTypes;
+  runType?: Difficulty;
 }
 
 interface Distances {

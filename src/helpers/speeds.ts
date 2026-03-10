@@ -1,23 +1,23 @@
-import type { RunTypes } from '../map/CustomPolyline';
 import { type Speed } from '../context/trackSettings/TrackSettingsContext';
-
-export type LiftsTypes = 'TC' | 'TSD' | 'TQ' | 'TS' | 'CT' | 'TCD' | 'TPV' | 'TCB' | 'TSC';
-
-export const liftSpeed: Record<LiftsTypes, number> = {
-  TC: 6.0,
-  TSC: 5.0,
-  TSD: 5.0,
-  TQ: 3.0,
-  TS: 2.5,
-  TCD: 1.5,
-  CT: 0.65,
-  TPV: 7.5,
-  TCB: 7.0,
-};
+import type { Difficulty } from '../types/types';
+//TODO:
+// export type LiftsTypes = 'TC' | 'TSD' | 'TQ' | 'TS' | 'CT' | 'TCD' | 'TPV' | 'TCB' | 'TSC';
+//TODO:
+// export const liftSpeed: Record<LiftsTypes, number> = {
+//   TC: 6.0,
+//   TSC: 5.0,
+//   TSD: 5.0,
+//   TQ: 3.0,
+//   TS: 2.5,
+//   TCD: 1.5,
+//   CT: 0.65,
+//   TPV: 7.5,
+//   TCB: 7.0,
+// };
 
 type RunSpeed = {
   [key in Speed]: {
-    [key in RunTypes]: number;
+    [key in Difficulty]: number;
   };
 };
 
@@ -28,6 +28,7 @@ export const runSpeedTable: RunSpeed = {
     intermediate: 45 / 3.6,
     expert: 30 / 3.6,
     advanced: 30 / 3.6,
+    extreme: 25 / 3.6,
     freeride: 25 / 3.6,
   },
   mid: {
@@ -36,6 +37,7 @@ export const runSpeedTable: RunSpeed = {
     intermediate: 37.5 / 3.6,
     expert: 22.5 / 3.6,
     advanced: 22.5 / 3.6,
+    extreme: 17.5 / 3.6,
     freeride: 17.5 / 3.6,
   },
   low: {
@@ -44,6 +46,7 @@ export const runSpeedTable: RunSpeed = {
     intermediate: 30 / 3.6,
     expert: 15 / 3.6,
     advanced: 15 / 3.6,
+    extreme: 10 / 3.6,
     freeride: 10 / 3.6,
   },
   xlow: {
@@ -52,6 +55,7 @@ export const runSpeedTable: RunSpeed = {
     intermediate: 22.5 / 3.6,
     expert: 7.5 / 3.6,
     advanced: 7.5 / 3.6,
+    extreme: 2.5 / 3.6,
     freeride: 2.5 / 3.6,
   },
 };

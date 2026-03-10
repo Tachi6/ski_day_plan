@@ -1,10 +1,10 @@
-import type { RunTypes } from '../map/CustomPolyline';
+import type { Difficulty } from '../types/types';
 
 export const primaryTextColor = '#1F2D3D';
 
 export const selectedColor = '#FFDD00';
 
-export const runColor = (type: RunTypes | undefined) => {
+export const runColor = (type: Difficulty | undefined) => {
   switch (type) {
     case 'novice':
       return '#008040'; // verde clásico
@@ -16,6 +16,8 @@ export const runColor = (type: RunTypes | undefined) => {
       return '#1F1F1F'; // NO negro puro
     case 'expert':
       return '#1F1F1F';
+    case 'extreme':
+      return '#1F1F1F';
     case 'freeride':
       return '#FF8A00'; // naranja un pelín más frío
     case undefined:
@@ -25,7 +27,7 @@ export const runColor = (type: RunTypes | undefined) => {
   }
 };
 
-export const borderColor = (type: RunTypes | undefined) => {
+export const borderColor = (type: Difficulty | undefined) => {
   switch (type) {
     case 'novice':
       return '#003820';
@@ -46,7 +48,7 @@ export const borderColor = (type: RunTypes | undefined) => {
   }
 };
 
-export const arrowColor = (type: RunTypes | undefined) => {
+export const arrowColor = (type: Difficulty | undefined) => {
   switch (type) {
     case 'novice':
       return '#4DFFB0';
@@ -67,7 +69,7 @@ export const arrowColor = (type: RunTypes | undefined) => {
   }
 };
 
-export const textColor = (type: RunTypes | undefined) => {
+export const textColor = (type: Difficulty | undefined) => {
   switch (type) {
     case 'novice':
       return '#D6FFEB';

@@ -1,12 +1,11 @@
 import { useEffect } from 'react';
 import { useMap } from 'react-leaflet';
 import { HighlightablePolyline } from 'leaflet-highlightable-layers';
-import type { Lift, Run } from '../hooks/useObtainData';
 import L from 'leaflet';
 import { borderColor, runColor, selectedColor } from '../helpers/colors';
-import type { RunTypes } from './CustomPolyline';
 import { renderToString } from 'react-dom/server';
 import { CirclePosition } from '../components/CirclePosition';
+import type { Lift, Run } from '../interfaces/interfacesRunLift';
 
 interface Props {
   track: Run | Lift;
@@ -20,17 +19,17 @@ export const CurrentTrackPolyline = ({ track, index, markerIndex }: Props): null
   useEffect(() => {
     if (!map) return;
 
-    const positions = track.geometry.coordinates;
-    const difficulty = track.properties.difficulty;
+    const positions = track.coordinates;
+    const difficulty = track.type === 'run' ? track.difficulty : undefined;
 
     const basePolyline = L.polyline(positions, {
       weight: 10,
-      color: borderColor(difficulty as RunTypes),
+      color: borderColor(difficulty),
       interactive: false,
     });
 
     const polyline = new HighlightablePolyline(positions, {
-      color: runColor(difficulty as RunTypes),
+      color: runColor(difficulty),
       weight: 4,
       raised: false,
       outlineWeight: 6,
@@ -41,7 +40,10 @@ export const CurrentTrackPolyline = ({ track, index, markerIndex }: Props): null
 
     const icon = L.divIcon({
       className: 'circle-marker',
-      html: renderToString(<CirclePosition difficulty={track.properties.difficulty} position={index + 1} />),
+      html: renderToString(
+        // TODO: ver si pinta bien los lifts
+        <CirclePosition difficulty={difficulty} position={index + 1} />,
+      ),
       iconSize: [20, 20],
       iconAnchor: [10, 10],
     });

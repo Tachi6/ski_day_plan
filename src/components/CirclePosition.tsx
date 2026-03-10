@@ -1,5 +1,5 @@
 import { borderColor, runColor, textColor } from '../helpers/colors';
-import type { RunTypes } from '../map/CustomPolyline';
+import type { Difficulty } from '../types/types';
 
 interface Props {
   difficulty: string | undefined;
@@ -11,9 +11,9 @@ export const CirclePosition = ({ difficulty, position }: Props) => {
     <div
       className="track-step"
       style={{
-        borderColor: borderColor(difficulty as RunTypes),
-        backgroundColor: runColor(difficulty as RunTypes),
-        color: textColor(difficulty as RunTypes),
+        borderColor: borderColor(difficulty as Difficulty),
+        backgroundColor: runColor(difficulty as Difficulty),
+        color: textColor(difficulty as Difficulty),
       }}
     >
       {position}

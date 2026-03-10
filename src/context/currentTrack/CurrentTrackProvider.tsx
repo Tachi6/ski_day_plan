@@ -2,11 +2,16 @@ import { type PropsWithChildren, use, useState } from 'react';
 import { type LatLngTuple } from 'leaflet';
 import { distanceHaversine, obtainDistance } from '../../helpers/distances';
 import { CurrentTrackContext } from './CurrentTrackContext';
-import { addNewTrack, clipCurrentTrack, getConnectionInfo, removeLastTrack } from './CurrentTrackHelpers';
-import { useObtainData, type Lift, type Run } from '../../hooks/useObtainData';
+import {
+  addNewTrack,
+  clipCurrentTrack,
+  getConnectionInfo,
+  removeLastTrack,
+} from './CurrentTrackHelpers';
+import { useObtainData } from '../../hooks/useObtainData';
 import { TrackSettingsContext } from '../trackSettings/TrackSettingsContext';
-import type { RunTypes } from '../../map/CustomPolyline';
 import { obtainSeconds } from '../../helpers/times';
+import type { Lift, Run } from '../../interfaces/interfacesRunLift';
 
 export interface Track {
   trackSteps: (Run | Lift)[];
@@ -48,8 +53,8 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
 
   const addRunToTrack = (newTrack: Run | Lift): void => {
     const lastTrack = currentTrack.trackSteps.at(-1);
-    const newTrackCoords: LatLngTuple[] = newTrack.geometry.coordinates;
-    const lastTrackCoords: LatLngTuple[] = lastTrack?.geometry.coordinates ?? [];
+    const newTrackCoords: LatLngTuple[] = newTrack.coordinates;
+    const lastTrackCoords: LatLngTuple[] = lastTrack?.coordinates ?? [];
 
     const newTrackInit = newTrackCoords[0];
     const lastTrackEnd = lastTrackCoords.at(-1)!;
@@ -64,7 +69,7 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
 
     const connect = connectionType.connectionType ?? connectionType.directions;
 
-    // console.log(connect);
+    console.log(connect);
 
     switch (connect) {
       case null:
@@ -84,10 +89,7 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
             currentTrack,
             newTrack: {
               ...newTrack,
-              geometry: {
-                coordinates: newTrackCoords.slice(connectionType.newTrackConnectionIndex),
-                type: newTrack.geometry.type,
-              },
+              coordinates: newTrackCoords.slice(connectionType.newTrackConnectionIndex),
             },
             trackSettings: trackSettings,
           }),
@@ -124,16 +126,12 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
               currentTrack: editedCurrentTrack,
               newTrack: {
                 ...newTrack,
-                geometry: {
-                  coordinates: newTrackCoords.slice(connectionType.newTrackConnectionIndex),
-                  type: newTrack.geometry.type,
-                },
+                coordinates: newTrackCoords.slice(connectionType.newTrackConnectionIndex),
               },
               trackSettings: trackSettings,
             }),
           );
         }
-
         return;
       }
 
@@ -154,10 +152,7 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
             currentTrack,
             newTrack: {
               ...newTrack,
-              geometry: {
-                coordinates: [...newTrackCoords.slice(connectionType.newTrackConnectionIndex)],
-                type: newTrack.geometry.type,
-              },
+              coordinates: [...newTrackCoords.slice(connectionType.newTrackConnectionIndex)],
             },
             connectorTrack: connectionType.connectorTrack,
             trackSettings: trackSettings,
@@ -178,10 +173,7 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
               currentTrack: editedCurrentTrack,
               newTrack: {
                 ...newTrack,
-                geometry: {
-                  coordinates: [...newTrackCoords.slice(connectionType.newTrackConnectionIndex)],
-                  type: newTrack.geometry.type,
-                },
+                coordinates: [...newTrackCoords.slice(connectionType.newTrackConnectionIndex)],
               },
               connectorTrack: connectionType.connectorTrack,
               trackSettings: trackSettings,
@@ -204,10 +196,7 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
               currentTrack: editedCurrentTrack,
               newTrack: {
                 ...newTrack,
-                geometry: {
-                  coordinates: [...newTrackCoords],
-                  type: newTrack.geometry.type,
-                },
+                coordinates: [...newTrackCoords],
               },
               connectorTrack: connectionType.connectorTrack,
               trackSettings: trackSettings,
@@ -224,11 +213,11 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
         ) {
           const connectorTrack: Run = structuredClone({ ...(newTrack as Run) });
 
-          connectorTrack.id = Date.now();
-          connectorTrack.properties.name = null;
-          connectorTrack.properties.difficulty = 'easy';
-          connectorTrack.properties.uses = 'connection';
-          connectorTrack.geometry.coordinates = [lastTrackEnd, newTrackCoords[0]];
+          connectorTrack.id = `${Date.now()}`;
+          connectorTrack.name = 'Conexión';
+          connectorTrack.difficulty = 'novice';
+          connectorTrack.uses = 'connection';
+          connectorTrack.coordinates = [lastTrackEnd, newTrackCoords[0]];
 
           setCurrentTrack(
             addNewTrack({
@@ -252,21 +241,18 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
           if (hasPoint) {
             const connectorTrack: Run = structuredClone({ ...(newTrack as Run) });
 
-            connectorTrack.id = Date.now();
-            connectorTrack.properties.name = null;
-            connectorTrack.properties.difficulty = 'easy';
-            connectorTrack.properties.uses = 'connection';
-            connectorTrack.geometry.coordinates = [lastTrackEnd, newTrackCoords[index]];
+            connectorTrack.id = `${Date.now()}`;
+            connectorTrack.name = 'Conexión';
+            connectorTrack.difficulty = 'novice';
+            connectorTrack.uses = 'connection';
+            connectorTrack.coordinates = [lastTrackEnd, newTrackCoords[index]];
 
             setCurrentTrack(
               addNewTrack({
                 currentTrack,
                 newTrack: {
                   ...newTrack,
-                  geometry: {
-                    coordinates: [...newTrackCoords.slice(index)],
-                    type: newTrack.geometry.type,
-                  },
+                  coordinates: [...newTrackCoords.slice(index)],
                 },
                 connectorTrack: connectorTrack,
                 trackSettings: trackSettings,
@@ -287,21 +273,18 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
           if (hasPoint) {
             const connectorTrack: Run = structuredClone({ ...(newTrack as Run) });
 
-            connectorTrack.id = Date.now();
-            connectorTrack.properties.name = null;
-            connectorTrack.properties.difficulty = 'easy';
-            connectorTrack.properties.uses = 'connection';
-            connectorTrack.geometry.coordinates = [lastTrackEnd, newTrackCoords[index]];
+            connectorTrack.id = `${Date.now()}`;
+            connectorTrack.name = 'Conexión';
+            connectorTrack.difficulty = 'novice';
+            connectorTrack.uses = 'connection';
+            connectorTrack.coordinates = [lastTrackEnd, newTrackCoords[index]];
 
             setCurrentTrack(
               addNewTrack({
                 currentTrack,
                 newTrack: {
                   ...newTrack,
-                  geometry: {
-                    coordinates: [...newTrackCoords.slice(index)],
-                    type: newTrack.geometry.type,
-                  },
+                  coordinates: [...newTrackCoords.slice(index)],
                 },
                 connectorTrack: connectorTrack,
                 trackSettings: trackSettings,
@@ -328,11 +311,11 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
 
             const connectorTrack: Run = structuredClone({ ...(newTrack as Run) });
 
-            connectorTrack.id = Date.now();
-            connectorTrack.properties.name = null;
-            connectorTrack.properties.difficulty = 'easy';
-            connectorTrack.properties.uses = 'connection';
-            connectorTrack.geometry.coordinates = [editedTrackEnd, newTrackCoords[0]];
+            connectorTrack.id = `${Date.now()}`;
+            connectorTrack.name = 'Conexión';
+            connectorTrack.difficulty = 'novice';
+            connectorTrack.uses = 'connection';
+            connectorTrack.coordinates = [editedTrackEnd, newTrackCoords[0]];
 
             setCurrentTrack(
               addNewTrack({
@@ -379,10 +362,12 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
     };
 
     currentTrack.trackSteps.forEach((track) => {
+      const difficulty = track.type === 'run' ? track.difficulty : undefined;
+
       const trackDistance = obtainDistance({
-        track: track.geometry.coordinates,
+        track: track.coordinates,
         turn: trackSettings.turn,
-        runType: track.properties.difficulty as RunTypes,
+        runType: difficulty,
       });
 
       const trackTime = obtainSeconds({
@@ -392,10 +377,12 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
         stops: trackSettings.stops,
       });
 
-      const isDownhill = track.properties.uses ? true : false;
+      const isDownhill = track.type === 'run';
 
-      newCurrentTrack.downhillDistance = newCurrentTrack.totalDistance + (isDownhill ? trackDistance.distance : 0);
-      newCurrentTrack.uphillDistance = newCurrentTrack.totalDistance + +(!isDownhill ? trackDistance.distance : 0);
+      newCurrentTrack.downhillDistance =
+        newCurrentTrack.totalDistance + (isDownhill ? trackDistance.distance : 0);
+      newCurrentTrack.uphillDistance =
+        newCurrentTrack.totalDistance + +(!isDownhill ? trackDistance.distance : 0);
       newCurrentTrack.totalDistance = newCurrentTrack.totalDistance + trackDistance.distance;
       newCurrentTrack.totalTime = newCurrentTrack.totalTime + trackTime;
     });

@@ -1,10 +1,9 @@
 import { type LatLngTuple } from 'leaflet';
 import { obtainDistance } from '../../helpers/distances';
 import type { Track } from './CurrentTrackProvider';
-import type { Lift, Run } from '../../hooks/useObtainData';
 import { obtainSeconds } from '../../helpers/times';
 import type { TrackSettingsState } from '../trackSettings/TrackSettingsContext';
-import type { RunTypes } from '../../map/CustomPolyline';
+import type { Lift, Run } from '../../interfaces/interfacesRunLift';
 
 type ConnectionType =
   | 'EndStart'
@@ -75,13 +74,18 @@ export const getConnectionInfo = ({
     return connectionInfo;
   }
 
-  if (lastTrackCoords.at(-1)![0] === newTrackCoords[0][0] && lastTrackCoords.at(-1)![1] === newTrackCoords[0][1]) {
+  if (
+    lastTrackCoords.at(-1)![0] === newTrackCoords[0][0] &&
+    lastTrackCoords.at(-1)![1] === newTrackCoords[0][1]
+  ) {
     connectionInfo.connectionType = 'EndStart';
     return connectionInfo;
   }
 
-  connectionInfo.lastTrackDirection = lastTrackCoords[0][2]! - lastTrackCoords.at(-1)![2]! >= 0 ? 'Down' : 'Up';
-  connectionInfo.newTrackDirection = newTrackCoords[0][2]! - newTrackCoords.at(-1)![2]! >= 0 ? 'Down' : 'Up';
+  connectionInfo.lastTrackDirection =
+    lastTrackCoords[0][2]! - lastTrackCoords.at(-1)![2]! >= 0 ? 'Down' : 'Up';
+  connectionInfo.newTrackDirection =
+    newTrackCoords[0][2]! - newTrackCoords.at(-1)![2]! >= 0 ? 'Down' : 'Up';
 
   const hasConnection = lastTrackCoords.some((point1, index1) =>
     newTrackCoords.some((point2, index2) => {
@@ -92,7 +96,8 @@ export const getConnectionInfo = ({
       if (hasMatch) {
         connectionInfo.lastTrackConnectionIndex = index1;
         connectionInfo.newTrackConnectionIndex = index2;
-        connectionInfo.lastTrackConnection = index1 === lastTrackCoords.length - 1 ? 'End' : 'Middle';
+        connectionInfo.lastTrackConnection =
+          index1 === lastTrackCoords.length - 1 ? 'End' : 'Middle';
         connectionInfo.newTrackConnection =
           index2 === 0 ? 'Start' : index2 === newTrackCoords.length - 1 ? 'End' : 'Middle';
       }
@@ -111,13 +116,13 @@ export const getConnectionInfo = ({
       const hasMatchLastTrack = lastTrackCoords.some((point1, index1) => {
         if (index1 === 0) return false;
 
-        return usedConnection.geometry.coordinates.some((point2, index) => {
+        return usedConnection.coordinates.some((point2, index) => {
           const hasMatch = point2[0] === point1[0] && point2[1] === point1[1];
 
           if (hasMatch) {
             lastTrackConnectionIndex = index1;
             lastTrackConnection = index1 === lastTrackCoords.length - 1 ? 'End' : 'Middle';
-            usedConnection.geometry.coordinates = usedConnection.geometry.coordinates.slice(index);
+            usedConnection.coordinates = usedConnection.coordinates.slice(index);
           }
 
           return hasMatch;
@@ -129,13 +134,13 @@ export const getConnectionInfo = ({
       const hasMatchNewTrack = newTrackCoords.some((point3, index2) => {
         if (index2 === newTrackCoords.length - 1) return false;
 
-        return usedConnection.geometry.coordinates.some((point4, index) => {
+        return usedConnection.coordinates.some((point4, index) => {
           const hasMatch = point4[0] === point3[0] && point4[1] === point3[1];
 
           if (hasMatch) {
             newTrackConnectionIndex = index2;
             newTrackConnection = index2 === 0 ? 'Start' : 'Middle';
-            usedConnection.geometry.coordinates = usedConnection.geometry.coordinates.slice(0, index + 1);
+            usedConnection.coordinates = usedConnection.coordinates.slice(0, index + 1);
           }
           return hasMatch;
         });
@@ -173,26 +178,33 @@ interface AddNewTrackProps {
   trackSettings: TrackSettingsState;
 }
 
-export const addNewTrack = ({ currentTrack, newTrack, connectorTrack, trackSettings }: AddNewTrackProps): Track => {
-  const newTrackCoords = newTrack.geometry.coordinates;
-  const connectorTrackCoords = connectorTrack?.geometry.coordinates;
-  const isDownhill = newTrack.properties.uses ? true : false;
+export const addNewTrack = ({
+  currentTrack,
+  newTrack,
+  connectorTrack,
+  trackSettings,
+}: AddNewTrackProps): Track => {
+  const newTrackCoords = newTrack.coordinates;
+  const connectorTrackCoords = connectorTrack?.coordinates;
+  const isDownhill = newTrack.type === 'run';
   const lastTrack = currentTrack.trackSteps.at(-1);
-  const islastTrackDownhill = lastTrack && lastTrack.properties.uses ? true : false;
+  // const isLastTrackDownhill = lastTrack && lastTrack.properties.uses ? true : false;
+  const isLastTrackDownhill = lastTrack?.type === 'run';
 
   const newTrackDistance = obtainDistance({
     track: newTrackCoords,
     turn: trackSettings.turn,
-    runType: newTrack.properties.difficulty as RunTypes,
+    runType: newTrack.type === 'run' ? newTrack.difficulty : undefined,
   });
   const connectorTrackDistance = connectorTrack
     ? obtainDistance({
         track: connectorTrackCoords!,
         turn: trackSettings.turn,
-        runType:
-          connectorTrack.properties.uses !== 'connection'
-            ? (connectorTrack.properties.difficulty as RunTypes)
-            : 'novice',
+        runType: !connectorTrack.uses.includes('connection')
+          ? connectorTrack.type === 'run'
+            ? connectorTrack.difficulty
+            : undefined
+          : 'novice',
       }).skiDistance
     : 0;
   const newTrackTime = obtainSeconds({
@@ -219,14 +231,20 @@ export const addNewTrack = ({ currentTrack, newTrack, connectorTrack, trackSetti
   return {
     trackSteps: [...currentTrack.trackSteps, ...newTrackSteps],
     downhillDistance:
-      currentTrack.downhillDistance + (isDownhill ? connectorTrackDistance + newTrackDistance.distance : 0),
+      currentTrack.downhillDistance +
+      (isDownhill ? connectorTrackDistance + newTrackDistance.distance : 0),
     uphillDistance:
-      currentTrack.uphillDistance + (!isDownhill ? connectorTrackDistance + newTrackDistance.distance : 0),
+      currentTrack.uphillDistance +
+      (!isDownhill ? connectorTrackDistance + newTrackDistance.distance : 0),
     totalDistance: currentTrack.totalDistance + connectorTrackDistance + newTrackDistance.distance,
     totalTime: currentTrack.totalTime + connectorTrackTime + newTrackTime,
-    descentElevation: currentTrack.descentElevation + (isDownhill ? connectorTrackElevation + newTrackElevation : 0),
-    climbElevation: currentTrack.climbElevation + (!isDownhill ? connectorTrackElevation + newTrackElevation : 0),
-    downhills: !islastTrackDownhill && isDownhill ? currentTrack.downhills + 1 : currentTrack.downhills,
+    descentElevation:
+      currentTrack.descentElevation +
+      (isDownhill ? connectorTrackElevation + newTrackElevation : 0),
+    climbElevation:
+      currentTrack.climbElevation + (!isDownhill ? connectorTrackElevation + newTrackElevation : 0),
+    downhills:
+      !isLastTrackDownhill && isDownhill ? currentTrack.downhills + 1 : currentTrack.downhills,
   };
 };
 
@@ -236,17 +254,21 @@ interface ClipCurrentTrackProps {
   trackSettings: TrackSettingsState;
 }
 
-export const clipCurrentTrack = ({ currentTrack, cutIndex, trackSettings }: ClipCurrentTrackProps): Track => {
+export const clipCurrentTrack = ({
+  currentTrack,
+  cutIndex,
+  trackSettings,
+}: ClipCurrentTrackProps): Track => {
   const lastTrack = currentTrack.trackSteps.at(-1)!;
 
-  const coordsToRemove = lastTrack.geometry.coordinates.slice(cutIndex);
+  const coordsToRemove = lastTrack.coordinates.slice(cutIndex);
 
-  const isDownhill = lastTrack.properties.uses ? true : false;
+  const isDownhill = lastTrack.type === 'run';
 
   const removeDistance = obtainDistance({
-    track: lastTrack.geometry.coordinates,
+    track: lastTrack.coordinates,
     turn: trackSettings.turn,
-    runType: lastTrack.properties.difficulty as RunTypes,
+    runType: lastTrack.type === 'run' ? lastTrack.difficulty : undefined,
   });
   const removeElevation = Math.abs(coordsToRemove.at(-1)![2]! - coordsToRemove[0][2]!);
   const removeTime = obtainSeconds({
@@ -258,14 +280,14 @@ export const clipCurrentTrack = ({ currentTrack, cutIndex, trackSettings }: Clip
 
   const newTrackStep: Run | Lift = {
     ...lastTrack,
-    geometry: {
-      coordinates: [...lastTrack.geometry.coordinates.slice(0, cutIndex)],
-      type: lastTrack.geometry.type,
-    },
+    coordinates: [...lastTrack.coordinates.slice(0, cutIndex)],
   };
 
   return {
-    trackSteps: [...currentTrack.trackSteps.slice(0, currentTrack.trackSteps.length - 2), newTrackStep],
+    trackSteps: [
+      ...currentTrack.trackSteps.slice(0, currentTrack.trackSteps.length - 2),
+      newTrackStep,
+    ],
     downhillDistance: currentTrack.downhillDistance - (isDownhill ? removeDistance.distance : 0),
     uphillDistance: currentTrack.uphillDistance - (!isDownhill ? removeDistance.distance : 0),
     totalDistance: currentTrack.totalDistance - removeDistance.distance,
@@ -279,16 +301,16 @@ export const clipCurrentTrack = ({ currentTrack, cutIndex, trackSettings }: Clip
 export const removeLastTrack = (currentTrack: Track, trackSettings: TrackSettingsState): Track => {
   const lastTrack = currentTrack.trackSteps.at(-1)!;
 
-  const coordsToRemove = lastTrack.geometry.coordinates;
+  const coordsToRemove = lastTrack.coordinates;
 
-  const isDownhill = lastTrack.properties.uses ? true : false;
+  const isDownhill = lastTrack.type === 'run';
   const previousTrack = currentTrack.trackSteps.at(-2);
-  const isPreviousTrackDownhill = previousTrack && previousTrack.properties.uses ? true : false;
+  const isPreviousTrackDownhill = previousTrack?.type === 'run';
 
   const removeDistance = obtainDistance({
     track: coordsToRemove,
     turn: trackSettings.turn,
-    runType: lastTrack.properties.difficulty as RunTypes,
+    runType: lastTrack.type === 'run' ? lastTrack.difficulty : undefined,
   });
   const removeElevation = Math.abs(coordsToRemove.at(-1)![2]! - coordsToRemove[0][2]!);
   const removeTime = obtainSeconds({
@@ -306,6 +328,7 @@ export const removeLastTrack = (currentTrack: Track, trackSettings: TrackSetting
     totalTime: currentTrack.totalTime - removeTime,
     descentElevation: currentTrack.descentElevation - (isDownhill ? removeElevation : 0),
     climbElevation: currentTrack.climbElevation - (!isDownhill ? removeElevation : 0),
-    downhills: !isPreviousTrackDownhill && isDownhill ? currentTrack.downhills - 1 : currentTrack.downhills,
+    downhills:
+      !isPreviousTrackDownhill && isDownhill ? currentTrack.downhills - 1 : currentTrack.downhills,
   };
 };
