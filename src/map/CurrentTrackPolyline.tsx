@@ -20,16 +20,15 @@ export const CurrentTrackPolyline = ({ track, index, markerIndex }: Props): null
     if (!map) return;
 
     const positions = track.coordinates;
-    const difficulty = track.type === 'run' ? track.difficulty : undefined;
 
     const basePolyline = L.polyline(positions, {
       weight: 10,
-      color: borderColor(difficulty),
+      color: borderColor(track.difficulty),
       interactive: false,
     });
 
     const polyline = new HighlightablePolyline(positions, {
-      color: runColor(difficulty),
+      color: runColor(track.difficulty),
       weight: 4,
       raised: false,
       outlineWeight: 6,
@@ -40,10 +39,7 @@ export const CurrentTrackPolyline = ({ track, index, markerIndex }: Props): null
 
     const icon = L.divIcon({
       className: 'circle-marker',
-      html: renderToString(
-        // TODO: ver si pinta bien los lifts
-        <CirclePosition difficulty={difficulty} position={index + 1} />,
-      ),
+      html: renderToString(<CirclePosition difficulty={track.difficulty} position={index + 1} />),
       iconSize: [20, 20],
       iconAnchor: [10, 10],
     });

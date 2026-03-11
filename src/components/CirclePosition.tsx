@@ -2,7 +2,7 @@ import { borderColor, runColor, textColor } from '../helpers/colors';
 import type { Difficulty } from '../types/types';
 
 interface Props {
-  difficulty: string | undefined;
+  difficulty: Difficulty | undefined;
   position: number;
 }
 
@@ -11,9 +11,9 @@ export const CirclePosition = ({ difficulty, position }: Props) => {
     <div
       className="track-step"
       style={{
-        borderColor: borderColor(difficulty as Difficulty),
-        backgroundColor: runColor(difficulty as Difficulty),
-        color: textColor(difficulty as Difficulty),
+        borderColor: borderColor(difficulty),
+        backgroundColor: runColor(difficulty),
+        color: textColor(difficulty),
       }}
     >
       {position}

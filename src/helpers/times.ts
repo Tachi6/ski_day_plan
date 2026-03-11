@@ -36,16 +36,15 @@ interface ObtainSeconds {
 }
 
 export const obtainSeconds = ({ distance, track, speed, stops }: ObtainSeconds): number => {
-  const difficulty = track.type === 'run' ? track.difficulty : undefined;
+  if (track.type === 'run') {
+    const usedSpeed = runSpeedTable[speed][track.difficulty];
 
-  if (difficulty) {
-    return distance / runSpeedTable[speed][difficulty] + obtainStopsSeconds({ distance, stops });
+    return distance / usedSpeed + obtainStopsSeconds({ distance, stops });
+  } else {
+    const liftTypeInfo = LIFTS_INFO[track.lift_type];
+
+    return track.duration + liftTypeInfo.wait + liftTypeInfo.prepare;
   }
-  const liftType = (track as Lift).lift_type;
-  const duration = (track as Lift).duration;
-  const liftSeconds = duration ?? distance / LIFTS_INFO[liftType].speed;
-
-  return liftSeconds + LIFTS_INFO[liftType].wait + LIFTS_INFO[liftType].prepare;
 };
 
 export const obtainPausesSeconds = (pauses: Pauses[]): number =>

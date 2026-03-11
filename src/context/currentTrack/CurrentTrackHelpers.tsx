@@ -1,5 +1,5 @@
 import { type LatLngTuple } from 'leaflet';
-import { obtainDistance } from '../../helpers/distances';
+import { obtainDistance, obtainStraightDistance } from '../../helpers/distances';
 import type { Track } from './CurrentTrackProvider';
 import { obtainSeconds } from '../../helpers/times';
 import type { TrackSettingsState } from '../trackSettings/TrackSettingsContext';
@@ -194,7 +194,7 @@ export const addNewTrack = ({
   const newTrackDistance = obtainDistance({
     track: newTrackCoords,
     turn: trackSettings.turn,
-    runType: newTrack.type === 'run' ? newTrack.difficulty : undefined,
+    runType: newTrack.difficulty,
   });
   const connectorTrackDistance = connectorTrack
     ? obtainDistance({
@@ -268,7 +268,7 @@ export const clipCurrentTrack = ({
   const removeDistance = obtainDistance({
     track: lastTrack.coordinates,
     turn: trackSettings.turn,
-    runType: lastTrack.type === 'run' ? lastTrack.difficulty : undefined,
+    runType: lastTrack.difficulty,
   });
   const removeElevation = Math.abs(coordsToRemove.at(-1)![2]! - coordsToRemove[0][2]!);
   const removeTime = obtainSeconds({
@@ -310,7 +310,7 @@ export const removeLastTrack = (currentTrack: Track, trackSettings: TrackSetting
   const removeDistance = obtainDistance({
     track: coordsToRemove,
     turn: trackSettings.turn,
-    runType: lastTrack.type === 'run' ? lastTrack.difficulty : undefined,
+    runType: lastTrack.difficulty,
   });
   const removeElevation = Math.abs(coordsToRemove.at(-1)![2]! - coordsToRemove[0][2]!);
   const removeTime = obtainSeconds({
@@ -332,3 +332,16 @@ export const removeLastTrack = (currentTrack: Track, trackSettings: TrackSetting
       !isPreviousTrackDownhill && isDownhill ? currentTrack.downhills - 1 : currentTrack.downhills,
   };
 };
+
+export const createConnectorTrack = (coordinates: LatLngTuple[]): Run => ({
+  id: `${Date.now()}`,
+  sources: 'connector',
+  name: 'Conexión',
+  ski_area_names: 'connector',
+  length: obtainStraightDistance(coordinates),
+  coordinates: coordinates,
+  type: 'run',
+  uses: 'connection',
+  grooming: 'classic',
+  difficulty: 'novice',
+});

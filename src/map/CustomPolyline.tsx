@@ -25,15 +25,14 @@ export const CustomPolyline = ({ track }: Props): null => {
     if (!map) return;
 
     const positions = track.coordinates;
-    const difficulty = track.type === 'run' ? track.difficulty : undefined;
 
     const polyline = new HighlightablePolyline(positions, {
-      color: runColor(difficulty),
+      color: runColor(track.difficulty),
       weight: 6,
       raised: false,
       outlineWeight: 10,
-      outlineColor: borderColor(difficulty),
-      pane: difficulty ? 'runs' : 'lifts',
+      outlineColor: borderColor(track.difficulty),
+      pane: track.difficulty ? 'runs' : 'lifts',
       opacity: 0.95,
     });
 
@@ -54,7 +53,7 @@ export const CustomPolyline = ({ track }: Props): null => {
       yawn: 45,
       frequency: '100m',
       fill: true,
-      color: arrowColor(difficulty),
+      color: arrowColor(track.difficulty),
       weight: 1,
       size: '4px',
       pane: 'arrows',

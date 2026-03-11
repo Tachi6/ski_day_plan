@@ -5,6 +5,7 @@ import { CurrentTrackContext } from './CurrentTrackContext';
 import {
   addNewTrack,
   clipCurrentTrack,
+  createConnectorTrack,
   getConnectionInfo,
   removeLastTrack,
 } from './CurrentTrackHelpers';
@@ -211,13 +212,7 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
           distanceHaversine(lastTrackEnd, newTrackInit) <= UP_UP_DISTANCE &&
           newTrackInit[2]! - lastTrackEnd[2]! <= UP_UP_HEIGHT
         ) {
-          const connectorTrack: Run = structuredClone({ ...(newTrack as Run) });
-
-          connectorTrack.id = `${Date.now()}`;
-          connectorTrack.name = 'Conexión';
-          connectorTrack.difficulty = 'novice';
-          connectorTrack.uses = 'connection';
-          connectorTrack.coordinates = [lastTrackEnd, newTrackCoords[0]];
+          const connectorTrack = createConnectorTrack([lastTrackEnd, newTrackCoords[0]]);
 
           setCurrentTrack(
             addNewTrack({
@@ -239,13 +234,7 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
             trackPoint[2]! - lastTrackEnd[2]! <= UP_DOWN_HEIGHT;
 
           if (hasPoint) {
-            const connectorTrack: Run = structuredClone({ ...(newTrack as Run) });
-
-            connectorTrack.id = `${Date.now()}`;
-            connectorTrack.name = 'Conexión';
-            connectorTrack.difficulty = 'novice';
-            connectorTrack.uses = 'connection';
-            connectorTrack.coordinates = [lastTrackEnd, newTrackCoords[index]];
+            const connectorTrack = createConnectorTrack([lastTrackEnd, newTrackCoords[index]]);
 
             setCurrentTrack(
               addNewTrack({
@@ -271,13 +260,7 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
             trackPoint[2]! - lastTrackEnd[2]! <= DOWN_DOWN_HEIGHT;
 
           if (hasPoint) {
-            const connectorTrack: Run = structuredClone({ ...(newTrack as Run) });
-
-            connectorTrack.id = `${Date.now()}`;
-            connectorTrack.name = 'Conexión';
-            connectorTrack.difficulty = 'novice';
-            connectorTrack.uses = 'connection';
-            connectorTrack.coordinates = [lastTrackEnd, newTrackCoords[index]];
+            const connectorTrack = createConnectorTrack([lastTrackEnd, newTrackCoords[index]]);
 
             setCurrentTrack(
               addNewTrack({
@@ -309,13 +292,7 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
                 : clipCurrentTrack({ currentTrack, cutIndex: index, trackSettings });
             const editedTrackEnd = lastTrackCoords.at(-1)!;
 
-            const connectorTrack: Run = structuredClone({ ...(newTrack as Run) });
-
-            connectorTrack.id = `${Date.now()}`;
-            connectorTrack.name = 'Conexión';
-            connectorTrack.difficulty = 'novice';
-            connectorTrack.uses = 'connection';
-            connectorTrack.coordinates = [editedTrackEnd, newTrackCoords[0]];
+            const connectorTrack = createConnectorTrack([editedTrackEnd, newTrackCoords[0]]);
 
             setCurrentTrack(
               addNewTrack({
@@ -362,12 +339,10 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
     };
 
     currentTrack.trackSteps.forEach((track) => {
-      const difficulty = track.type === 'run' ? track.difficulty : undefined;
-
       const trackDistance = obtainDistance({
         track: track.coordinates,
         turn: trackSettings.turn,
-        runType: difficulty,
+        runType: track.difficulty,
       });
 
       const trackTime = obtainSeconds({

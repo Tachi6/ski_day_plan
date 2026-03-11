@@ -1,28 +1,26 @@
 import type { LatLngTuple } from 'leaflet';
 import type { Grooming, LiftType, Difficulty } from '../types/types';
 
-export interface Run {
+interface BaseTrack {
   id: string;
-  type: 'run';
   sources: string;
   name: string;
   ski_area_names: string;
-  uses: string;
   length: number;
-  grooming: Grooming;
-  difficulty: Difficulty;
   coordinates: LatLngTuple[];
 }
 
-export interface Lift {
-  id: string;
+export interface Run extends BaseTrack {
+  type: 'run';
+  uses: string;
+  grooming: Grooming;
+  difficulty: Difficulty;
+}
+
+export interface Lift extends BaseTrack {
   type: 'lift';
-  sources: string;
-  name: string;
-  ski_area_names: string;
   lift_type: LiftType;
-  length: number;
   duration: number;
   transitionTime: number;
-  coordinates: LatLngTuple[];
+  difficulty?: undefined;
 }

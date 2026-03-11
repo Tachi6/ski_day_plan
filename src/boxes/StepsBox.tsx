@@ -62,12 +62,10 @@ export const StepsBox = () => {
       >
         {currentTrack.trackSteps.length > 0 &&
           currentTrack.trackSteps.map((track, index) => {
-            const difficulty = track.type === 'run' ? track.difficulty : undefined;
-
             return (
               <div key={`${track.id}-${index}-steps`} className="animation-wrapper">
                 <div className="steps-box">
-                  <CirclePosition difficulty={difficulty} position={index + 1} />
+                  <CirclePosition difficulty={track.difficulty} position={index + 1} />
                   <p>{track.name ?? 'Conexión'}</p>
                 </div>
               </div>
