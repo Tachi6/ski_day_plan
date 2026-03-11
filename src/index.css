@@ -424,6 +424,7 @@ h2 {
   gap: 10px;
   transition: 0.5s;
   pointer-events: auto;
+  overflow: hidden;
 }
 
 .animation-wrapper {
@@ -435,8 +436,10 @@ h2 {
 }
 
 .steps-box p {
-  line-height: 1;
+  line-height: 1.17;
   text-align: left;
+  max-width: 110px;
+  max-height: 30px;
 }
 
 /* SPINNER CONTAINER */
