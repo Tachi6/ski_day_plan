@@ -1,6 +1,5 @@
 import { use, useEffect, useEffectEvent, useRef } from 'react';
 import { useMap } from 'react-leaflet';
-import 'leaflet-textpath';
 import { HighlightablePolyline } from 'leaflet-highlightable-layers';
 import { arrowColor, borderColor, primaryTextColor, runColor } from '../helpers/colors';
 import L from 'leaflet';
@@ -25,25 +24,20 @@ export const CustomPolyline = ({ track }: Props): null => {
     if (!map) return;
 
     const positions = track.coordinates;
+    const LTRpositions =
+      positions[positions.length - 1][1] > positions[0][1]
+        ? positions
+        : structuredClone(positions).reverse();
 
-    const polyline = new HighlightablePolyline(positions, {
+    const polyline = new HighlightablePolyline(LTRpositions, {
       color: runColor(track.difficulty),
-      weight: 6,
+      weight: 8,
       raised: false,
       outlineWeight: 10,
       outlineColor: borderColor(track.difficulty),
       pane: track.difficulty ? 'runs' : 'lifts',
-      opacity: 0.95,
+      opacity: 1,
     });
-
-    polyline.setText(track.name, {
-      center: true,
-      offset: -7,
-      orientation: positions[positions.length - 1][1] > positions[0][1] ? 0 : 180,
-      attributes: { fill: primaryTextColor },
-    });
-
-    polyline.on('click', () => handleClick(track));
 
     const polylineArrows = L.polyline(positions, {
       color: 'transparent',
@@ -57,6 +51,29 @@ export const CustomPolyline = ({ track }: Props): null => {
       weight: 1,
       size: '4px',
       pane: 'arrows',
+    });
+
+    polyline.on('click', () => handleClick(track));
+
+    polyline.on('add', () => {
+      const path = polyline._path;
+
+      const pathId = track.id;
+      path.setAttribute('id', pathId);
+
+      const textNode = L.SVG.create('text');
+      const textPathNode = L.SVG.create('textPath');
+
+      textPathNode.setAttribute('href', '#' + pathId);
+      textPathNode.setAttribute('startOffset', '50%');
+      textPathNode.style.textAnchor = 'middle';
+      textPathNode.textContent = track.name;
+      textNode.setAttribute('fill', primaryTextColor);
+      textNode.setAttribute('dominant-baseline', 'central');
+      textNode.setAttribute('dy', track.type === 'run' ? '-12' : '12');
+      textNode.appendChild(textPathNode);
+
+      path.parentNode!.appendChild(textNode);
     });
 
     polyline.addTo(map);

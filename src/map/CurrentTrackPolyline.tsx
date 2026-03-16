@@ -29,12 +29,13 @@ export const CurrentTrackPolyline = ({ track, index, markerIndex }: Props): null
 
     const polyline = new HighlightablePolyline(positions, {
       color: runColor(track.difficulty),
-      weight: 4,
+      weight: 6,
       raised: false,
-      outlineWeight: 6,
+      outlineWeight: 8,
       interactive: false,
       outlineColor: selectedColor,
       pane: 'current-track',
+      opacity: 1,
     });
 
     const icon = L.divIcon({

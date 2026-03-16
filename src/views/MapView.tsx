@@ -12,7 +12,6 @@ export const MapView = () => {
       scrollWheelZoom={true}
       minZoom={12}
       zoomControl={false}
-      preferCanvas={true}
       className="back-layer"
     >
       <TileLayer
