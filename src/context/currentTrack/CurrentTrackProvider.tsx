@@ -1,10 +1,11 @@
 import { type PropsWithChildren, use, useState } from 'react';
 import { type LatLngTuple } from 'leaflet';
-import { distanceHaversine, obtainDistance } from '../../helpers/distances';
+import { distanceHaversine, obtainSkiDistance } from '../../helpers/distances';
 import { CurrentTrackContext } from './CurrentTrackContext';
 import {
   addNewTrack,
   clipCurrentTrack,
+  clipNewTrack,
   createConnectorTrack,
   getConnectionInfo,
   removeLastTrack,
@@ -78,8 +79,8 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
         setCurrentTrack(
           addNewTrack({
             currentTrack,
-            newTrack: newTrack,
-            trackSettings: trackSettings,
+            newTrack,
+            trackSettings,
           }),
         );
         return;
@@ -88,11 +89,8 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
         setCurrentTrack(
           addNewTrack({
             currentTrack,
-            newTrack: {
-              ...newTrack,
-              coordinates: newTrackCoords.slice(connectionType.newTrackConnectionIndex),
-            },
-            trackSettings: trackSettings,
+            newTrack: clipNewTrack(newTrack, connectionType.newTrackConnectionIndex),
+            trackSettings,
           }),
         );
         return;
@@ -108,7 +106,7 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
           addNewTrack({
             currentTrack: editedCurrentTrack,
             newTrack,
-            trackSettings: trackSettings,
+            trackSettings,
           }),
         );
         return;
@@ -125,42 +123,47 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
           setCurrentTrack(
             addNewTrack({
               currentTrack: editedCurrentTrack,
-              newTrack: {
-                ...newTrack,
-                coordinates: newTrackCoords.slice(connectionType.newTrackConnectionIndex),
-              },
-              trackSettings: trackSettings,
+              newTrack: clipNewTrack(newTrack, connectionType.newTrackConnectionIndex),
+              trackSettings,
             }),
           );
         }
         return;
       }
 
-      case 'EndConexStart':
+      case 'EndConexStart': {
+        const currentTrackWithConnector = addNewTrack({
+          currentTrack,
+          newTrack: connectionType.connectorTrack!,
+          trackSettings,
+        });
+
         setCurrentTrack(
           addNewTrack({
-            currentTrack,
+            currentTrack: currentTrackWithConnector,
             newTrack,
-            connectorTrack: connectionType.connectorTrack,
-            trackSettings: trackSettings,
+            trackSettings,
           }),
         );
         return;
+      }
 
-      case 'EndConexMiddle':
+      case 'EndConexMiddle': {
+        const currentTrackWithConnector = addNewTrack({
+          currentTrack,
+          newTrack: connectionType.connectorTrack!,
+          trackSettings,
+        });
+
         setCurrentTrack(
           addNewTrack({
-            currentTrack,
-            newTrack: {
-              ...newTrack,
-              coordinates: [...newTrackCoords.slice(connectionType.newTrackConnectionIndex)],
-            },
-            connectorTrack: connectionType.connectorTrack,
-            trackSettings: trackSettings,
+            currentTrack: currentTrackWithConnector,
+            newTrack: clipNewTrack(newTrack, connectionType.newTrackConnectionIndex),
+            trackSettings,
           }),
         );
         return;
-
+      }
       case 'MiddleConexMiddle': {
         if (connectionType.lastTrackDirection === 'Down') {
           const editedCurrentTrack = clipCurrentTrack({
@@ -169,15 +172,17 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
             trackSettings,
           });
 
+          const currentTrackWithConnector = addNewTrack({
+            currentTrack: editedCurrentTrack,
+            newTrack: connectionType.connectorTrack!,
+            trackSettings,
+          });
+
           setCurrentTrack(
             addNewTrack({
-              currentTrack: editedCurrentTrack,
-              newTrack: {
-                ...newTrack,
-                coordinates: [...newTrackCoords.slice(connectionType.newTrackConnectionIndex)],
-              },
-              connectorTrack: connectionType.connectorTrack,
-              trackSettings: trackSettings,
+              currentTrack: currentTrackWithConnector,
+              newTrack: clipNewTrack(newTrack, connectionType.newTrackConnectionIndex),
+              trackSettings,
             }),
           );
         }
@@ -192,15 +197,17 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
             trackSettings,
           });
 
+          const currentTrackWithConnector = addNewTrack({
+            currentTrack: editedCurrentTrack,
+            newTrack: connectionType.connectorTrack!,
+            trackSettings,
+          });
+
           setCurrentTrack(
             addNewTrack({
-              currentTrack: editedCurrentTrack,
-              newTrack: {
-                ...newTrack,
-                coordinates: [...newTrackCoords],
-              },
-              connectorTrack: connectionType.connectorTrack,
-              trackSettings: trackSettings,
+              currentTrack: currentTrackWithConnector,
+              newTrack,
+              trackSettings,
             }),
           );
         }
@@ -212,14 +219,17 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
           distanceHaversine(lastTrackEnd, newTrackInit) <= UP_UP_DISTANCE &&
           newTrackInit[2]! - lastTrackEnd[2]! <= UP_UP_HEIGHT
         ) {
-          const connectorTrack = createConnectorTrack([lastTrackEnd, newTrackCoords[0]]);
+          const currentTrackWithConnector = addNewTrack({
+            currentTrack,
+            newTrack: createConnectorTrack([lastTrackEnd, newTrackCoords[0]]),
+            trackSettings,
+          });
 
           setCurrentTrack(
             addNewTrack({
-              currentTrack,
+              currentTrack: currentTrackWithConnector,
               newTrack: newTrack,
-              connectorTrack: connectorTrack,
-              trackSettings: trackSettings,
+              trackSettings,
             }),
           );
         }
@@ -234,17 +244,17 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
             trackPoint[2]! - lastTrackEnd[2]! <= UP_DOWN_HEIGHT;
 
           if (hasPoint) {
-            const connectorTrack = createConnectorTrack([lastTrackEnd, newTrackCoords[index]]);
+            const currentTrackWithConnector = addNewTrack({
+              currentTrack,
+              newTrack: createConnectorTrack([lastTrackEnd, newTrackCoords[index]]),
+              trackSettings,
+            });
 
             setCurrentTrack(
               addNewTrack({
-                currentTrack,
-                newTrack: {
-                  ...newTrack,
-                  coordinates: [...newTrackCoords.slice(index)],
-                },
-                connectorTrack: connectorTrack,
-                trackSettings: trackSettings,
+                currentTrack: currentTrackWithConnector,
+                newTrack: clipNewTrack(newTrack, index),
+                trackSettings,
               }),
             );
           }
@@ -260,17 +270,17 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
             trackPoint[2]! - lastTrackEnd[2]! <= DOWN_DOWN_HEIGHT;
 
           if (hasPoint) {
-            const connectorTrack = createConnectorTrack([lastTrackEnd, newTrackCoords[index]]);
+            const currentTrackWithConnector = addNewTrack({
+              currentTrack,
+              newTrack: createConnectorTrack([lastTrackEnd, newTrackCoords[index]]),
+              trackSettings,
+            });
 
             setCurrentTrack(
               addNewTrack({
-                currentTrack,
-                newTrack: {
-                  ...newTrack,
-                  coordinates: [...newTrackCoords.slice(index)],
-                },
-                connectorTrack: connectorTrack,
-                trackSettings: trackSettings,
+                currentTrack: currentTrackWithConnector,
+                newTrack: clipNewTrack(newTrack, index),
+                trackSettings,
               }),
             );
           }
@@ -292,14 +302,17 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
                 : clipCurrentTrack({ currentTrack, cutIndex: index, trackSettings });
             const editedTrackEnd = lastTrackCoords.at(-1)!;
 
-            const connectorTrack = createConnectorTrack([editedTrackEnd, newTrackCoords[0]]);
+            const currentTrackWithConnector = addNewTrack({
+              currentTrack: editedCurrentTrack,
+              newTrack: createConnectorTrack([editedTrackEnd, newTrackCoords[0]]),
+              trackSettings,
+            });
 
             setCurrentTrack(
               addNewTrack({
-                currentTrack: editedCurrentTrack,
+                currentTrack: currentTrackWithConnector,
                 newTrack: newTrack,
-                connectorTrack: connectorTrack,
-                trackSettings: trackSettings,
+                trackSettings,
               }),
             );
           }
@@ -339,14 +352,14 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
     };
 
     currentTrack.trackSteps.forEach((track) => {
-      const trackDistance = obtainDistance({
-        track: track.coordinates,
+      const trackDistance = obtainSkiDistance({
+        distance: track.length,
         turn: trackSettings.turn,
         runType: track.difficulty,
       });
 
       const trackTime = obtainSeconds({
-        distance: trackDistance.skiDistance,
+        distance: trackDistance,
         track: track,
         speed: trackSettings.speed,
         stops: trackSettings.stops,
@@ -355,10 +368,10 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
       const isDownhill = track.type === 'run';
 
       newCurrentTrack.downhillDistance =
-        newCurrentTrack.totalDistance + (isDownhill ? trackDistance.distance : 0);
+        newCurrentTrack.totalDistance + (isDownhill ? trackDistance : 0);
       newCurrentTrack.uphillDistance =
-        newCurrentTrack.totalDistance + +(!isDownhill ? trackDistance.distance : 0);
-      newCurrentTrack.totalDistance = newCurrentTrack.totalDistance + trackDistance.distance;
+        newCurrentTrack.totalDistance + +(!isDownhill ? trackDistance : 0);
+      newCurrentTrack.totalDistance = newCurrentTrack.totalDistance + trackDistance;
       newCurrentTrack.totalTime = newCurrentTrack.totalTime + trackTime;
     });
 

@@ -1,5 +1,9 @@
 import { type LatLngTuple } from 'leaflet';
-import { obtainDistance, obtainStraightDistance } from '../../helpers/distances';
+import {
+  obtainRunDistance,
+  obtainSkiDistance,
+  obtainStraightDistance,
+} from '../../helpers/distances';
 import type { Track } from './CurrentTrackProvider';
 import { obtainSeconds } from '../../helpers/times';
 import type { TrackSettingsState } from '../trackSettings/TrackSettingsContext';
@@ -174,81 +178,46 @@ export const getConnectionInfo = ({
 interface AddNewTrackProps {
   currentTrack: Track;
   newTrack: Run | Lift;
-  connectorTrack?: Run;
   trackSettings: TrackSettingsState;
 }
 
-export const addNewTrack = ({
-  currentTrack,
-  newTrack,
-  connectorTrack,
-  trackSettings,
-}: AddNewTrackProps): Track => {
+export const addNewTrack = ({ currentTrack, newTrack, trackSettings }: AddNewTrackProps): Track => {
   const newTrackCoords = newTrack.coordinates;
-  const connectorTrackCoords = connectorTrack?.coordinates;
   const isDownhill = newTrack.type === 'run';
   const lastTrack = currentTrack.trackSteps.at(-1);
-  // const isLastTrackDownhill = lastTrack && lastTrack.properties.uses ? true : false;
   const isLastTrackDownhill = lastTrack?.type === 'run';
 
-  const newTrackDistance = obtainDistance({
-    track: newTrackCoords,
+  const newTrackDistance = obtainSkiDistance({
+    distance: newTrack.length,
     turn: trackSettings.turn,
     runType: newTrack.difficulty,
   });
-  const connectorTrackDistance = connectorTrack
-    ? obtainDistance({
-        track: connectorTrackCoords!,
-        turn: trackSettings.turn,
-        runType: !connectorTrack.uses.includes('connection')
-          ? connectorTrack.type === 'run'
-            ? connectorTrack.difficulty
-            : undefined
-          : 'novice',
-      }).skiDistance
-    : 0;
   const newTrackTime = obtainSeconds({
-    distance: newTrackDistance.skiDistance,
+    distance: newTrackDistance,
     track: newTrack,
     speed: trackSettings.speed,
     stops: trackSettings.stops,
   });
-  const connectorTrackTime = connectorTrack
-    ? obtainSeconds({
-        distance: connectorTrackDistance,
-        track: connectorTrack,
-        speed: trackSettings.speed,
-        stops: trackSettings.stops,
-      })
-    : 0;
   const newTrackElevation = Math.abs(newTrackCoords[0][2]! - newTrackCoords.at(-1)![2]!);
-  const connectorTrackElevation = connectorTrack
-    ? Math.abs(connectorTrackCoords![0][2]! - connectorTrackCoords!.at(-1)![2]!)
-    : 0;
-
-  const newTrackSteps = connectorTrack ? [connectorTrack, newTrack] : [newTrack];
+  const isConnection = newTrack.uses?.includes('connection');
 
   return {
-    trackSteps: [...currentTrack.trackSteps, ...newTrackSteps],
-    downhillDistance:
-      currentTrack.downhillDistance +
-      (isDownhill ? connectorTrackDistance + newTrackDistance.distance : 0),
-    uphillDistance:
-      currentTrack.uphillDistance +
-      (!isDownhill ? connectorTrackDistance + newTrackDistance.distance : 0),
-    totalDistance: currentTrack.totalDistance + connectorTrackDistance + newTrackDistance.distance,
-    totalTime: currentTrack.totalTime + connectorTrackTime + newTrackTime,
-    descentElevation:
-      currentTrack.descentElevation +
-      (isDownhill ? connectorTrackElevation + newTrackElevation : 0),
-    climbElevation:
-      currentTrack.climbElevation + (!isDownhill ? connectorTrackElevation + newTrackElevation : 0),
-    downhills:
-      !isLastTrackDownhill && isDownhill ? currentTrack.downhills + 1 : currentTrack.downhills,
+    trackSteps: [...currentTrack.trackSteps, newTrack],
+    downhillDistance: currentTrack.downhillDistance + (isDownhill ? newTrackDistance : 0),
+    uphillDistance: currentTrack.uphillDistance + (!isDownhill ? newTrackDistance : 0),
+    totalDistance: currentTrack.totalDistance + newTrackDistance,
+    totalTime: currentTrack.totalTime + newTrackTime,
+    descentElevation: currentTrack.descentElevation + (isDownhill ? newTrackElevation : 0),
+    climbElevation: currentTrack.climbElevation + (!isDownhill ? newTrackElevation : 0),
+    downhills: !isConnection
+      ? currentTrack.downhills
+      : !isLastTrackDownhill && isDownhill
+        ? currentTrack.downhills + 1
+        : currentTrack.downhills,
   };
 };
 
-interface ClipCurrentTrackProps {
+interface ClipCurrentTrack {
   currentTrack: Track;
   cutIndex: number;
   trackSettings: TrackSettingsState;
@@ -258,21 +227,29 @@ export const clipCurrentTrack = ({
   currentTrack,
   cutIndex,
   trackSettings,
-}: ClipCurrentTrackProps): Track => {
+}: ClipCurrentTrack): Track => {
   const lastTrack = currentTrack.trackSteps.at(-1)!;
 
   const coordsToRemove = lastTrack.coordinates.slice(cutIndex);
+  const lastTrackInitHeight = lastTrack.coordinates[0][2]!;
+  const lastTrackEndHeight = lastTrack.coordinates.at(-1)![2]!;
 
   const isDownhill = lastTrack.type === 'run';
 
-  const removeDistance = obtainDistance({
-    track: lastTrack.coordinates,
+  const removeDistance =
+    lastTrack.type === 'run'
+      ? obtainRunDistance(coordsToRemove)
+      : obtainStraightDistance(coordsToRemove);
+
+  const distance = obtainSkiDistance({
+    distance: removeDistance,
     turn: trackSettings.turn,
     runType: lastTrack.difficulty,
   });
-  const removeElevation = Math.abs(coordsToRemove.at(-1)![2]! - coordsToRemove[0][2]!);
+
+  const removeElevation = Math.abs(lastTrackEndHeight - lastTrackInitHeight);
   const removeTime = obtainSeconds({
-    distance: removeDistance.skiDistance,
+    distance: distance,
     speed: trackSettings.speed,
     stops: trackSettings.stops,
     track: lastTrack,
@@ -281,6 +258,7 @@ export const clipCurrentTrack = ({
   const newTrackStep: Run | Lift = {
     ...lastTrack,
     coordinates: [...lastTrack.coordinates.slice(0, cutIndex)],
+    length: lastTrack.length - removeDistance,
   };
 
   return {
@@ -288,9 +266,9 @@ export const clipCurrentTrack = ({
       ...currentTrack.trackSteps.slice(0, currentTrack.trackSteps.length - 2),
       newTrackStep,
     ],
-    downhillDistance: currentTrack.downhillDistance - (isDownhill ? removeDistance.distance : 0),
-    uphillDistance: currentTrack.uphillDistance - (!isDownhill ? removeDistance.distance : 0),
-    totalDistance: currentTrack.totalDistance - removeDistance.distance,
+    downhillDistance: currentTrack.downhillDistance - (isDownhill ? removeDistance : 0),
+    uphillDistance: currentTrack.uphillDistance - (!isDownhill ? removeDistance : 0),
+    totalDistance: currentTrack.totalDistance - removeDistance,
     totalTime: currentTrack.totalTime - removeTime,
     descentElevation: currentTrack.descentElevation - (isDownhill ? removeElevation : 0),
     climbElevation: currentTrack.climbElevation - (!isDownhill ? removeElevation : 0),
@@ -298,38 +276,57 @@ export const clipCurrentTrack = ({
   };
 };
 
+export const clipNewTrack = (newTrack: Run | Lift, cutIndex: number): Run | Lift => {
+  const coordinates = newTrack.coordinates.slice(cutIndex);
+
+  const length =
+    newTrack.type === 'run' ? obtainRunDistance(coordinates) : obtainStraightDistance(coordinates);
+
+  return {
+    ...newTrack,
+    coordinates: coordinates,
+    length,
+  };
+};
+
 export const removeLastTrack = (currentTrack: Track, trackSettings: TrackSettingsState): Track => {
   const lastTrack = currentTrack.trackSteps.at(-1)!;
 
-  const coordsToRemove = lastTrack.coordinates;
+  const lastTrackInitHeight = lastTrack.coordinates[0][2]!;
+  const lastTrackEndHeight = lastTrack.coordinates.at(-1)![2]!;
 
-  const isDownhill = lastTrack.type === 'run';
-  const previousTrack = currentTrack.trackSteps.at(-2);
-  const isPreviousTrackDownhill = previousTrack?.type === 'run';
+  const isLastTrackDownhill = lastTrack.type === 'run';
+  const isPreviousTrackDownhill = currentTrack.trackSteps.at(-2)?.type === 'run';
 
-  const removeDistance = obtainDistance({
-    track: coordsToRemove,
+  const distance = obtainSkiDistance({
+    distance: lastTrack.length,
     turn: trackSettings.turn,
     runType: lastTrack.difficulty,
   });
-  const removeElevation = Math.abs(coordsToRemove.at(-1)![2]! - coordsToRemove[0][2]!);
+
+  const removeElevation = Math.abs(lastTrackEndHeight - lastTrackInitHeight);
   const removeTime = obtainSeconds({
-    distance: removeDistance.skiDistance,
+    distance: distance,
     speed: trackSettings.speed,
     stops: trackSettings.stops,
     track: lastTrack,
   });
 
+  const isConnection = lastTrack.uses?.includes('connection');
+
   return {
     trackSteps: [...currentTrack.trackSteps.slice(0, currentTrack.trackSteps.length - 1)],
-    downhillDistance: currentTrack.downhillDistance - (isDownhill ? removeDistance.distance : 0),
-    uphillDistance: currentTrack.uphillDistance - (!isDownhill ? removeDistance.distance : 0),
-    totalDistance: currentTrack.totalDistance - removeDistance.distance,
+    downhillDistance: currentTrack.downhillDistance - (isLastTrackDownhill ? lastTrack.length : 0),
+    uphillDistance: currentTrack.uphillDistance - (!isLastTrackDownhill ? lastTrack.length : 0),
+    totalDistance: currentTrack.totalDistance - lastTrack.length,
     totalTime: currentTrack.totalTime - removeTime,
-    descentElevation: currentTrack.descentElevation - (isDownhill ? removeElevation : 0),
-    climbElevation: currentTrack.climbElevation - (!isDownhill ? removeElevation : 0),
-    downhills:
-      !isPreviousTrackDownhill && isDownhill ? currentTrack.downhills - 1 : currentTrack.downhills,
+    descentElevation: currentTrack.descentElevation - (isLastTrackDownhill ? removeElevation : 0),
+    climbElevation: currentTrack.climbElevation - (!isLastTrackDownhill ? removeElevation : 0),
+    downhills: !isConnection
+      ? currentTrack.downhills
+      : !isPreviousTrackDownhill && isLastTrackDownhill
+        ? currentTrack.downhills - 1
+        : currentTrack.downhills,
   };
 };
 
@@ -338,7 +335,7 @@ export const createConnectorTrack = (coordinates: LatLngTuple[]): Run => ({
   sources: 'connector',
   name: 'Conexión',
   ski_area_names: 'connector',
-  length: obtainStraightDistance(coordinates),
+  length: obtainRunDistance(coordinates),
   coordinates: coordinates,
   type: 'run',
   uses: 'connection',

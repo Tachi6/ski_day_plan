@@ -23,4 +23,5 @@ export interface Lift extends BaseTrack {
   duration: number;
   transitionTime: number;
   difficulty?: undefined;
+  uses?: undefined;
 }

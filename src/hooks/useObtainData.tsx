@@ -18,8 +18,7 @@ export const useObtainData = (dbName?: string, specialTag?: string) => {
       setStatus('loading');
 
       try {
-        // TODO: change name
-        const runsLiftsDB = ref(getDatabase(app), `t-${dbName}`);
+        const runsLiftsDB = ref(getDatabase(app), dbName);
         const snapshot = await get(runsLiftsDB);
         const data = snapshot.val();
 
