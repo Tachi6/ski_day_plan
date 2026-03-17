@@ -64,9 +64,9 @@ export const resorts: Record<ResortName, Resort> = {
   espot: {
     name: 'Espot',
     dbName: 'espot',
-    centerLandscape: [42.5505868, 1.0829852],
+    centerLandscape: [42.5636134, 1.0938145999999993],
     // TODO:
-    centerPortrait: [42.5505868, 1.0829852],
+    centerPortrait: [42.5636134, 1.0938145999999993],
     image: espot,
   },
   masella: {
