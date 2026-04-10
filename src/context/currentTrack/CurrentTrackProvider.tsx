@@ -344,14 +344,14 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
 
   const recalculateStats = () => {
     const newTotalTime = currentTrack.trackSteps.reduce((acc, curr) => {
-      const trackDistance = obtainSkiDistance({
+      const skiDistance = obtainSkiDistance({
         distance: curr.length,
         turn: trackSettings.turn,
         runType: curr.difficulty,
       });
 
       const trackTime = obtainSeconds({
-        distance: trackDistance,
+        distance: skiDistance,
         track: curr,
         speed: trackSettings.speed,
         stops: trackSettings.stops,

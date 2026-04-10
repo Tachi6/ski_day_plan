@@ -187,13 +187,13 @@ export const addNewTrack = ({ currentTrack, newTrack, trackSettings }: AddNewTra
   const lastTrack = currentTrack.trackSteps.at(-1);
   const isLastTrackDownhill = lastTrack?.type === 'run';
 
-  const newTrackDistance = obtainSkiDistance({
+  const newTrackSkiDistance = obtainSkiDistance({
     distance: newTrack.length,
     turn: trackSettings.turn,
     runType: newTrack.difficulty,
   });
   const newTrackTime = obtainSeconds({
-    distance: newTrackDistance,
+    distance: newTrackSkiDistance,
     track: newTrack,
     speed: trackSettings.speed,
     stops: trackSettings.stops,
@@ -203,9 +203,9 @@ export const addNewTrack = ({ currentTrack, newTrack, trackSettings }: AddNewTra
 
   return {
     trackSteps: [...currentTrack.trackSteps, newTrack],
-    downhillDistance: currentTrack.downhillDistance + (isDownhill ? newTrackDistance : 0),
-    uphillDistance: currentTrack.uphillDistance + (!isDownhill ? newTrackDistance : 0),
-    totalDistance: currentTrack.totalDistance + newTrackDistance,
+    downhillDistance: currentTrack.downhillDistance + (isDownhill ? newTrack.length : 0),
+    uphillDistance: currentTrack.uphillDistance + (!isDownhill ? newTrack.length : 0),
+    totalDistance: currentTrack.totalDistance + newTrack.length,
     totalTime: currentTrack.totalTime + newTrackTime,
     descentElevation: currentTrack.descentElevation + (isDownhill ? newTrackElevation : 0),
     climbElevation: currentTrack.climbElevation + (!isDownhill ? newTrackElevation : 0),
@@ -241,7 +241,7 @@ export const clipCurrentTrack = ({
       ? obtainRunDistance(coordsToRemove)
       : obtainStraightDistance(coordsToRemove);
 
-  const distance = obtainSkiDistance({
+  const skiDistance = obtainSkiDistance({
     distance: removeDistance,
     turn: trackSettings.turn,
     runType: lastTrack.difficulty,
@@ -249,7 +249,7 @@ export const clipCurrentTrack = ({
 
   const removeElevation = Math.abs(lastTrackEndHeight - lastTrackInitHeight);
   const removeTime = obtainSeconds({
-    distance: distance,
+    distance: skiDistance,
     speed: trackSettings.speed,
     stops: trackSettings.stops,
     track: lastTrack,
@@ -298,7 +298,7 @@ export const removeLastTrack = (currentTrack: Track, trackSettings: TrackSetting
   const isLastTrackDownhill = lastTrack.type === 'run';
   const isPreviousTrackDownhill = currentTrack.trackSteps.at(-2)?.type === 'run';
 
-  const distance = obtainSkiDistance({
+  const skiDistance = obtainSkiDistance({
     distance: lastTrack.length,
     turn: trackSettings.turn,
     runType: lastTrack.difficulty,
@@ -306,7 +306,7 @@ export const removeLastTrack = (currentTrack: Track, trackSettings: TrackSetting
 
   const removeElevation = Math.abs(lastTrackEndHeight - lastTrackInitHeight);
   const removeTime = obtainSeconds({
-    distance: distance,
+    distance: skiDistance,
     speed: trackSettings.speed,
     stops: trackSettings.stops,
     track: lastTrack,
