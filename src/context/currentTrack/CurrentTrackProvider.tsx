@@ -343,39 +343,27 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
   const clearTrack = () => setCurrentTrack(initTrackState);
 
   const recalculateStats = () => {
-    const newCurrentTrack: Track = {
-      ...currentTrack,
-      downhillDistance: 0,
-      uphillDistance: 0,
-      totalDistance: 0,
-      totalTime: 0,
-    };
-
-    currentTrack.trackSteps.forEach((track) => {
+    const newTotalTime = currentTrack.trackSteps.reduce((acc, curr) => {
       const trackDistance = obtainSkiDistance({
-        distance: track.length,
+        distance: curr.length,
         turn: trackSettings.turn,
-        runType: track.difficulty,
+        runType: curr.difficulty,
       });
 
       const trackTime = obtainSeconds({
         distance: trackDistance,
-        track: track,
+        track: curr,
         speed: trackSettings.speed,
         stops: trackSettings.stops,
       });
 
-      const isDownhill = track.type === 'run';
+      return acc + trackTime;
+    }, 0);
 
-      newCurrentTrack.downhillDistance =
-        newCurrentTrack.totalDistance + (isDownhill ? trackDistance : 0);
-      newCurrentTrack.uphillDistance =
-        newCurrentTrack.totalDistance + +(!isDownhill ? trackDistance : 0);
-      newCurrentTrack.totalDistance = newCurrentTrack.totalDistance + trackDistance;
-      newCurrentTrack.totalTime = newCurrentTrack.totalTime + trackTime;
+    setCurrentTrack({
+      ...currentTrack,
+      totalTime: newTotalTime,
     });
-
-    setCurrentTrack(newCurrentTrack);
   };
 
   return (
