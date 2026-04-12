@@ -9,7 +9,6 @@ import portdelcomte from '../assets/images/portdelcomte.png';
 import tavascan from '../assets/images/tavascan.png';
 import valldenuria from '../assets/images/valldenuria.png';
 import vallter2000 from '../assets/images/vallter2000.png';
-import sellaronda from '../assets/images/sellaronda.png';
 import type { LatLngExpression } from 'leaflet';
 
 export const defaultCenter: LatLngExpression = [41.786389, 1.096389];
@@ -25,8 +24,7 @@ type ResortName =
   | 'portdelcomte'
   | 'tavascan'
   | 'valldenuria'
-  | 'vallter2000'
-  | 'sellaronda';
+  | 'vallter2000';
 
 export interface Resort {
   name: string;
@@ -126,13 +124,5 @@ export const resorts: Record<ResortName, Resort> = {
     // TODO:
     centerPortrait: [42.426464499999994, 2.2635059],
     image: vallter2000,
-  },
-  sellaronda: {
-    name: 'Sella Ronda',
-    dbName: 'sellaronda',
-    centerLandscape: [46.510082499999996, 11.757369699999998],
-    // TODO:
-    centerPortrait: [46.510082499999996, 11.757369699999998],
-    image: sellaronda,
   },
 };
