@@ -1,6 +1,6 @@
 import { type PropsWithChildren, use, useState } from 'react';
 import { type LatLngTuple } from 'leaflet';
-import { distanceHaversine, obtainSkiDistance } from '../../helpers/distances';
+import { distanceHaversine } from '../../helpers/distances';
 import { CurrentTrackContext } from './CurrentTrackContext';
 import {
   addNewTrack,
@@ -8,11 +8,11 @@ import {
   clipNewTrack,
   createConnectorTrack,
   getConnectionInfo,
+  obtainTrackTime,
   removeLastTrack,
 } from './CurrentTrackHelpers';
 import { useObtainData } from '../../hooks/useObtainData';
 import { TrackSettingsContext } from '../trackSettings/TrackSettingsContext';
-import { obtainSeconds } from '../../helpers/times';
 import type { Lift, Run } from '../../interfaces/interfacesRunLift';
 
 export interface Track {
@@ -64,8 +64,8 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
     if (newTrack.id === lastTrack?.id) return;
 
     const connectionType = getConnectionInfo({
-      lastTrackCoords,
-      newTrackCoords,
+      lastTrack,
+      newTrack,
       allRuns,
     });
 
@@ -344,18 +344,7 @@ export const CurrentTrackContextProvider = ({ children }: PropsWithChildren) => 
 
   const recalculateStats = () => {
     const newTotalTime = currentTrack.trackSteps.reduce((acc, curr) => {
-      const skiDistance = obtainSkiDistance({
-        distance: curr.length,
-        turn: trackSettings.turn,
-        runType: curr.difficulty,
-      });
-
-      const trackTime = obtainSeconds({
-        distance: skiDistance,
-        track: curr,
-        speed: trackSettings.speed,
-        stops: trackSettings.stops,
-      });
+      const trackTime = obtainTrackTime(curr, trackSettings);
 
       return acc + trackTime;
     }, 0);

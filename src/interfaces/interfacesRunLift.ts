@@ -7,6 +7,7 @@ interface BaseTrack {
   name: string;
   ski_area_names: string;
   length: number;
+  elevation: number;
   coordinates: LatLngTuple[];
 }
 

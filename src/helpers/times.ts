@@ -1,7 +1,10 @@
+import type { LatLngTuple } from 'leaflet';
 import type { Pauses, Speed, Stops } from '../context/trackSettings/TrackSettingsContext';
 import type { Lift, Run } from '../interfaces/interfacesRunLift';
-import { LIFTS_INFO } from './liftsInfo';
 import { runSpeedTable } from './speeds';
+import type { LiftType } from '../types/types';
+import { LIFTS_INFO } from './liftsInfo';
+import { obtainStraightDistance } from './distances';
 
 // Stops in seconds
 const stopsValues: Record<Stops, number> = {
@@ -41,9 +44,7 @@ export const obtainSeconds = ({ distance, track, speed, stops }: ObtainSeconds):
 
     return distance / usedSpeed + obtainStopsSeconds({ distance, stops });
   } else {
-    const liftTypeInfo = LIFTS_INFO[track.lift_type];
-
-    return track.duration + liftTypeInfo.wait + liftTypeInfo.prepare;
+    return track.duration + track.transitionTime;
   }
 };
 
@@ -65,3 +66,6 @@ export const timeToHoursAndMinutes = (seconds: number): TimeToHoursAndMinutes =>
     minutes: minutes.toString().padStart(2, '0'),
   };
 };
+
+export const obtainLiftDuration = (coordinates: LatLngTuple[], liftType: LiftType) =>
+  Math.round(obtainStraightDistance(coordinates) / LIFTS_INFO[liftType].speed);

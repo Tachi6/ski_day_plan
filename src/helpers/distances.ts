@@ -112,3 +112,6 @@ export const obtainSkiDistance = ({ distance, turn, runType }: ObtainSkiDistance
   }
   return distance;
 };
+
+export const obtainElevation = (coordinates: LatLngTuple[]) =>
+  Math.round(Math.abs(coordinates[0]![2]! - coordinates.at(-1)![2]!) * 100) / 100;
